@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_acc_to_primary">
+    android:background="@drawable/bg_white_bone">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -35,7 +35,7 @@
                 android:id="@+id/et_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="56dp"
                 android:paddingHorizontal="20dp"
                 android:paddingVertical="15dp"
                 android:text="nm.rosebw@gmail.com"
@@ -59,21 +59,10 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/tv_forgot_password"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:fontFamily="@font/sourcesanspro_semibold"
-                android:text="Lupa Password?"
-                android:layout_gravity="right"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="18sp" />
-
-            <TextView
                 android:id="@+id/tv_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="48dp"
                 android:paddingHorizontal="20dp"
                 android:paddingVertical="15dp"
                 android:background="@drawable/rc_primary_to_acc_side"
@@ -85,27 +74,6 @@
                 android:textSize="18sp"
                 android:elevation="4dp"
                 android:translationZ="4dp"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="atau"
-                android:textAlignment="center"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="18sp"/>
-
-            <TextView
-                android:id="@+id/tv_register"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:fontFamily="@font/sourcesanspro_semibold"
-                android:onClick="moveToRegister"
-                android:text="Register"
-                android:textAlignment="center"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="20sp" />
 
         </LinearLayout>
     </ScrollView>

@@ -7,6 +7,7 @@ import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.project.siternak.R;
+import com.project.siternak.activities.home.MainActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,17 +33,13 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    @OnClick(R.id.tv_register)
-    public void moveToRegister(){
-        Intent intent=new Intent(LoginActivity.this, RegisterActivity.class);
+//    sementara !!
+    @OnClick(R.id.tv_login)
+    public void moveToAfterLogin(){
+        Intent intent=new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
     }
 
-    @OnClick(R.id.tv_forgot_password)
-    public void moveToForgotPassword(){
-        Intent intent=new Intent(LoginActivity.this, ForgotPasswordActivity.class);
-        startActivity(intent);
-    }
 
 //    public void moveToHome(){
 //        Intent intent=new Intent(LoginActivity.this, MainActivity.class);
