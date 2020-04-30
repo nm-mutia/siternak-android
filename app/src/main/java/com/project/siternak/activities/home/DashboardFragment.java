@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.project.siternak.R;
+import com.project.siternak.activities.data.DataActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -78,8 +79,8 @@ public class DashboardFragment extends Fragment {
     public void moveToData(){
 //        if (!verified()) return;
 
-//        Intent intent=new Intent(getActivity(), EventDashboardActivity.class);
-//        startActivity(intent);
+        Intent intent=new Intent(getActivity(), DataActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.ll_barcode)

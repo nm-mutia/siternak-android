@@ -3,6 +3,9 @@
     <color name="colorPrimary">#008080</color>
     <color name="colorPrimaryDark">#004C4C</color>
     <color name="colorAccent">#FF7F7F</color>
+    <color name="colorPrimaryLight">#66b2b2</color>
+
+    <color name="gradientDarker">#265B5F</color>
 
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
