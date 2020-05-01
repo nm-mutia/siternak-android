@@ -1,12 +1,29 @@
-package com.project.siternak.models;
+package com.project.siternak.models.data;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class KematianModel {
+    @SerializedName("id")
+    @Expose
     Integer id;
+    @SerializedName("tgl_kematian")
+    @Expose
     String tgl_kematian;
+    @SerializedName("waktu_kematian")
+    @Expose
     String waktu_kematian;
+    @SerializedName("penyebab")
+    @Expose
     String penyebab;
+    @SerializedName("kondisi")
+    @Expose
     String kondisi;
+    @SerializedName("created_at")
+    @Expose
     String created_at;
+    @SerializedName("updated_at")
+    @Expose
     String updated_at;
 
     public KematianModel(Integer id, String tgl_kematian, String waktu_kematian, String penyebab, String kondisi, String created_at, String updated_at) {

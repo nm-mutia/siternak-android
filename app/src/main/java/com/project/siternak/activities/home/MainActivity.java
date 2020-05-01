@@ -1,5 +1,6 @@
 package com.project.siternak.activities.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.project.siternak.R;
+import com.project.siternak.utils.SharedPrefManager;
 
 public class MainActivity extends AppCompatActivity {
     Fragment selectedFragment;
@@ -53,9 +55,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-//        getSupportFragmentManager().beginTransaction().detach(selectedFragment).attach(selectedFragment).commitAllowingStateLoss();
-    }
+//    @Override
+//    protected void onRestart() {
+//        super.onRestart();
+////        getSupportFragmentManager().beginTransaction().detach(selectedFragment).attach(selectedFragment).commitAllowingStateLoss();
+//    }
 }

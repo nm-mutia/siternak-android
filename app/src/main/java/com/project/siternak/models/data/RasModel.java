@@ -1,4 +1,4 @@
-package com.project.siternak.models;
+package com.project.siternak.models.data;
 
 
 public class RasModel {

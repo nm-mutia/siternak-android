@@ -11,18 +11,21 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.siternak.R;
-import com.project.siternak.activities.data.DataKematianActivity;
-import com.project.siternak.models.KematianModel;
+import com.project.siternak.models.data.KematianModel;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DataKematianAdapter extends RecyclerView.Adapter<DataKematianAdapter.DataKematianHolder> {
-    private List<KematianModel> kematianArrayList;
+    private ArrayList<KematianModel> kematianArrayList;
     private Context mContext;
+
+    public DataKematianAdapter(Context mcontext, ArrayList<KematianModel> kematianArrayList){
+        this.kematianArrayList = kematianArrayList;
+        this.mContext = mcontext;
+    }
 
     @NonNull
     @Override
@@ -35,26 +38,20 @@ public class DataKematianAdapter extends RecyclerView.Adapter<DataKematianAdapte
     @Override
     public void onBindViewHolder(@NonNull DataKematianHolder holder, int position) {
         final KematianModel data = kematianArrayList.get(position);
-        holder.tv_id.setText("1");
-        holder.tv_tgl.setText("2020-12-12");
-        holder.tv_waktu.setText("12:00:00");
-        holder.tv_penyebab.setText("halo");
-        holder.tv_kondisi.setText("haloha");
+        holder.tv_id.setText(data.getId());
+        holder.tv_tgl.setText(data.getTgl_kematian());
+        holder.tv_waktu.setText(data.getWaktu_kematian());
+        holder.tv_penyebab.setText(data.getPenyebab());
+        holder.tv_kondisi.setText(data.getKondisi());
 
-//        final KematianModel data = kematianArrayList.get(position);
-//        holder.tv_id.setText(data.getEventType());
-//        holder.tv_tgl.setText(data.getEventName());
-//        holder.tv_waktu.setText(data.getEventDate());
-//        holder.tv_penyebab.setText(data.getEventDate());
-//        holder.tv_kondisi.setText(data.getEventDate());
-//        holder.ll_data_kematian.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
+        holder.ll_data_kematian.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 //                Intent intent = new Intent(view.getContext(), EventHistoryDetailActivity.class);
 //                intent.putExtra("event", data);
 //                mContext.startActivity(intent);
-//            }
-//        });
+            }
+        });
 //        Glide.with(holder.itemView.getContext())
 //                .load(data.getPictureCompleteUrl())
 //                .into(holder.ivEventPhoto);
@@ -62,7 +59,7 @@ public class DataKematianAdapter extends RecyclerView.Adapter<DataKematianAdapte
 
     @Override
     public int getItemCount() {
-        return kematianArrayList== null? 0: kematianArrayList.size();
+        return kematianArrayList== null ? 0 : kematianArrayList.size();
     }
 
     public class DataKematianHolder extends RecyclerView.ViewHolder {
