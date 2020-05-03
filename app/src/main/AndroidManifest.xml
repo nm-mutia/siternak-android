@@ -40,6 +40,9 @@
         <activity android:name=".activities.data.DataKematianActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".activities.data.DataKematianDetailActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
 
     </application>
 

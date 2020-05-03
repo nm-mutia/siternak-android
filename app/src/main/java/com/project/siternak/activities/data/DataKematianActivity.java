@@ -1,5 +1,6 @@
 package com.project.siternak.activities.data;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,6 +30,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -98,6 +100,12 @@ public class DataKematianActivity extends AppCompatActivity {
     }
 
     private void setDataKematian() {
+        SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("Mohon Tunggu");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
         Call<KematianResponse> call = RetrofitClient
                 .getInstance()
                 .getApi()
@@ -112,7 +120,7 @@ public class DataKematianActivity extends AppCompatActivity {
                     List<KematianModel> kematians = resp.getKematians();
                     kematianArrayList = (ArrayList<KematianModel>)kematians;
 
-                    Toast.makeText(DataKematianActivity.this, resp.getStatus() ,Toast.LENGTH_LONG).show();
+                    pDialog.cancel();
 
                     for(int i=0; i<kematians.size(); i++){
                         kematianAdapter = new DataKematianAdapter(DataKematianActivity.this, kematianArrayList);
@@ -128,50 +136,18 @@ public class DataKematianActivity extends AppCompatActivity {
                     }
                 }
                 else {
+                    pDialog.cancel();
                     tv_nodata.setVisibility(View.VISIBLE);
                     tv_nodata.setText("Code: " + response.code());
-                    Toast.makeText(DataKematianActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                 }
 
             }
             @Override
             public void onFailure(Call<KematianResponse> call, Throwable t) {
+                pDialog.cancel();
                 tv_nodata.setText(t.getMessage());
                 tv_nodata.setVisibility(View.VISIBLE);
-
-                Toast.makeText(DataKematianActivity.this, "Failed", Toast.LENGTH_SHORT).show();
             }
         });
-
-//        SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
-//        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-//        pDialog.setTitleText("Mohon Tunggu");
-//        pDialog.setCancelable(false);
-//        pDialog.show();
-//
-//        new GetEventHistoryInteractor(mUser.getMemberID(),
-//                new OnInteractListener<List<EventHistoryViewModel>>() {
-//                    @Override
-//                    public void onSuccess(List<EventHistoryViewModel> eventList) {
-//                        pDialog.cancel();
-//                        eventAdapter = new EventHistoryAdapter(eventList,EventHistoryListActivity.this);
-//
-//                        if(eventAdapter.getItemCount()==0) {
-//                            tv_nodata.setVisibility(View.VISIBLE);
-//                            tv_nodata.setText("Tidak ada data kematian");
-//                        }
-//                        else {
-//                            rv_event.setAdapter(eventAdapter);
-//                            tv_nodata.setVisibility(View.GONE);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(SLException e) {
-//                        pDialog.cancel();
-//                    }
-//                }
-//        ).execute();
-
     }
 }

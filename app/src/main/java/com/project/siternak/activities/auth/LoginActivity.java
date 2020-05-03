@@ -1,6 +1,7 @@
 package com.project.siternak.activities.auth;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.project.siternak.utils.SharedPrefManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -62,6 +64,12 @@ public class LoginActivity extends AppCompatActivity {
 
         if (!validated(email, password)) return;
 
+        SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("Loading");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
         Call<LoginResponse> call = RetrofitClient
                 .getInstance()
                 .getApi()
@@ -98,17 +106,25 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     });
-
+                    pDialog.dismiss();
                     moveToDashboard();
                 }
                 else{
-                    Toast.makeText(LoginActivity.this, response.message(), Toast.LENGTH_LONG).show();
+                    pDialog.dismiss();
+                    SweetAlertDialog swal = new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.ERROR_TYPE);
+                    swal.setTitleText("Error");
+                    swal.setContentText(response.message());
+                    swal.show();
                 }
             }
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
-                Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                pDialog.dismiss();
+                SweetAlertDialog swal = new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.ERROR_TYPE);
+                swal.setTitleText("Error");
+                swal.setContentText(t.getMessage());
+                swal.show();
             }
         });
     }
@@ -138,37 +154,4 @@ public class LoginActivity extends AppCompatActivity {
         return pass;
     }
 }
-
-//    @OnClick(R.id.tv_login)
-//    public void doLogin(View view){
-//        if (!validated()) return;
-//
-//        String username = this.editTextUsername.getText().toString();
-//        String password = this.editTextPassword.getText().toString();
-//
-//        SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
-//        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-//        pDialog.setTitleText("Loading");
-//        pDialog.setCancelable(false);
-//        pDialog.show();
-//
-//        LoginInteractor interactor = new LoginInteractor(username, password, this, new OnInteractListener() {
-//            @Override
-//            public void onSuccess(Object object) {
-//                pDialog.dismiss();
-//                moveToHome();
-//            }
-//
-//            @Override
-//            public void onFailure(SLException e) {
-//                pDialog.dismiss();
-//                SweetAlertDialog swal = new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.ERROR_TYPE);
-//                swal.setTitleText("Error");
-//                swal.setContentText(e.getMessage());
-//                swal.show();
-//            }
-//        });
-//        interactor.execute();
-//    }
-
 

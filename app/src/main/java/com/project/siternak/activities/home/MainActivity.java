@@ -32,9 +32,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         bottomNav.setOnNavigationItemSelectedListener(this);
         bottomNav.setSelectedItemId(R.id.nav_dashboard);
 
-//        if (savedInstanceState == null) {
-            displayFragment(new DashboardFragment());
-//        }
+        displayFragment(new DashboardFragment());
     }
 
 

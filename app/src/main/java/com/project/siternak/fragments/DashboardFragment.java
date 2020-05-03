@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +25,7 @@ import butterknife.Unbinder;
 
 public class DashboardFragment extends Fragment {
     @BindView(R.id.tv_fullname) TextView tvFullname;
+    @BindView(R.id.ll_peternak) LinearLayout llPeternak;
 
     private Unbinder unbinder;
     private UserModel mUser;
@@ -32,17 +35,19 @@ public class DashboardFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
         unbinder = ButterKnife.bind(this, view);
-
+        
         ButterKnife.bind(getActivity());
+        mUser = SharedPrefManager.getInstance(getActivity()).getUser();
 
+        if(mUser.getRole() != null && mUser.getRole().equals("peternak")){
+            llPeternak.setVisibility(View.GONE);
+        }
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        mUser = SharedPrefManager.getInstance(getActivity()).getUser();
         tvFullname.setText(mUser.getName()+ ", " + mUser.getRole());
     }
 
@@ -117,6 +122,7 @@ public class DashboardFragment extends Fragment {
 
     @OnClick(R.id.ll_peternak)
     public void moveToPeternak(){
+        Toast.makeText(getActivity(), "haloha" ,Toast.LENGTH_SHORT).show();
 //        if (!verified()) return; //only admin
 //
 //        Intent intent=new Intent(getActivity(), ElearningDashboardActivity.class);

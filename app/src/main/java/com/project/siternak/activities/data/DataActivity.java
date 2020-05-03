@@ -2,16 +2,26 @@ package com.project.siternak.activities.data;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.project.siternak.R;
+import com.project.siternak.models.auth.UserModel;
+import com.project.siternak.utils.SharedPrefManager;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class DataActivity extends AppCompatActivity {
+    @BindView(R.id.tv_data_peternakan) TextView tvDataPeternakan;
+
+    private UserModel mUser;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,6 +29,12 @@ public class DataActivity extends AppCompatActivity {
 
         getSupportActionBar().hide();
         ButterKnife.bind(this);
+
+        mUser = SharedPrefManager.getInstance(this).getUser();
+
+        if(mUser.getRole() != null && mUser.getRole().equals("peternak")){
+            tvDataPeternakan.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -70,6 +86,7 @@ public class DataActivity extends AppCompatActivity {
 
     @OnClick(R.id.tv_data_peternakan)
     public void moveToPeternakan(){
+        Toast.makeText(this, "halo" ,Toast.LENGTH_SHORT).show();
 //        Intent intent=new Intent(DataActivity.this, PeternakanActivity.class);
 //        startActivity(intent);
     }

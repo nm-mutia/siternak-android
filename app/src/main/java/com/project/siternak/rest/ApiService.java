@@ -1,6 +1,7 @@
 package com.project.siternak.rest;
 
 import com.project.siternak.models.auth.UserModel;
+import com.project.siternak.responses.KematianDetailResponse;
 import com.project.siternak.responses.KematianResponse;
 import com.project.siternak.responses.LoginResponse;
 import com.project.siternak.responses.UserDetailsResponse;
@@ -12,6 +13,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface ApiService {
     @POST("login")
@@ -32,8 +34,8 @@ public interface ApiService {
 
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @GET("kematian/{id}")
-    Call<KematianResponse> getKematianDetail(
+    Call<KematianDetailResponse> getKematianDetail(
             @Header("Authorization") String authToken,
-            @Field("id") Integer id
+            @Path("id") Integer id
     );
 }

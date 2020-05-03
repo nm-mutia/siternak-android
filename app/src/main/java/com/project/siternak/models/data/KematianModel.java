@@ -3,7 +3,9 @@ package com.project.siternak.models.data;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class KematianModel {
+import java.io.Serializable;
+
+public class KematianModel implements Serializable {
     @SerializedName("id")
     @Expose
     Integer id;

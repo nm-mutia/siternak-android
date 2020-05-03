@@ -17,6 +17,7 @@ import com.project.siternak.R;
 import com.project.siternak.activities.data.DataKematianDetailActivity;
 import com.project.siternak.models.data.KematianModel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,17 +45,18 @@ public class DataKematianAdapter extends RecyclerView.Adapter<DataKematianAdapte
 
     @Override
     public void onBindViewHolder(@NonNull DataKematianHolder holder, int position) {
+        final KematianModel data = kematianArrayList.get(position);
         holder.tvNumbering.setText(String.valueOf(position + 1));
-        holder.tvId.setText(String.valueOf(kematianArrayList.get(position).getId()));
-        holder.tvTgl.setText(kematianArrayList.get(position).getTgl_kematian());
-        holder.tvWaktu.setText(kematianArrayList.get(position).getWaktu_kematian());
-        holder.tvPenyebab.setText(kematianArrayList.get(position).getPenyebab());
-        holder.tvKondisi.setText(kematianArrayList.get(position).getKondisi());
+        holder.tvId.setText(String.valueOf(data.getId()));
+        holder.tvTgl.setText(data.getTgl_kematian());
+        holder.tvWaktu.setText(data.getWaktu_kematian());
+        holder.tvPenyebab.setText(data.getPenyebab());
+        holder.tvKondisi.setText(data.getKondisi());
         holder.llDataKematian.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), DataKematianDetailActivity.class);
-//                intent.putExtra("event", data);
+                intent.putExtra("kematian", (Serializable) data);
                 mContext.startActivity(intent);
             }
         });
