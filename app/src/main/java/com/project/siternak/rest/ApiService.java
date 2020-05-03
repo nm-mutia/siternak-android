@@ -1,12 +1,14 @@
 package com.project.siternak.rest;
 
 import com.project.siternak.models.auth.UserModel;
+import com.project.siternak.responses.KematianDeleteResponse;
 import com.project.siternak.responses.KematianDetailResponse;
 import com.project.siternak.responses.KematianResponse;
 import com.project.siternak.responses.LoginResponse;
 import com.project.siternak.responses.UserDetailsResponse;
 
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -35,6 +37,13 @@ public interface ApiService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @GET("kematian/{id}")
     Call<KematianDetailResponse> getKematianDetail(
+            @Header("Authorization") String authToken,
+            @Path("id") Integer id
+    );
+
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @DELETE("kematian/{id}")
+    Call<KematianDeleteResponse> delKematian(
             @Header("Authorization") String authToken,
             @Path("id") Integer id
     );

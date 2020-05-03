@@ -1,5 +1,6 @@
 package com.project.siternak.activities.data;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.project.siternak.R;
 import com.project.siternak.models.data.KematianModel;
+import com.project.siternak.responses.KematianDeleteResponse;
 import com.project.siternak.responses.KematianDetailResponse;
 import com.project.siternak.responses.KematianResponse;
 import com.project.siternak.rest.RetrofitClient;
@@ -37,7 +39,6 @@ public class DataKematianDetailActivity extends AppCompatActivity {
     @BindView(R.id.tl_detail_kematian) TableLayout tlDetailKematian;
 
     private KematianModel kematianData;
-
     private String userToken;
 
     @Override
@@ -72,7 +73,47 @@ public class DataKematianDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.ib_delete_data)
     public void deleteData(){
-//        finish(); go to swal
+        SweetAlertDialog wDialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE);
+        wDialog.setTitleText("Apakah anda yakin untuk menghapus data ini?");
+        wDialog.setContentText("Data kematian id " + kematianData.getId());
+        wDialog.setConfirmText("Ya");
+        wDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sDialog) {
+                sDialog.dismissWithAnimation();
+
+                Call<KematianDeleteResponse> calls = RetrofitClient
+                        .getInstance()
+                        .getApi()
+                        .delKematian("Bearer " + userToken, kematianData.getId());
+
+                calls.enqueue(new Callback<KematianDeleteResponse>() {
+                    @Override
+                    public void onResponse(Call<KematianDeleteResponse> call, Response<KematianDeleteResponse> response) {
+                        KematianDeleteResponse resp = response.body();
+
+                        if(response.isSuccessful()){
+                            sDialog.setConfirmText(resp.getMessage());
+                            Toast.makeText(DataKematianDetailActivity.this, resp.getMessage(), Toast.LENGTH_SHORT).show();
+
+                            finish();
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<KematianDeleteResponse> call, Throwable t) {
+                        sDialog.setConfirmText(t.getMessage());
+                        Toast.makeText(DataKematianDetailActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+        wDialog.setCancelButton("Batal", new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sDialog) {
+                sDialog.dismissWithAnimation();
+            }
+        });
+        wDialog.show();
     }
 
     @OnClick
@@ -99,7 +140,6 @@ public class DataKematianDetailActivity extends AppCompatActivity {
 
                 if(response.isSuccessful()){
                     pDialog.cancel();
-
                     KematianModel data = resp.getKematians();
 
                     tvId.setText(String.valueOf(data.getId()));
@@ -115,7 +155,6 @@ public class DataKematianDetailActivity extends AppCompatActivity {
                     Toast.makeText(DataKematianDetailActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
-
             @Override
             public void onFailure(Call<KematianDetailResponse> call, Throwable t) {
                 pDialog.cancel();
