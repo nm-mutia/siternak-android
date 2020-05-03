@@ -1,5 +1,7 @@
 package com.project.siternak.rest;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -10,9 +12,18 @@ public class RetrofitClient {
     private Retrofit retrofit;
 
     private RetrofitClient(){
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.level(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient okHttpClient = new OkHttpClient
+                .Builder()
+                .addInterceptor(loggingInterceptor)
+                .build();
+
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL_API)
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient)
                 .build();
     }
 

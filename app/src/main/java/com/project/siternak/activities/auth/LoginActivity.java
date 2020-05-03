@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.project.siternak.R;
 import com.project.siternak.activities.home.MainActivity;
 import com.project.siternak.responses.LoginResponse;
+import com.project.siternak.responses.UserDetailsResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.SharedPrefManager;
 
@@ -73,10 +74,35 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (response.isSuccessful()) {
                     SharedPrefManager.getInstance(LoginActivity.this)
-                            .saveAccessToken(resp.getData());
+                            .saveAccessToken(resp.getData().getToken());
 
-                    Toast.makeText(LoginActivity.this, resp.getStatus(), Toast.LENGTH_LONG).show();
+                    Call<UserDetailsResponse> calls = RetrofitClient
+                            .getInstance()
+                            .getApi()
+                            .userDetails("Bearer " + SharedPrefManager.getInstance(LoginActivity.this).getAccessToken());
+
+                    calls.enqueue(new Callback<UserDetailsResponse>() {
+                        @Override
+                        public void onResponse(Call<UserDetailsResponse> call, Response<UserDetailsResponse> response) {
+                            UserDetailsResponse resp = response.body();
+
+                            if (response.isSuccessful()) {
+                                SharedPrefManager.getInstance(LoginActivity.this)
+                                        .saveUser(resp.getData());
+                            }
+                            Toast.makeText(LoginActivity.this, "Selamat datang, " + resp.getData().getName(), Toast.LENGTH_LONG).show();
+                        }
+
+                        @Override
+                        public void onFailure(Call<UserDetailsResponse> call, Throwable t) {
+                            Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+
                     moveToDashboard();
+                }
+                else{
+                    Toast.makeText(LoginActivity.this, response.message(), Toast.LENGTH_LONG).show();
                 }
             }
 

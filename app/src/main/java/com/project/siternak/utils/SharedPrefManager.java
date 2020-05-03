@@ -3,7 +3,7 @@ package com.project.siternak.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.project.siternak.models.auth.AccessToken;
+import com.project.siternak.models.auth.UserModel;
 
 public class SharedPrefManager {
     private static final String SHARED_PREF_NAME = "SiternakSharedPref";
@@ -26,19 +26,41 @@ public class SharedPrefManager {
         return mInstance;
     }
 
-    public void saveAccessToken(AccessToken token){
+    public void saveAccessToken(String token){
         SharedPreferences sharedPreferences = mContext.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        editor.putString(TAG_TOKEN, token.getToken());
+        editor.putString(TAG_TOKEN, token);
         editor.putBoolean(IS_LOGGED_IN, true);
         editor.apply();
     }
 
-    public AccessToken getAccessToken(){
-        SharedPreferences sharedPreferences = mContext.getSharedPreferences(SHARED_PREF_NAME,Context.MODE_PRIVATE);
-        return new AccessToken(
-                sharedPreferences.getString(TAG_TOKEN,null)
+    public String getAccessToken(){
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(TAG_TOKEN,null);
+    }
+
+    public void saveUser(UserModel user){
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putInt("id", user.getId());
+        editor.putString("name", user.getName());
+        editor.putString("username", user.getUsername());
+        editor.putString("role", user.getRole());
+        editor.putString("email", user.getEmail());
+
+        editor.apply();
+    }
+
+    public UserModel getUser(){
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        return new UserModel(
+                sharedPreferences.getInt("id",-1),
+                sharedPreferences.getString("name",null),
+                sharedPreferences.getString("username",null),
+                sharedPreferences.getString("role",null),
+                sharedPreferences.getString("email",null)
         );
     }
 

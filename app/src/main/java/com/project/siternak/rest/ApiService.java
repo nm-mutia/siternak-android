@@ -1,19 +1,19 @@
 package com.project.siternak.rest;
 
+import com.project.siternak.models.auth.UserModel;
 import com.project.siternak.responses.KematianResponse;
 import com.project.siternak.responses.LoginResponse;
+import com.project.siternak.responses.UserDetailsResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
 public interface ApiService {
-
-    @GET("kematian")
-    Call<KematianResponse> getKematian();
-
     @POST("login")
     @FormUrlEncoded
     Call<LoginResponse> userLogin(
@@ -21,5 +21,11 @@ public interface ApiService {
             @Field("password") String password
     );
 
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @GET("profile")
+    Call<UserDetailsResponse> userDetails(@Header("Authorization") String authToken);
 
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @GET("kematian")
+    Call<KematianResponse> getKematian(@Header("Authorization") String authToken);
 }

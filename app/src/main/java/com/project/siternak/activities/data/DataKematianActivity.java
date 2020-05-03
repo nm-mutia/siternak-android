@@ -16,7 +16,7 @@ import com.project.siternak.adapter.data.DataKematianAdapter;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.responses.KematianResponse;
 import com.project.siternak.models.data.KematianModel;
-import com.project.siternak.rest.ApiService;
+import com.project.siternak.utils.SharedPrefManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +27,6 @@ import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class DataKematianActivity extends AppCompatActivity {
     @BindView(R.id.rv) RecyclerView rv_kematian;
@@ -36,9 +34,8 @@ public class DataKematianActivity extends AppCompatActivity {
 
     private DataKematianAdapter kematianAdapter;
     private ArrayList<KematianModel> kematianArrayList;
-    private ApiService apiService;
 
-//    User mUser;
+    private String userToken;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,12 +46,13 @@ public class DataKematianActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.actionbar_primary_arrow);
 
-        TextView tv_actionbar_title=getSupportActionBar().getCustomView().findViewById(R.id.tv_actionbar_title);
+        TextView tv_actionbar_title = getSupportActionBar().getCustomView().findViewById(R.id.tv_actionbar_title);
         tv_actionbar_title.setText("Kematian");
 
-//        mUser = Authenticated.getInstance().getUser();
-
         ButterKnife.bind(this);
+
+        userToken = SharedPrefManager.getInstance(this).getAccessToken();
+        rv_kematian.setLayoutManager(new LinearLayoutManager(this));
         setDataKematian();
     }
 
@@ -69,41 +67,41 @@ public class DataKematianActivity extends AppCompatActivity {
     }
 
     private void setDataKematian() {
-        LinearLayoutManager manager = new LinearLayoutManager(this);
+        Call<KematianResponse> call = RetrofitClient
+                .getInstance()
+                .getApi()
+                .getKematian("Bearer " + this.userToken);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(RetrofitClient.BASE_URL_API)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        apiService = retrofit.create(ApiService.class);
-        Call<KematianResponse> callList = apiService.getKematian();
-
-        callList.enqueue(new Callback<KematianResponse>() {
+        call.enqueue(new Callback<KematianResponse>() {
             @Override
             public void onResponse(Call<KematianResponse> call, Response<KematianResponse> response) {
-                if(!response.isSuccessful()){
+                KematianResponse resp = response.body();
+
+                if(response.isSuccessful()) {
+                    List<KematianModel> kematians = resp.getKematians();
+                    kematianArrayList = (ArrayList<KematianModel>)kematians;
+
+                    Toast.makeText(DataKematianActivity.this, resp.getStatus() ,Toast.LENGTH_LONG).show();
+
+                    for(int i=0; i<kematians.size(); i++){
+                        kematianAdapter = new DataKematianAdapter(DataKematianActivity.this, kematianArrayList);
+
+                        if (kematianAdapter.getItemCount() == 0) {
+                            tv_nodata.setVisibility(View.VISIBLE);
+                            tv_nodata.setText("Tidak ada data kematian");
+                        } else {
+                            tv_nodata.setVisibility(View.GONE);
+                            rv_kematian.setAdapter(kematianAdapter);
+                            kematianAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+                else {
+                    tv_nodata.setVisibility(View.VISIBLE);
                     tv_nodata.setText("Code: " + response.code());
+                    Toast.makeText(DataKematianActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                 }
 
-                List<KematianModel> kematians = response.body().getKematians();
-//                for (int i=0; i<kematians.size(); i++){
-                    kematianArrayList = (ArrayList<KematianModel>) kematians;
-                    kematianAdapter = new DataKematianAdapter(DataKematianActivity.this, kematianArrayList);
-
-                    if(kematianAdapter.getItemCount()==0) {
-                        tv_nodata.setVisibility(View.VISIBLE);
-                        tv_nodata.setText("Tidak ada data kematian");
-                    }
-                    else {
-                        rv_kematian.setAdapter(kematianAdapter);
-                        rv_kematian.setLayoutManager(manager);
-                        rv_kematian.setHasFixedSize(true);
-                        kematianAdapter.notifyDataSetChanged();
-                        tv_nodata.setVisibility(View.GONE);
-                    }
-
-//                }
             }
             @Override
             public void onFailure(Call<KematianResponse> call, Throwable t) {

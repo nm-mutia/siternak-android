@@ -13,6 +13,11 @@ public class LoginResponse {
     @Expose
     private AccessToken data;
 
+    public LoginResponse(String status, AccessToken data) {
+        this.status = status;
+        this.data = data;
+    }
+
     public String getStatus() {
         return status;
     }

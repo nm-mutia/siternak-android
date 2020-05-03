@@ -1,4 +1,4 @@
-package com.project.siternak.activities.home;
+package com.project.siternak.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,8 @@ import androidx.fragment.app.Fragment;
 
 import com.project.siternak.R;
 import com.project.siternak.activities.data.DataActivity;
+import com.project.siternak.models.auth.UserModel;
+import com.project.siternak.utils.SharedPrefManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,28 +24,28 @@ import butterknife.Unbinder;
 public class DashboardFragment extends Fragment {
     @BindView(R.id.tv_fullname) TextView tvFullname;
 
-//    User mUser;
-//    Member mMember;
-
     private Unbinder unbinder;
+    private UserModel mUser;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_dashboard,container, false);
-        unbinder = ButterKnife.bind(this,view);
+        View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
+        unbinder = ButterKnife.bind(this, view);
 
         ButterKnife.bind(getActivity());
 
-//        mUser = Authenticated.getInstance().getUser();
-//        mMember = Authenticated.getInstance().getMember();
-//
-//        if (mMember == null || mMember.getFirstname() == null) tvFullname.setText(mUser.getUsername());
-//        else tvFullname.setText(mMember.getFullname());
-//
-//        setMemberDetail();
-
         return view;
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        mUser = SharedPrefManager.getInstance(getActivity()).getUser();
+        tvFullname.setText(mUser.getName()+ ", " + mUser.getRole());
+    }
+
 
 //    private void setMemberDetail(){
 //        if(Authenticated.getInstance().getMember() == null || !Authenticated.getInstance().isValidCacheMember()){

@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.project.siternak.models.data.KematianModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class KematianResponse {
@@ -13,7 +14,7 @@ public class KematianResponse {
 
     @SerializedName("kematian")
     @Expose
-    private List<KematianModel> kematians = null;
+    private List<KematianModel> kematians;
 
     public List<KematianModel> getKematians() {
         return kematians;
