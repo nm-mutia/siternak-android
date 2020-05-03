@@ -71,7 +71,8 @@
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:elevation="4dp"
-                android:translationZ="4dp"/>
+                android:translationZ="4dp"
+                android:foreground="?attr/selectableItemBackground"/>
 
         </LinearLayout>
     </ScrollView>

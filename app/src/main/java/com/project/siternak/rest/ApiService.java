@@ -25,7 +25,15 @@ public interface ApiService {
     @GET("profile")
     Call<UserDetailsResponse> userDetails(@Header("Authorization") String authToken);
 
+    // data kematian
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @GET("kematian")
     Call<KematianResponse> getKematian(@Header("Authorization") String authToken);
+
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @GET("kematian/{id}")
+    Call<KematianResponse> getKematianDetail(
+            @Header("Authorization") String authToken,
+            @Field("id") Integer id
+    );
 }

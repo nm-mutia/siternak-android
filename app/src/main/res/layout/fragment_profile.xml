@@ -178,7 +178,7 @@
                 android:id="@+id/tv_logout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Log Out"
+                android:text="LOG OUT"
                 android:fontFamily="@font/sourcesanspro_bold"
                 android:layout_marginTop="12dp"
                 android:layout_marginLeft="12dp"
@@ -190,7 +190,8 @@
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:elevation="4dp"
-                android:translationZ="4dp"/>
+                android:translationZ="4dp"
+                android:foreground="?attr/selectableItemBackground"/>
 
         </LinearLayout>
     </ScrollView>

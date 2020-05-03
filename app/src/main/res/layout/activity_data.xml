@@ -77,7 +77,8 @@
                 android:paddingBottom="12dp"
                 android:text="Kematian"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:foreground="?attr/selectableItemBackground"/>
 
             <TextView
                 android:id="@+id/tv_data_pemilik"
@@ -97,7 +98,8 @@
                 android:paddingBottom="12dp"
                 android:text="Pemilik"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:foreground="?attr/selectableItemBackground"/>
 
             <TextView
                 android:id="@+id/tv_data_penyakit"
@@ -117,7 +119,8 @@
                 android:paddingBottom="12dp"
                 android:text="Penyakit"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:foreground="?attr/selectableItemBackground"/>
 
             <TextView
                 android:id="@+id/tv_data_perkawinan"
@@ -137,7 +140,8 @@
                 android:paddingBottom="12dp"
                 android:text="Perkawinan"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:foreground="?attr/selectableItemBackground"/>
 
             <TextView
                 android:id="@+id/tv_data_ras"
@@ -157,7 +161,8 @@
                 android:paddingBottom="12dp"
                 android:text="Ras"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:foreground="?attr/selectableItemBackground"/>
 
             <TextView
                 android:id="@+id/tv_data_riwayat"
@@ -177,7 +182,8 @@
                 android:paddingBottom="12dp"
                 android:text="Riwayat Penyakit"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:foreground="?attr/selectableItemBackground"/>
 
             <TextView
                 android:id="@+id/tv_data_ternak"
@@ -197,7 +203,8 @@
                 android:paddingBottom="12dp"
                 android:text="Ternak"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:foreground="?attr/selectableItemBackground"/>
 
             <TextView
                 android:id="@+id/tv_data_peternakan"
@@ -218,7 +225,8 @@
                 android:paddingBottom="12dp"
                 android:text="Peternakan"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:foreground="?attr/selectableItemBackground"/>
 
         </LinearLayout>
     </ScrollView>

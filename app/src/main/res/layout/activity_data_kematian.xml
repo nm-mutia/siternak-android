@@ -45,10 +45,13 @@
                     android:gravity="center"
                     android:visibility="gone"/>
                 <ImageButton
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:id="@+id/ib_add_data"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:src="@drawable/ic_add_circle"
-                    android:layout_alignParentBottom="true"/>
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:background="@color/background"/>
             </RelativeLayout>
         </LinearLayout>
 

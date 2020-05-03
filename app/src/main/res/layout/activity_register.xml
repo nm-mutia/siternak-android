@@ -115,7 +115,8 @@
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:fontFamily="@font/sourcesanspro_bold"
-                android:elevation="4dp"/>
+                android:elevation="4dp"
+                android:foreground="?attr/selectableItemBackground"/>
 
         </LinearLayout>
     </ScrollView>
