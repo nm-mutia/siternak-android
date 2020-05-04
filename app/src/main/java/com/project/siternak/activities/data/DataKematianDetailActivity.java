@@ -93,15 +93,16 @@ public class DataKematianDetailActivity extends AppCompatActivity {
                         KematianDeleteResponse resp = response.body();
 
                         if(response.isSuccessful()){
-                            sDialog.setConfirmText(resp.getMessage());
-                            Toast.makeText(DataKematianDetailActivity.this, resp.getMessage(), Toast.LENGTH_SHORT).show();
-
-                            finish();
+                            Toast.makeText(DataKematianDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(DataKematianDetailActivity.this, DataKematianActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            
+                            DataKematianDetailActivity.this.finish();
                         }
                     }
                     @Override
                     public void onFailure(Call<KematianDeleteResponse> call, Throwable t) {
-                        sDialog.setConfirmText(t.getMessage());
                         Toast.makeText(DataKematianDetailActivity.this, "Failed", Toast.LENGTH_SHORT).show();
                     }
                 });
