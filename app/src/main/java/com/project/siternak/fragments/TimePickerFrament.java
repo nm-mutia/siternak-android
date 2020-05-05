@@ -14,19 +14,23 @@ import com.project.siternak.R;
 import java.util.Calendar;
 
 public class TimePickerFrament extends DialogFragment {
+
+    private int hour;
+    private int minute;
+
+    public TimePickerFrament(int hour, int minute) {
+        this.hour = hour;
+        this.minute = minute;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        Calendar calendar = Calendar.getInstance();
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
-
         return new TimePickerDialog(
                 getActivity(),
                 R.style.DialogTheme,
                 (TimePickerDialog.OnTimeSetListener) getActivity(),
-                hour,
-                minute,
+                hour, minute,
                 DateFormat.is24HourFormat(getActivity())
         );
     }

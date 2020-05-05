@@ -24,12 +24,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DataKematianAdapter extends RecyclerView.Adapter<DataKematianAdapter.DataKematianHolder> implements Filterable {
+public class KematianAdapter extends RecyclerView.Adapter<KematianAdapter.DataKematianHolder> implements Filterable {
     private ArrayList<KematianModel> kematianArrayList;
     private ArrayList<KematianModel> kematianArrayListFull;
     private Context mContext;
 
-    public DataKematianAdapter(Context mContext, ArrayList<KematianModel> kematianArrayList){
+    public KematianAdapter(Context mContext, ArrayList<KematianModel> kematianArrayList){
         this.kematianArrayList = kematianArrayList;
         this.mContext = mContext;
         kematianArrayListFull = new ArrayList<>(kematianArrayList);

@@ -115,9 +115,11 @@ public class KematianDetailActivity extends AppCompatActivity {
         wDialog.show();
     }
 
-    @OnClick
+    @OnClick(R.id.tl_detail_kematian)
     public void editData(){
-//        intent
+        Intent intent = new Intent(KematianDetailActivity.this, EditKematianActivity.class);
+        intent.putExtra("data", kematianData);
+        startActivity(intent);
     }
 
     private void setDataKematian() {

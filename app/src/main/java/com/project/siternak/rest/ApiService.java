@@ -14,6 +14,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface ApiService {
@@ -29,16 +30,6 @@ public interface ApiService {
     Call<UserDetailsResponse> userDetails(@Header("Authorization") String authToken);
 
     // ------------------------------------data kematian--------------------------------------------
-    @FormUrlEncoded
-    @POST("kematian")
-    Call<KematianResponse> addKematian(
-            @Field("tgl_kematian") String tglKematian,
-            @Field("waktu_kematian") String waktuKematian,
-            @Field("penyebab") String penyebab,
-            @Field("kondisi") String kondisi,
-            @Header("Authorization") String authToken
-    );
-
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @GET("kematian")
     Call<KematianGetResponse> getKematian(@Header("Authorization") String authToken);
@@ -49,6 +40,28 @@ public interface ApiService {
             @Header("Authorization") String authToken,
             @Path("id") Integer id
     );
+
+    @FormUrlEncoded
+    @POST("kematian")
+    Call<KematianResponse> addKematian(
+            @Header("Authorization") String authToken,
+            @Field("tgl_kematian") String tglKematian,
+            @Field("waktu_kematian") String waktuKematian,
+            @Field("penyebab") String penyebab,
+            @Field("kondisi") String kondisi
+    );
+
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @FormUrlEncoded
+    @PUT("kematian/{id}")
+    Call<KematianResponse> editKematian(
+            @Header("Authorization") String authToken,
+            @Path("id") Integer id,
+            @Field("tgl_kematian") String tglKematian,
+            @Field("waktu_kematian") String waktuKematian,
+            @Field("penyebab") String penyebab,
+            @Field("kondisi") String kondisi
+        );
 
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @DELETE("kematian/{id}")

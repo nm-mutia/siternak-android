@@ -61,6 +61,7 @@
             android:src="@drawable/ic_add_circle"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:background="@color/float_transparent"/>
+            android:background="@color/float_transparent"
+            android:elevation="5dp"/>
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

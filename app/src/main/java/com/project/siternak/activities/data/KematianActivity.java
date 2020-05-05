@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.siternak.R;
-import com.project.siternak.adapter.data.DataKematianAdapter;
+import com.project.siternak.adapter.data.KematianAdapter;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.responses.KematianGetResponse;
 import com.project.siternak.models.data.KematianModel;
@@ -39,7 +39,7 @@ public class KematianActivity extends AppCompatActivity {
     @BindView(R.id.rv) RecyclerView rv_kematian;
     @BindView(R.id.tv_nodata) TextView tv_nodata;
 
-    private DataKematianAdapter kematianAdapter;
+    private KematianAdapter kematianAdapter;
     private ArrayList<KematianModel> kematianArrayList;
 
     private String userToken;
@@ -129,7 +129,7 @@ public class KematianActivity extends AppCompatActivity {
                     pDialog.cancel();
 
                     for(int i=0; i<kematians.size(); i++){
-                        kematianAdapter = new DataKematianAdapter(KematianActivity.this, kematianArrayList);
+                        kematianAdapter = new KematianAdapter(KematianActivity.this, kematianArrayList);
 
                         if (kematianAdapter.getItemCount() == 0) {
                             tv_nodata.setVisibility(View.VISIBLE);

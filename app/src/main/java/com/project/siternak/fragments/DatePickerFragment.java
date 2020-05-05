@@ -13,14 +13,20 @@ import com.project.siternak.R;
 import java.util.Calendar;
 
 public class DatePickerFragment extends DialogFragment {
+
+    private int year;
+    private int month;
+    private int day;
+
+    public DatePickerFragment(int year, int month, int day) {
+        this.year = year;
+        this.month = month;
+        this.day = day;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
         return new DatePickerDialog(getActivity(), R.style.DialogTheme,(DatePickerDialog.OnDateSetListener) getActivity(), year, month, day);
     }
 }

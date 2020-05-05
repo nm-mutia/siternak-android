@@ -28,7 +28,8 @@
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimary"
                 android:orientation="vertical"
-                android:paddingVertical="24dp">
+                android:paddingVertical="24dp"
+                android:layout_alignParentTop="true">
 
                 <TextView
                     android:id="@+id/tv_siternak"
