@@ -1,5 +1,6 @@
 package com.project.siternak.activities.data;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.project.siternak.R;
 import com.project.siternak.adapter.data.DataKematianAdapter;
 import com.project.siternak.rest.RetrofitClient;
-import com.project.siternak.responses.KematianResponse;
+import com.project.siternak.responses.KematianGetResponse;
 import com.project.siternak.models.data.KematianModel;
 import com.project.siternak.utils.SharedPrefManager;
 
@@ -35,7 +35,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DataKematianActivity extends AppCompatActivity {
+public class KematianActivity extends AppCompatActivity {
     @BindView(R.id.rv) RecyclerView rv_kematian;
     @BindView(R.id.tv_nodata) TextView tv_nodata;
 
@@ -73,6 +73,12 @@ public class DataKematianActivity extends AppCompatActivity {
         finish();
     }
 
+    @OnClick(R.id.ib_add_data)
+    public void addData(){
+        Intent intent = new Intent(KematianActivity.this, TambahKematianActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -106,15 +112,15 @@ public class DataKematianActivity extends AppCompatActivity {
         pDialog.setCancelable(false);
         pDialog.show();
 
-        Call<KematianResponse> call = RetrofitClient
+        Call<KematianGetResponse> call = RetrofitClient
                 .getInstance()
                 .getApi()
                 .getKematian("Bearer " + this.userToken);
 
-        call.enqueue(new Callback<KematianResponse>() {
+        call.enqueue(new Callback<KematianGetResponse>() {
             @Override
-            public void onResponse(Call<KematianResponse> call, Response<KematianResponse> response) {
-                KematianResponse resp = response.body();
+            public void onResponse(Call<KematianGetResponse> call, Response<KematianGetResponse> response) {
+                KematianGetResponse resp = response.body();
 
                 if(response.isSuccessful()) {
                     List<KematianModel> kematians = resp.getKematians();
@@ -123,7 +129,7 @@ public class DataKematianActivity extends AppCompatActivity {
                     pDialog.cancel();
 
                     for(int i=0; i<kematians.size(); i++){
-                        kematianAdapter = new DataKematianAdapter(DataKematianActivity.this, kematianArrayList);
+                        kematianAdapter = new DataKematianAdapter(KematianActivity.this, kematianArrayList);
 
                         if (kematianAdapter.getItemCount() == 0) {
                             tv_nodata.setVisibility(View.VISIBLE);
@@ -143,7 +149,7 @@ public class DataKematianActivity extends AppCompatActivity {
 
             }
             @Override
-            public void onFailure(Call<KematianResponse> call, Throwable t) {
+            public void onFailure(Call<KematianGetResponse> call, Throwable t) {
                 pDialog.cancel();
                 tv_nodata.setText(t.getMessage());
                 tv_nodata.setVisibility(View.VISIBLE);

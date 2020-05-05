@@ -1,9 +1,8 @@
 package com.project.siternak.rest;
 
-import com.project.siternak.models.auth.UserModel;
 import com.project.siternak.responses.KematianDeleteResponse;
-import com.project.siternak.responses.KematianDetailResponse;
 import com.project.siternak.responses.KematianResponse;
+import com.project.siternak.responses.KematianGetResponse;
 import com.project.siternak.responses.LoginResponse;
 import com.project.siternak.responses.UserDetailsResponse;
 
@@ -29,14 +28,24 @@ public interface ApiService {
     @GET("profile")
     Call<UserDetailsResponse> userDetails(@Header("Authorization") String authToken);
 
-    // data kematian
+    // ------------------------------------data kematian--------------------------------------------
+    @FormUrlEncoded
+    @POST("kematian")
+    Call<KematianResponse> addKematian(
+            @Field("tgl_kematian") String tglKematian,
+            @Field("waktu_kematian") String waktuKematian,
+            @Field("penyebab") String penyebab,
+            @Field("kondisi") String kondisi,
+            @Header("Authorization") String authToken
+    );
+
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @GET("kematian")
-    Call<KematianResponse> getKematian(@Header("Authorization") String authToken);
+    Call<KematianGetResponse> getKematian(@Header("Authorization") String authToken);
 
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @GET("kematian/{id}")
-    Call<KematianDetailResponse> getKematianDetail(
+    Call<KematianResponse> getKematianDetail(
             @Header("Authorization") String authToken,
             @Path("id") Integer id
     );
@@ -47,4 +56,6 @@ public interface ApiService {
             @Header("Authorization") String authToken,
             @Path("id") Integer id
     );
+
+
 }

@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.siternak.R;
-import com.project.siternak.activities.data.DataKematianDetailActivity;
+import com.project.siternak.activities.data.KematianDetailActivity;
 import com.project.siternak.models.data.KematianModel;
 
 import java.io.Serializable;
@@ -55,7 +55,7 @@ public class DataKematianAdapter extends RecyclerView.Adapter<DataKematianAdapte
         holder.llDataKematian.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), DataKematianDetailActivity.class);
+                Intent intent = new Intent(view.getContext(), KematianDetailActivity.class);
                 intent.putExtra("kematian", (Serializable) data);
                 mContext.startActivity(intent);
             }

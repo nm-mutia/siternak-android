@@ -3,7 +3,6 @@ package com.project.siternak.activities.data;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.project.siternak.R;
 import com.project.siternak.models.data.KematianModel;
 import com.project.siternak.responses.KematianDeleteResponse;
-import com.project.siternak.responses.KematianDetailResponse;
 import com.project.siternak.responses.KematianResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.SharedPrefManager;
@@ -28,7 +26,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DataKematianDetailActivity extends AppCompatActivity {
+public class KematianDetailActivity extends AppCompatActivity {
     @BindView(R.id.tv_id) TextView tvId;
     @BindView(R.id.tv_tgl) TextView tvTgl;
     @BindView(R.id.tv_waktu) TextView tvWaktu;
@@ -93,17 +91,17 @@ public class DataKematianDetailActivity extends AppCompatActivity {
                         KematianDeleteResponse resp = response.body();
 
                         if(response.isSuccessful()){
-                            Toast.makeText(DataKematianDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(DataKematianDetailActivity.this, DataKematianActivity.class);
+                            Toast.makeText(KematianDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(KematianDetailActivity.this, KematianActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
-                            
-                            DataKematianDetailActivity.this.finish();
+
+                            KematianDetailActivity.this.finish();
                         }
                     }
                     @Override
                     public void onFailure(Call<KematianDeleteResponse> call, Throwable t) {
-                        Toast.makeText(DataKematianDetailActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(KematianDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -129,15 +127,15 @@ public class DataKematianDetailActivity extends AppCompatActivity {
         pDialog.setCancelable(false);
         pDialog.show();
 
-        Call<KematianDetailResponse> call = RetrofitClient
+        Call<KematianResponse> call = RetrofitClient
                 .getInstance()
                 .getApi()
                 .getKematianDetail("Bearer " + this.userToken, kematianData.getId());
 
-        call.enqueue(new Callback<KematianDetailResponse>() {
+        call.enqueue(new Callback<KematianResponse>() {
             @Override
-            public void onResponse(Call<KematianDetailResponse> call, Response<KematianDetailResponse> response) {
-                KematianDetailResponse resp = response.body();
+            public void onResponse(Call<KematianResponse> call, Response<KematianResponse> response) {
+                KematianResponse resp = response.body();
 
                 if(response.isSuccessful()){
                     pDialog.cancel();
@@ -153,13 +151,13 @@ public class DataKematianDetailActivity extends AppCompatActivity {
                 }
                 else {
                     pDialog.cancel();
-                    Toast.makeText(DataKematianDetailActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(KematianDetailActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
-            public void onFailure(Call<KematianDetailResponse> call, Throwable t) {
+            public void onFailure(Call<KematianResponse> call, Throwable t) {
                 pDialog.cancel();
-                Toast.makeText(DataKematianDetailActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(KematianDetailActivity.this, "Failed", Toast.LENGTH_SHORT).show();
             }
         });
     }

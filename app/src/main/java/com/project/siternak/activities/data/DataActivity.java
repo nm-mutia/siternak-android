@@ -44,7 +44,7 @@ public class DataActivity extends AppCompatActivity {
 
     @OnClick(R.id.tv_data_kematian)
     public void moveToKematian(){
-        Intent intent=new Intent(DataActivity.this, DataKematianActivity.class);
+        Intent intent=new Intent(DataActivity.this, KematianActivity.class);
         startActivity(intent);
     }
 
