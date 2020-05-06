@@ -131,14 +131,13 @@ public class KematianAddActivity extends AppCompatActivity implements DatePicker
             @Override
             public void onResponse(Call<KematianResponse> call, Response<KematianResponse> response) {
                 KematianResponse resp = response.body();
+                pDialog.dismiss();
 
                 if(response.isSuccessful()){
                     if(resp.getStatus().equals("error")){
-                        pDialog.dismiss();
                         Toast.makeText(KematianAddActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
                     }
                     else {
-                        pDialog.dismiss();
                         Toast.makeText(KematianAddActivity.this, "Data berhasil dibuat: id " + resp.getKematians().getId(), Toast.LENGTH_LONG).show();
 
                         Intent intent = new Intent(KematianAddActivity.this, KematianActivity.class);
@@ -149,7 +148,6 @@ public class KematianAddActivity extends AppCompatActivity implements DatePicker
                     }
                 }
                 else{
-                    pDialog.dismiss();
                     SweetAlertDialog swal = new SweetAlertDialog(KematianAddActivity.this, SweetAlertDialog.ERROR_TYPE);
                     swal.setTitleText("Error");
                     swal.setContentText(response.message());

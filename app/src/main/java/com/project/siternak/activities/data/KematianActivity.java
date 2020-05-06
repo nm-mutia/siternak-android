@@ -121,12 +121,11 @@ public class KematianActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<KematianGetResponse> call, Response<KematianGetResponse> response) {
                 KematianGetResponse resp = response.body();
+                pDialog.cancel();
 
                 if(response.isSuccessful()) {
                     List<KematianModel> kematians = resp.getKematians();
                     kematianArrayList = (ArrayList<KematianModel>)kematians;
-
-                    pDialog.cancel();
                     kematianAdapter = new KematianAdapter(KematianActivity.this, kematianArrayList);
 
                     if (kematianAdapter.getItemCount() == 0) {
@@ -139,7 +138,6 @@ public class KematianActivity extends AppCompatActivity {
                     }
                 }
                 else {
-                    pDialog.cancel();
                     tv_nodata.setVisibility(View.VISIBLE);
                     tv_nodata.setText("Code: " + response.code());
                 }

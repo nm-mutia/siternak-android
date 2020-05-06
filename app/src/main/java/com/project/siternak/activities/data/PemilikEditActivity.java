@@ -16,6 +16,8 @@ import com.project.siternak.responses.PemilikResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.SharedPrefManager;
 
+import java.io.Serializable;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -118,7 +120,7 @@ public class PemilikEditActivity extends AppCompatActivity {
 
                         Intent intent = new Intent(PemilikEditActivity.this, PemilikDetailActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("pemilik", datas);
+                        intent.putExtra("pemilik", (Serializable) datas);
                         intent.putExtra("finish", backFinish);
                         startActivity(intent);
 

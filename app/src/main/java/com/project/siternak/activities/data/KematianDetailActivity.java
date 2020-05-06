@@ -146,9 +146,9 @@ public class KematianDetailActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<KematianResponse> call, Response<KematianResponse> response) {
                 KematianResponse resp = response.body();
+                pDialog.cancel();
 
                 if(response.isSuccessful()){
-                    pDialog.cancel();
                     KematianModel data = resp.getKematians();
 
                     tvId.setText(String.valueOf(data.getId()));
@@ -160,7 +160,6 @@ public class KematianDetailActivity extends AppCompatActivity {
                     tvUpdatedAt.setText(data.getUpdated_at());
                 }
                 else {
-                    pDialog.cancel();
                     Toast.makeText(KematianDetailActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                 }
             }

@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.project.siternak.R;
+import com.project.siternak.activities.auth.LoginActivity;
 import com.project.siternak.models.auth.UserModel;
 import com.project.siternak.utils.SharedPrefManager;
 
@@ -44,20 +45,20 @@ public class DataActivity extends AppCompatActivity {
 
     @OnClick(R.id.tv_data_kematian)
     public void moveToKematian(){
-        Intent intent=new Intent(DataActivity.this, KematianActivity.class);
+        Intent intent = new Intent(DataActivity.this, KematianActivity.class);
         startActivity(intent);
     }
 
     @OnClick(R.id.tv_data_pemilik)
     public void moveToPemilik(){
-        Intent intent=new Intent(DataActivity.this, PemilikActivity.class);
+        Intent intent = new Intent(DataActivity.this, PemilikActivity.class);
         startActivity(intent);
     }
 
     @OnClick(R.id.tv_data_penyakit)
     public void moveToPenyakit(){
-//        Intent intent=new Intent(DataActivity.this, DataPenyakitActivity.class);
-//        startActivity(intent);
+        Intent intent = new Intent(DataActivity.this, PenyakitActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.tv_data_perkawinan)
@@ -86,7 +87,6 @@ public class DataActivity extends AppCompatActivity {
 
     @OnClick(R.id.tv_data_peternakan)
     public void moveToPeternakan(){
-        Toast.makeText(this, "halo" ,Toast.LENGTH_SHORT).show();
 //        Intent intent=new Intent(DataActivity.this, PeternakanActivity.class);
 //        startActivity(intent);
     }

@@ -22,7 +22,7 @@
             android:layout_height="match_parent">
 
             <TableLayout
-                android:id="@+id/tl_detail_kematian"
+                android:id="@+id/tl_detail_penyakit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -62,17 +62,17 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tanggal"
+                        android:text="Nama\nPenyakit"
                         android:layout_marginLeft="12dp"
                         android:padding="4dp"
                         android:fontFamily="@font/sourcesanspro_semibold"
                         android:textColor="@color/black"
                         android:textSize="18sp"/>
                     <TextView
-                        android:id="@+id/tv_tgl"
+                        android:id="@+id/tv_nama_penyakit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="tgl"
+                        android:text="nama"
                         android:layout_marginLeft="12dp"
                         android:padding="4dp"
                         android:singleLine="false"
@@ -88,69 +88,17 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Waktu"
+                        android:text="Keterangan"
                         android:layout_marginLeft="12dp"
                         android:padding="4dp"
                         android:fontFamily="@font/sourcesanspro_semibold"
                         android:textColor="@color/black"
                         android:textSize="18sp"/>
                     <TextView
-                        android:id="@+id/tv_waktu"
+                        android:id="@+id/tv_ket_penyakit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="waktu"
-                        android:layout_marginLeft="12dp"
-                        android:padding="4dp"
-                        android:singleLine="false"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/sourcesanspro_regular"
-                        android:textColor="@color/black"
-                        android:textSize="18sp"/>
-                </TableRow>
-
-                <TableRow
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Penyebab"
-                        android:layout_marginLeft="12dp"
-                        android:padding="4dp"
-                        android:fontFamily="@font/sourcesanspro_semibold"
-                        android:textColor="@color/black"
-                        android:textSize="18sp"/>
-                    <TextView
-                        android:id="@+id/tv_penyebab"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="penyebab"
-                        android:layout_marginLeft="12dp"
-                        android:padding="4dp"
-                        android:singleLine="false"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/sourcesanspro_regular"
-                        android:textColor="@color/black"
-                        android:textSize="18sp"/>
-                </TableRow>
-
-                <TableRow
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Kondisi"
-                        android:layout_marginLeft="12dp"
-                        android:padding="4dp"
-                        android:fontFamily="@font/sourcesanspro_semibold"
-                        android:textColor="@color/black"
-                        android:textSize="18sp"/>
-                    <TextView
-                        android:id="@+id/tv_kondisi"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="kondisi"
+                        android:text="ket"
                         android:layout_marginLeft="12dp"
                         android:padding="4dp"
                         android:singleLine="false"
@@ -204,9 +152,9 @@
                         android:layout_height="wrap_content"
                         android:text="update"
                         android:layout_marginLeft="12dp"
-                        android:padding="4dp"
                         android:singleLine="false"
                         android:layout_weight="1"
+                        android:padding="4dp"
                         android:fontFamily="@font/sourcesanspro_regular"
                         android:textColor="@color/black"
                         android:textSize="18sp"/>

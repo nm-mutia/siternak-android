@@ -23,6 +23,8 @@ import com.project.siternak.responses.KematianResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.SharedPrefManager;
 
+import java.io.Serializable;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -160,7 +162,7 @@ public class KematianEditActivity extends AppCompatActivity implements DatePicke
 
                         Intent intent = new Intent(KematianEditActivity.this, KematianDetailActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("kematian", datas);
+                        intent.putExtra("kematian", (Serializable) datas);
                         intent.putExtra("finish", backFinish);
                         startActivity(intent);
 

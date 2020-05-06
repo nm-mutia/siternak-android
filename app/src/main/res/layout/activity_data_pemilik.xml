@@ -74,6 +74,8 @@
                         android:layout_height="wrap_content"
                         android:text="ktp"
                         android:layout_marginLeft="12dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
                         android:padding="4dp"
                         android:fontFamily="@font/sourcesanspro_regular"
                         android:textColor="@color/black"
@@ -86,7 +88,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Nama"
+                        android:text="Nama\nPemilik"
                         android:layout_marginLeft="12dp"
                         android:padding="4dp"
                         android:fontFamily="@font/sourcesanspro_semibold"
@@ -99,6 +101,8 @@
                         android:text="nama"
                         android:layout_marginLeft="12dp"
                         android:padding="4dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
                         android:fontFamily="@font/sourcesanspro_regular"
                         android:textColor="@color/black"
                         android:textSize="18sp"/>
@@ -123,6 +127,8 @@
                         android:text="create"
                         android:layout_marginLeft="12dp"
                         android:padding="4dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
                         android:fontFamily="@font/sourcesanspro_regular"
                         android:textColor="@color/black"
                         android:textSize="18sp"/>
@@ -147,6 +153,8 @@
                         android:text="update"
                         android:layout_marginLeft="12dp"
                         android:padding="4dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
                         android:fontFamily="@font/sourcesanspro_regular"
                         android:textColor="@color/black"
                         android:textSize="18sp"/>

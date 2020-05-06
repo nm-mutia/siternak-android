@@ -18,9 +18,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.siternak.R;
-import com.project.siternak.adapter.data.PemilikAdapter;
-import com.project.siternak.models.data.PemilikModel;
-import com.project.siternak.responses.PemilikGetResponse;
+import com.project.siternak.adapter.data.PenyakitAdapter;
+import com.project.siternak.models.data.PenyakitModel;
+import com.project.siternak.responses.PenyakitGetResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.SharedPrefManager;
 
@@ -35,13 +35,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PemilikActivity extends AppCompatActivity {
-    @BindView(R.id.rv) RecyclerView rv_pemilik;
+public class PenyakitActivity extends AppCompatActivity {
+    @BindView(R.id.rv) RecyclerView rv_penyakit;
     @BindView(R.id.tv_nodata) TextView tv_nodata;
 
-    private PemilikAdapter pemilikAdapter;
-    private ArrayList<PemilikModel> pemilikArrayList;
-
+    private PenyakitAdapter penyakitAdapter;
+    private ArrayList<PenyakitModel> penyakitArrayList;
     private String userToken;
 
     @Override
@@ -54,12 +53,12 @@ public class PemilikActivity extends AppCompatActivity {
         getSupportActionBar().setCustomView(R.layout.actionbar_primary_arrow);
 
         TextView tv_actionbar_title = getSupportActionBar().getCustomView().findViewById(R.id.tv_actionbar_title);
-        tv_actionbar_title.setText("Pemilik");
+        tv_actionbar_title.setText("Penyakit");
 
         ButterKnife.bind(this);
 
         userToken = SharedPrefManager.getInstance(this).getAccessToken();
-        rv_pemilik.setLayoutManager(new LinearLayoutManager(this));
+        rv_penyakit.setLayoutManager(new LinearLayoutManager(this));
         setDataPemilik();
     }
 
@@ -75,7 +74,7 @@ public class PemilikActivity extends AppCompatActivity {
 
     @OnClick(R.id.ib_add_data)
     public void addData(){
-        Intent intent = new Intent(PemilikActivity.this, PemilikAddActivity.class);
+        Intent intent = new Intent(PenyakitActivity.this, PenyakitAddActivity.class);
         startActivity(intent);
     }
 
@@ -97,7 +96,7 @@ public class PemilikActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                pemilikAdapter.getFilter().filter(newText);
+                penyakitAdapter.getFilter().filter(newText);
                 return false;
             }
         });
@@ -112,29 +111,29 @@ public class PemilikActivity extends AppCompatActivity {
         pDialog.setCancelable(false);
         pDialog.show();
 
-        Call<PemilikGetResponse> call = RetrofitClient
+        Call<PenyakitGetResponse> call = RetrofitClient
                 .getInstance()
                 .getApi()
-                .getPemilik("Bearer " + this.userToken);
+                .getPenyakit("Bearer " + this.userToken);
 
-        call.enqueue(new Callback<PemilikGetResponse>() {
+        call.enqueue(new Callback<PenyakitGetResponse>() {
             @Override
-            public void onResponse(Call<PemilikGetResponse> call, Response<PemilikGetResponse> response) {
-                PemilikGetResponse resp = response.body();
+            public void onResponse(Call<PenyakitGetResponse> call, Response<PenyakitGetResponse> response) {
+                PenyakitGetResponse resp = response.body();
                 pDialog.cancel();
 
                 if(response.isSuccessful()) {
-                    List<PemilikModel> pemiliks = resp.getPemiliks();
-                    pemilikArrayList = (ArrayList<PemilikModel>)pemiliks;
-                    pemilikAdapter = new PemilikAdapter(PemilikActivity.this, pemilikArrayList);
+                    List<PenyakitModel> penyakits = resp.getPenyakits();
+                    penyakitArrayList = (ArrayList<PenyakitModel>)penyakits;
+                    penyakitAdapter = new PenyakitAdapter(PenyakitActivity.this, penyakitArrayList);
 
-                    if (pemilikAdapter.getItemCount() == 0) {
+                    if (penyakitAdapter.getItemCount() == 0) {
                         tv_nodata.setVisibility(View.VISIBLE);
-                        tv_nodata.setText("Tidak ada data pemilik");
+                        tv_nodata.setText("Tidak ada data penyakit");
                     } else {
                         tv_nodata.setVisibility(View.GONE);
-                        rv_pemilik.setAdapter(pemilikAdapter);
-                        pemilikAdapter.notifyDataSetChanged();
+                        rv_penyakit.setAdapter(penyakitAdapter);
+                        penyakitAdapter.notifyDataSetChanged();
                     }
                 }
                 else {
@@ -144,7 +143,7 @@ public class PemilikActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<PemilikGetResponse> call, Throwable t) {
+            public void onFailure(Call<PenyakitGetResponse> call, Throwable t) {
                 pDialog.cancel();
                 tv_nodata.setText(t.getMessage());
                 tv_nodata.setVisibility(View.VISIBLE);

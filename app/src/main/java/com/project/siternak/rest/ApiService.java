@@ -6,6 +6,8 @@ import com.project.siternak.responses.KematianGetResponse;
 import com.project.siternak.responses.LoginResponse;
 import com.project.siternak.responses.PemilikGetResponse;
 import com.project.siternak.responses.PemilikResponse;
+import com.project.siternak.responses.PenyakitGetResponse;
+import com.project.siternak.responses.PenyakitResponse;
 import com.project.siternak.responses.UserDetailsResponse;
 
 import retrofit2.Call;
@@ -94,4 +96,35 @@ public interface ApiService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @DELETE("pemilik/{id}")
     Call<DataDeleteResponse> delPemilik(@Header("Authorization") String authToken, @Path("id") Integer id);
+
+
+    // ------------------------------------data penyakit--------------------------------------------
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @GET("penyakit")
+    Call<PenyakitGetResponse> getPenyakit(@Header("Authorization") String authToken);
+
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @GET("penyakit/{id}")
+    Call<PenyakitResponse> getPenyakitDetail(@Header("Authorization") String authToken, @Path("id") Integer id);
+
+    @FormUrlEncoded
+    @POST("penyakit")
+    Call<PenyakitResponse> addPenyakit(
+            @Field("nama_penyakit") String nama,
+            @Field("ket_penyakit") String ket,
+            @Header("Authorization") String authToken
+    );
+
+    @FormUrlEncoded
+    @PUT("penyakit/{id}")
+    Call<PenyakitResponse> editPenyakit(
+            @Path("id") Integer id,
+            @Field("nama_penyakit") String nama,
+            @Field("ket_penyakit") String ket,
+            @Header("Authorization") String authToken
+    );
+
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @DELETE("penyakit/{id}")
+    Call<DataDeleteResponse> delPenyakit(@Header("Authorization") String authToken, @Path("id") Integer id);
 }
