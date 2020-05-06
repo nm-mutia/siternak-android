@@ -17,51 +17,213 @@
         app:layout_constraintTop_toTopOf="parent"
         android:fillViewport="true">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <RelativeLayout
+            <TableLayout
+                android:id="@+id/tl_detail_kematian"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:elevation="5dp">
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/row_data"/>
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/rc_white"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginLeft="12dp"
+                android:elevation="4dp">
+                <TableRow
+                    android:paddingTop="16dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ID"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"/>
+                    <TextView
+                        android:id="@+id/tv_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="id"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tanggal"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"/>
+                    <TextView
+                        android:id="@+id/tv_tgl"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="tgl"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Waktu"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"/>
+                    <TextView
+                        android:id="@+id/tv_waktu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="waktu"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Penyebab"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"/>
+                    <TextView
+                        android:id="@+id/tv_penyebab"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="penyebab"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Kondisi"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"/>
+                    <TextView
+                        android:id="@+id/tv_kondisi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="kondisi"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Created At"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"/>
+                    <TextView
+                        android:id="@+id/tv_created_at"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="create"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Updated At"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"/>
+                    <TextView
+                        android:id="@+id/tv_updated_at"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="update"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"/>
+                </TableRow>
+
                 <TextView
-                    android:id="@+id/tv_nodata"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="15dp"
-                    android:layout_marginVertical="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
                     android:layout_gravity="center"
-                    android:text="Tidak ada data"
-                    android:fontFamily="@font/sourcesanspro_semibold"
-                    android:textSize="16sp"
-                    android:gravity="center"
-                    android:visibility="gone"/>
-            </RelativeLayout>
-        </LinearLayout>
+                    android:text="edit data"
+                    android:fontFamily="@font/sourcesanspro_light"
+                    android:textSize="14sp"
+                    android:gravity="right"
+                    android:textColor="@color/colorPrimaryLight"/>
+            </TableLayout>
+
+            <ImageButton
+                android:id="@+id/ib_delete_data"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_delete"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:background="@color/background"/>
+
+        </RelativeLayout>
     </ScrollView>
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-        <ImageButton
-            android:id="@+id/ib_add_data"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/ic_add_circle"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:background="@color/float_transparent"
-            android:elevation="5dp"/>
-    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

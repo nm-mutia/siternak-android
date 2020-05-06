@@ -115,7 +115,7 @@ public class KematianAdapter extends RecyclerView.Adapter<KematianAdapter.DataKe
         @BindView(R.id.tv_text1) TextView tvWaktu;
         @BindView(R.id.tv_text2) TextView tvPenyebab;
         @BindView(R.id.tv_text3) TextView tvKondisi;
-        @BindView(R.id.ll_data_kematian) LinearLayout llDataKematian;
+        @BindView(R.id.ll_data) LinearLayout llDataKematian;
 
         public DataKematianHolder(@NonNull View itemView) {
             super(itemView);

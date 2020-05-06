@@ -50,8 +50,8 @@ public class DataActivity extends AppCompatActivity {
 
     @OnClick(R.id.tv_data_pemilik)
     public void moveToPemilik(){
-//        Intent intent=new Intent(DataActivity.this, DataPemilikActivity.class);
-//        startActivity(intent);
+        Intent intent=new Intent(DataActivity.this, PemilikActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.tv_data_penyakit)

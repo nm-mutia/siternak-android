@@ -47,7 +47,7 @@ public class KematianActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_data_kematian);
+        setContentView(R.layout.activity_data_list);
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
@@ -75,7 +75,7 @@ public class KematianActivity extends AppCompatActivity {
 
     @OnClick(R.id.ib_add_data)
     public void addData(){
-        Intent intent = new Intent(KematianActivity.this, KematianTambahActivity.class);
+        Intent intent = new Intent(KematianActivity.this, KematianAddActivity.class);
         startActivity(intent);
     }
 
@@ -127,18 +127,15 @@ public class KematianActivity extends AppCompatActivity {
                     kematianArrayList = (ArrayList<KematianModel>)kematians;
 
                     pDialog.cancel();
+                    kematianAdapter = new KematianAdapter(KematianActivity.this, kematianArrayList);
 
-                    for(int i=0; i<kematians.size(); i++){
-                        kematianAdapter = new KematianAdapter(KematianActivity.this, kematianArrayList);
-
-                        if (kematianAdapter.getItemCount() == 0) {
-                            tv_nodata.setVisibility(View.VISIBLE);
-                            tv_nodata.setText("Tidak ada data kematian");
-                        } else {
-                            tv_nodata.setVisibility(View.GONE);
-                            rv_kematian.setAdapter(kematianAdapter);
-                            kematianAdapter.notifyDataSetChanged();
-                        }
+                    if (kematianAdapter.getItemCount() == 0) {
+                        tv_nodata.setVisibility(View.VISIBLE);
+                        tv_nodata.setText("Tidak ada data kematian");
+                    } else {
+                        tv_nodata.setVisibility(View.GONE);
+                        rv_kematian.setAdapter(kematianAdapter);
+                        kematianAdapter.notifyDataSetChanged();
                     }
                 }
                 else {

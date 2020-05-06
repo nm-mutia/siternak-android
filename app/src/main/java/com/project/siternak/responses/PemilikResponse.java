@@ -2,18 +2,18 @@ package com.project.siternak.responses;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.project.siternak.models.data.KematianModel;
+import com.project.siternak.models.data.PemilikModel;
 
 import java.util.List;
 
-public class KematianResponse {
+public class PemilikResponse {
     @SerializedName("status")
     @Expose
     private String status;
 
-    @SerializedName("kematian")
+    @SerializedName("pemilik")
     @Expose
-    private KematianModel kematians;
+    private PemilikModel pemiliks;
 
     @SerializedName("error")
     @Expose
@@ -27,12 +27,12 @@ public class KematianResponse {
         this.status = status;
     }
 
-    public KematianModel getKematians() {
-        return kematians;
+    public PemilikModel getPemiliks() {
+        return pemiliks;
     }
 
-    public void setKematians(KematianModel kematians) {
-        this.kematians = kematians;
+    public void setPemiliks(PemilikModel pemiliks) {
+        this.pemiliks = pemiliks;
     }
 
     public List getErrors() {

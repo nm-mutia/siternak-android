@@ -15,7 +15,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
@@ -23,13 +23,15 @@
             android:paddingBottom="8dp">
 
             <LinearLayout
-                android:id="@+id/tv_title"
+                android:id="@+id/ll_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimary"
                 android:orientation="vertical"
                 android:paddingVertical="24dp"
-                android:layout_alignParentTop="true">
+                app:layout_constraintBottom_toTopOf="@id/ll_form"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
 
                 <TextView
                     android:id="@+id/tv_siternak"
@@ -55,7 +57,7 @@
                     android:layout_marginEnd="24dp"
                     android:layout_marginRight="24dp"
                     android:fontFamily="@font/sourcesanspro_bold"
-                    android:text="Kematian"
+                    android:text="Pemilik"
                     android:textAlignment="center"
                     android:textColor="@color/white"
                     android:textSize="30sp"
@@ -75,31 +77,33 @@
                 android:background="@drawable/rc_white"
                 android:orientation="vertical"
                 android:padding="16dp"
-                android:layout_below="@id/tv_title">
+                app:layout_constraintTop_toBottomOf="@id/ll_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/til_kematian_tgl"
+                    android:id="@+id/til_pemilik_ktp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp"
                     app:errorEnabled="true"
                     app:helperTextTextColor="@color/danger"
-                    app:hintTextAppearance="@style/TextLabel">
+                    app:hintTextAppearance="@style/TextLabel"
+                    app:counterMaxLength="16"
+                    app:counterEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/tiet_kematian_tgl"
+                        android:id="@+id/tiet_pemilik_ktp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:clickable="false"
-                        android:cursorVisible="false"
-                        android:focusable="false"
                         android:fontFamily="@font/sourcesanspro_regular"
-                        android:hint="Tanggal Kematian"
-                        android:inputType="date"/>
+                        android:hint="KTP"
+                        android:inputType="number"
+                        android:maxLength="16"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/til_kematian_waktu"
+                    android:id="@+id/til_pemilik_nama"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp"
@@ -108,50 +112,11 @@
                     app:hintTextAppearance="@style/TextLabel">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/tiet_kematian_waktu"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="false"
-                        android:cursorVisible="false"
-                        android:focusable="false"
-                        android:fontFamily="@font/sourcesanspro_regular"
-                        android:hint="Waktu Kematian"
-                        android:inputType="time" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/til_kematian_penyebab"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="8dp"
-                    app:errorEnabled="true"
-                    app:helperTextTextColor="@color/danger"
-                    app:hintTextAppearance="@style/TextLabel">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/tiet_kematian_penyebab"
+                        android:id="@+id/tiet_pemilik_nama"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/sourcesanspro_regular"
-                        android:hint="Penyebab"
-                        android:inputType="text" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/til_kematian_kondisi"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="8dp"
-                    app:errorEnabled="true"
-                    app:helperTextTextColor="@color/danger"
-                    app:hintTextAppearance="@style/TextLabel">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/tiet_kematian_kondisi"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/sourcesanspro_regular"
-                        android:hint="Kondisi"
+                        android:hint="Nama"
                         android:inputType="text" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
@@ -174,9 +139,10 @@
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="18sp"
-                android:layout_below="@id/ll_form"
-                android:layout_alignParentBottom="true" />
+                app:layout_constraintTop_toBottomOf="@id/ll_form"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
 
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,7 +5,6 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -51,7 +50,7 @@ public class KematianEditActivity extends AppCompatActivity implements DatePicke
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_data_kematian);
+        setContentView(R.layout.activity_data_kematian_edit);
 
         getSupportActionBar().hide();
         ButterKnife.bind(this);
@@ -153,7 +152,7 @@ public class KematianEditActivity extends AppCompatActivity implements DatePicke
 
                 if(response.isSuccessful()){
                     if(resp.getStatus().equals("error")){
-                        Toast.makeText(KematianEditActivity.this, "Error data null", Toast.LENGTH_LONG).show();
+                        Toast.makeText(KematianEditActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
                     }
                     else {
                         KematianModel datas = new KematianModel(id, tgl, waktu, penyebab, kondisi, resp.getKematians().getCreated_at(), resp.getKematians().getUpdated_at());

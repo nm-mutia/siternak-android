@@ -12,9 +12,9 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.project.siternak.R;
-import com.project.siternak.models.data.KematianModel;
+import com.project.siternak.models.data.PemilikModel;
 import com.project.siternak.responses.DataDeleteResponse;
-import com.project.siternak.responses.KematianResponse;
+import com.project.siternak.responses.PemilikResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.SharedPrefManager;
 
@@ -26,24 +26,22 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class KematianDetailActivity extends AppCompatActivity {
+public class PemilikDetailActivity extends AppCompatActivity {
     @BindView(R.id.tv_id) TextView tvId;
-    @BindView(R.id.tv_tgl) TextView tvTgl;
-    @BindView(R.id.tv_waktu) TextView tvWaktu;
-    @BindView(R.id.tv_penyebab) TextView tvPenyebab;
-    @BindView(R.id.tv_kondisi) TextView tvKondisi;
+    @BindView(R.id.tv_ktp) TextView tvKtp;
+    @BindView(R.id.tv_nama_pemilik) TextView tvNamaPemilik;
     @BindView(R.id.tv_created_at) TextView tvCreatedAt;
     @BindView(R.id.tv_updated_at) TextView tvUpdatedAt;
-    @BindView(R.id.tl_detail_kematian) TableLayout tlDetailKematian;
+    @BindView(R.id.tl_detail_pemilik) TableLayout tlDetailPemilik;
 
-    private KematianModel kematianData;
+    private PemilikModel pemilikData;
     private String userToken;
     private int backFinish;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_data_kematian);
+        setContentView(R.layout.activity_data_pemilik);
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
@@ -53,19 +51,19 @@ public class KematianDetailActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        kematianData = (KematianModel) getIntent().getSerializableExtra("kematian");
-        tv_actionbar_title.setText("Kematian - " + String.valueOf(kematianData.getId()));
+        pemilikData = (PemilikModel) getIntent().getSerializableExtra("pemilik");
+        tv_actionbar_title.setText("Pemilik - " + String.valueOf(pemilikData.getId()));
 
-        backFinish = (int) getIntent().getIntExtra("finish", 0); //data from after edit kematian
+        backFinish = (int) getIntent().getIntExtra("finish", 0); //data from after edit pemilik
 
         userToken = SharedPrefManager.getInstance(this).getAccessToken();
-        setDataKematian();
+        setDataPemilik();
     }
 
     @Override
     public void onBackPressed() {
         if(backFinish == 1){
-            Intent intent = new Intent(KematianDetailActivity.this, KematianActivity.class);
+            Intent intent = new Intent(PemilikDetailActivity.this, PemilikActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
@@ -81,7 +79,7 @@ public class KematianDetailActivity extends AppCompatActivity {
     public void deleteData(){
         SweetAlertDialog wDialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE);
         wDialog.setTitleText("Apakah anda yakin untuk menghapus data ini?");
-        wDialog.setContentText("Data kematian id " + kematianData.getId());
+        wDialog.setContentText("Data kematian id " + pemilikData.getId());
         wDialog.setConfirmText("Ya");
         wDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
             @Override
@@ -91,7 +89,7 @@ public class KematianDetailActivity extends AppCompatActivity {
                 Call<DataDeleteResponse> calls = RetrofitClient
                         .getInstance()
                         .getApi()
-                        .delKematian("Bearer " + userToken, kematianData.getId());
+                        .delPemilik("Bearer " + userToken, pemilikData.getId());
 
                 calls.enqueue(new Callback<DataDeleteResponse>() {
                     @Override
@@ -99,17 +97,18 @@ public class KematianDetailActivity extends AppCompatActivity {
                         DataDeleteResponse resp = response.body();
 
                         if(response.isSuccessful()){
-                            Toast.makeText(KematianDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(KematianDetailActivity.this, KematianActivity.class);
+                            Toast.makeText(PemilikDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(PemilikDetailActivity.this, PemilikActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
 
-                            KematianDetailActivity.this.finish();
+                            PemilikDetailActivity.this.finish();
                         }
                     }
+
                     @Override
                     public void onFailure(Call<DataDeleteResponse> call, Throwable t) {
-                        Toast.makeText(KematianDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PemilikDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -123,51 +122,50 @@ public class KematianDetailActivity extends AppCompatActivity {
         wDialog.show();
     }
 
-    @OnClick(R.id.tl_detail_kematian)
+    @OnClick(R.id.tl_detail_pemilik)
     public void editData(){
-        Intent intent = new Intent(KematianDetailActivity.this, KematianEditActivity.class);
-        intent.putExtra("data", kematianData);
+        Intent intent = new Intent(PemilikDetailActivity.this, PemilikEditActivity.class);
+        intent.putExtra("data", pemilikData);
         startActivity(intent);
     }
 
-    private void setDataKematian() {
+    private void setDataPemilik() {
         SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         pDialog.setTitleText("Mohon Tunggu");
         pDialog.setCancelable(false);
         pDialog.show();
 
-        Call<KematianResponse> call = RetrofitClient
+        Call<PemilikResponse> call = RetrofitClient
                 .getInstance()
                 .getApi()
-                .getKematianDetail("Bearer " + this.userToken, kematianData.getId());
+                .getPemilikDetail("Bearer " + this.userToken, pemilikData.getId());
 
-        call.enqueue(new Callback<KematianResponse>() {
+        call.enqueue(new Callback<PemilikResponse>() {
             @Override
-            public void onResponse(Call<KematianResponse> call, Response<KematianResponse> response) {
-                KematianResponse resp = response.body();
+            public void onResponse(Call<PemilikResponse> call, Response<PemilikResponse> response) {
+                PemilikResponse resp = response.body();
 
                 if(response.isSuccessful()){
                     pDialog.cancel();
-                    KematianModel data = resp.getKematians();
+                    PemilikModel data = resp.getPemiliks();
 
                     tvId.setText(String.valueOf(data.getId()));
-                    tvTgl.setText(data.getTgl_kematian());
-                    tvWaktu.setText(data.getWaktu_kematian());
-                    tvPenyebab.setText(data.getPenyebab());
-                    tvKondisi.setText(data.getKondisi());
+                    tvKtp.setText(data.getKtp());
+                    tvNamaPemilik.setText(data.getNama_pemilik());
                     tvCreatedAt.setText(data.getCreated_at());
                     tvUpdatedAt.setText(data.getUpdated_at());
                 }
                 else {
                     pDialog.cancel();
-                    Toast.makeText(KematianDetailActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PemilikDetailActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
-            public void onFailure(Call<KematianResponse> call, Throwable t) {
+            public void onFailure(Call<PemilikResponse> call, Throwable t) {
                 pDialog.cancel();
-                Toast.makeText(KematianDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PemilikDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
             }
         });
     }
