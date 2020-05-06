@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.siternak.R;
-import com.project.siternak.adapter.data.PenyakitAdapter;
+import com.project.siternak.adapter.PenyakitAdapter;
 import com.project.siternak.models.data.PenyakitModel;
 import com.project.siternak.responses.PenyakitGetResponse;
 import com.project.siternak.rest.RetrofitClient;

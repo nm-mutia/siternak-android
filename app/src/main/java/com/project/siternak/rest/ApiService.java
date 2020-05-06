@@ -8,6 +8,8 @@ import com.project.siternak.responses.PemilikGetResponse;
 import com.project.siternak.responses.PemilikResponse;
 import com.project.siternak.responses.PenyakitGetResponse;
 import com.project.siternak.responses.PenyakitResponse;
+import com.project.siternak.responses.RasGetResponse;
+import com.project.siternak.responses.RasResponse;
 import com.project.siternak.responses.UserDetailsResponse;
 
 import retrofit2.Call;
@@ -127,4 +129,35 @@ public interface ApiService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @DELETE("penyakit/{id}")
     Call<DataDeleteResponse> delPenyakit(@Header("Authorization") String authToken, @Path("id") Integer id);
+
+
+    // ------------------------------------data ras--------------------------------------------
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @GET("ras")
+    Call<RasGetResponse> getRas(@Header("Authorization") String authToken);
+
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @GET("ras/{id}")
+    Call<RasResponse> getRasDetail(@Header("Authorization") String authToken, @Path("id") Integer id);
+
+    @FormUrlEncoded
+    @POST("ras")
+    Call<RasResponse> addRas(
+            @Field("jenis_ras") String jenisRas,
+            @Field("ket_ras") String ketRas,
+            @Header("Authorization") String authToken
+    );
+
+    @FormUrlEncoded
+    @PUT("ras/{id}")
+    Call<RasResponse> editRas(
+            @Path("id") Integer id,
+            @Field("jenis_ras") String jenisRas,
+            @Field("ket_ras") String ketRas,
+            @Header("Authorization") String authToken
+    );
+
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @DELETE("ras/{id}")
+    Call<DataDeleteResponse> delRas(@Header("Authorization") String authToken, @Path("id") Integer id);
 }

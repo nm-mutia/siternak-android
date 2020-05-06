@@ -12,9 +12,9 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.project.siternak.R;
-import com.project.siternak.models.data.PenyakitModel;
+import com.project.siternak.models.data.RasModel;
 import com.project.siternak.responses.DataDeleteResponse;
-import com.project.siternak.responses.PenyakitResponse;
+import com.project.siternak.responses.RasResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.SharedPrefManager;
 
@@ -28,22 +28,22 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PenyakitDetailActivity extends AppCompatActivity {
+public class RasDetailActivity extends AppCompatActivity {
     @BindView(R.id.tv_id) TextView tvId;
-    @BindView(R.id.tv_nama_penyakit) TextView tvNamaPenyakit;
-    @BindView(R.id.tv_ket_penyakit) TextView tvKetPenyakit;
+    @BindView(R.id.tv_jenis_ras) TextView tvJenisRas;
+    @BindView(R.id.tv_ket_ras) TextView tvKetRas;
     @BindView(R.id.tv_created_at) TextView tvCreatedAt;
     @BindView(R.id.tv_updated_at) TextView tvUpdatedAt;
-    @BindView(R.id.tl_detail_penyakit) TableLayout tlDetailPenyakit;
+    @BindView(R.id.tl_detail_ras) TableLayout tlDetailRas;
 
-    private PenyakitModel penyakitData;
+    private RasModel rasData;
     private String userToken;
     private int backFinish;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_data_penyakit);
+        setContentView(R.layout.activity_data_ras);
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
@@ -53,19 +53,19 @@ public class PenyakitDetailActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        penyakitData = (PenyakitModel) getIntent().getSerializableExtra("penyakit");
-        tv_actionbar_title.setText("Penyakit - " + String.valueOf(penyakitData.getId()));
+        rasData = (RasModel) getIntent().getSerializableExtra("ras");
+        tv_actionbar_title.setText("Ras - " + String.valueOf(rasData.getId()));
 
-        backFinish = (int) getIntent().getIntExtra("finish", 0); //data from after edit penyakit
+        backFinish = (int) getIntent().getIntExtra("finish", 0); //data from after edit ras
 
         userToken = SharedPrefManager.getInstance(this).getAccessToken();
-        setDataPenyakit();
+        setDataRas();
     }
 
     @Override
     public void onBackPressed() {
         if(backFinish == 1){
-            Intent intent = new Intent(PenyakitDetailActivity.this, PenyakitActivity.class);
+            Intent intent = new Intent(RasDetailActivity.this, RasActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
@@ -81,7 +81,7 @@ public class PenyakitDetailActivity extends AppCompatActivity {
     public void deleteData() {
         SweetAlertDialog wDialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE);
         wDialog.setTitleText("Apakah anda yakin untuk menghapus data ini?");
-        wDialog.setContentText("Data penyakit id " + penyakitData.getId());
+        wDialog.setContentText("Data ras id " + rasData.getId());
         wDialog.setConfirmText("Ya");
         wDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
             @Override
@@ -91,7 +91,7 @@ public class PenyakitDetailActivity extends AppCompatActivity {
                 Call<DataDeleteResponse> calld = RetrofitClient
                         .getInstance()
                         .getApi()
-                        .delPenyakit("Bearer " + userToken, penyakitData.getId());
+                        .delRas("Bearer " + userToken, rasData.getId());
 
                 calld.enqueue(new Callback<DataDeleteResponse>() {
                     @Override
@@ -99,18 +99,18 @@ public class PenyakitDetailActivity extends AppCompatActivity {
                         DataDeleteResponse resp = response.body();
 
                         if(response.isSuccessful()){
-                            Toast.makeText(PenyakitDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(PenyakitDetailActivity.this, PenyakitActivity.class);
+                            Toast.makeText(RasDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(RasDetailActivity.this, RasActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
 
-                            PenyakitDetailActivity.this.finish();
+                            RasDetailActivity.this.finish();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<DataDeleteResponse> call, Throwable t) {
-                        Toast.makeText(PenyakitDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RasDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -124,49 +124,49 @@ public class PenyakitDetailActivity extends AppCompatActivity {
         wDialog.show();
     }
 
-    @OnClick(R.id.tl_detail_penyakit)
+    @OnClick(R.id.tl_detail_ras)
     public void editData(){
-        Intent intent = new Intent(PenyakitDetailActivity.this, PenyakitEditActivity.class);
-        intent.putExtra("data", (Serializable) penyakitData);
+        Intent intent = new Intent(RasDetailActivity.this, RasEditActivity.class);
+        intent.putExtra("data", (Serializable) rasData);
         startActivity(intent);
     }
 
-    private void setDataPenyakit() {
+    private void setDataRas() {
         SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         pDialog.setTitleText("Mohon Tunggu");
         pDialog.setCancelable(false);
         pDialog.show();
 
-        Call<PenyakitResponse> call = RetrofitClient
+        Call<RasResponse> call = RetrofitClient
                 .getInstance()
                 .getApi()
-                .getPenyakitDetail("Bearer " + this.userToken, penyakitData.getId());
+                .getRasDetail("Bearer " + this.userToken, rasData.getId());
 
-        call.enqueue(new Callback<PenyakitResponse>() {
+        call.enqueue(new Callback<RasResponse>() {
             @Override
-            public void onResponse(Call<PenyakitResponse> call, Response<PenyakitResponse> response) {
-                PenyakitResponse resp = response.body();
+            public void onResponse(Call<RasResponse> call, Response<RasResponse> response) {
+                RasResponse resp = response.body();
                 pDialog.cancel();
 
                 if(response.isSuccessful()){
-                    PenyakitModel data = resp.getPenyakits();
+                    RasModel data = resp.getRas();
 
                     tvId.setText(String.valueOf(data.getId()));
-                    tvNamaPenyakit.setText(data.getNamaPenyakit());
-                    tvKetPenyakit.setText(data.getKetPenyakit());
+                    tvJenisRas.setText(data.getJenisRas());
+                    tvKetRas.setText(data.getKetRas());
                     tvCreatedAt.setText(data.getCreated_at());
                     tvUpdatedAt.setText(data.getUpdated_at());
                 }
                 else {
-                    Toast.makeText(PenyakitDetailActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RasDetailActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<PenyakitResponse> call, Throwable t) {
+            public void onFailure(Call<RasResponse> call, Throwable t) {
                 pDialog.cancel();
-                Toast.makeText(PenyakitDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RasDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
             }
         });
     }

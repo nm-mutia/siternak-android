@@ -1,4 +1,4 @@
-package com.project.siternak.adapter.data;
+package com.project.siternak.adapter;
 
 import android.content.Context;
 import android.content.Intent;

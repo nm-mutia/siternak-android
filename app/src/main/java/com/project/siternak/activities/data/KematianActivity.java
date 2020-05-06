@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.siternak.R;
-import com.project.siternak.adapter.data.KematianAdapter;
+import com.project.siternak.adapter.KematianAdapter;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.responses.KematianGetResponse;
 import com.project.siternak.models.data.KematianModel;

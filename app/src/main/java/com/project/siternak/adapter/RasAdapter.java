@@ -1,4 +1,4 @@
-package com.project.siternak.adapter.data;
+package com.project.siternak.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,8 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.siternak.R;
-import com.project.siternak.activities.data.PemilikDetailActivity;
-import com.project.siternak.models.data.PemilikModel;
+import com.project.siternak.activities.data.RasDetailActivity;
+import com.project.siternak.models.data.RasModel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -24,37 +24,37 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PemilikAdapter extends RecyclerView.Adapter<PemilikAdapter.DataPemilikHolder> implements Filterable {
-    private ArrayList<PemilikModel> pemilikArrayList;
-    private ArrayList<PemilikModel> pemilikArrayListFull;
+public class RasAdapter extends RecyclerView.Adapter<RasAdapter.DataRasHolder> implements Filterable {
+    private ArrayList<RasModel> rasArrayList;
+    private ArrayList<RasModel> rasArrayListFull;
     private Context mContext;
 
-    public PemilikAdapter(Context mContext, ArrayList<PemilikModel> pemilikArrayList){
-        this.pemilikArrayList = pemilikArrayList;
+    public RasAdapter(Context mContext, ArrayList<RasModel> rasArrayList) {
+        this.rasArrayList = rasArrayList;
         this.mContext = mContext;
-        pemilikArrayListFull = new ArrayList<>(pemilikArrayList);
+        rasArrayListFull = new ArrayList<>(rasArrayList);
     }
 
     @NonNull
     @Override
-    public DataPemilikHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public DataRasHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(R.layout.row_data, parent, false);
-        return new DataPemilikHolder(view);
+        return new DataRasHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DataPemilikHolder holder, int position) {
-        final PemilikModel data = pemilikArrayList.get(position);
+    public void onBindViewHolder(@NonNull DataRasHolder holder, int position) {
+        final RasModel data = rasArrayList.get(position);
         holder.tvNumbering.setText(String.valueOf(position + 1));
         holder.tvId.setText(String.valueOf(data.getId()));
-        holder.tvKtp.setText(data.getKtp());
-        holder.tvNama.setText(data.getNama_pemilik());
-        holder.llDataPemilik.setOnClickListener(new View.OnClickListener() {
+        holder.tvJenisRas.setText(data.getJenisRas());
+        holder.tvKetRas.setText(data.getKetRas());
+        holder.llDataRas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), PemilikDetailActivity.class);
-                intent.putExtra("pemilik", (Serializable) data);
+                Intent intent = new Intent(view.getContext(), RasDetailActivity.class);
+                intent.putExtra("ras", (Serializable) data);
                 mContext.startActivity(intent);
             }
         });
@@ -62,29 +62,29 @@ public class PemilikAdapter extends RecyclerView.Adapter<PemilikAdapter.DataPemi
 
     @Override
     public int getItemCount() {
-        return pemilikArrayList == null ? 0 : pemilikArrayList.size();
+        return rasArrayList == null ? 0 : rasArrayList.size();
     }
 
     @Override
     public Filter getFilter() {
-        return pemilikFilter;
+        return rasFilter;
     }
 
-    private Filter pemilikFilter = new Filter() {
+    private Filter rasFilter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence charSequence) {
-            List<PemilikModel> filteredList = new ArrayList<>();
+            List<RasModel> filteredList = new ArrayList<>();
 
             if(charSequence == null || charSequence.length() == 0){
-                filteredList.addAll(pemilikArrayListFull);
+                filteredList.addAll(rasArrayListFull);
             }
             else {
                 String filterPattern = charSequence.toString().toLowerCase().trim();
 
-                for(PemilikModel data : pemilikArrayListFull){
+                for(RasModel data : rasArrayListFull){
                     if(String.valueOf(data.getId()).toLowerCase().contains(filterPattern) ||
-                            data.getKtp().toLowerCase().contains(filterPattern) ||
-                            data.getNama_pemilik().toLowerCase().contains(filterPattern)){
+                            data.getJenisRas().toLowerCase().contains(filterPattern) ||
+                            data.getKetRas().toLowerCase().contains(filterPattern)){
                         filteredList.add(data);
                     }
                 }
@@ -98,23 +98,22 @@ public class PemilikAdapter extends RecyclerView.Adapter<PemilikAdapter.DataPemi
 
         @Override
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-            pemilikArrayList.clear();
-            pemilikArrayList.addAll((List) filterResults.values);
+            rasArrayList.clear();
+            rasArrayList.addAll((List) filterResults.values);
             notifyDataSetChanged();
         }
     };
 
-
-    public class DataPemilikHolder extends RecyclerView.ViewHolder {
+    public class DataRasHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_numbering) TextView tvNumbering;
         @BindView(R.id.tv_id) TextView tvId;
-        @BindView(R.id.tv_text1) TextView tvKtp;
-        @BindView(R.id.tv_text2) TextView tvNama;
+        @BindView(R.id.tv_text1) TextView tvJenisRas;
+        @BindView(R.id.tv_text2) TextView tvKetRas;
         @BindView(R.id.tv_tgl) TextView tvText1;
         @BindView(R.id.tv_text3) TextView tvText2;
-        @BindView(R.id.ll_data) LinearLayout llDataPemilik;
+        @BindView(R.id.ll_data) LinearLayout llDataRas;
 
-        public DataPemilikHolder(@NonNull View itemView) {
+        public DataRasHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 

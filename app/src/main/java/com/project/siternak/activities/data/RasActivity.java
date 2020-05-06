@@ -18,9 +18,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.siternak.R;
-import com.project.siternak.adapter.PemilikAdapter;
-import com.project.siternak.models.data.PemilikModel;
-import com.project.siternak.responses.PemilikGetResponse;
+import com.project.siternak.adapter.RasAdapter;
+import com.project.siternak.models.data.RasModel;
+import com.project.siternak.responses.RasGetResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.SharedPrefManager;
 
@@ -35,13 +35,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PemilikActivity extends AppCompatActivity {
-    @BindView(R.id.rv) RecyclerView rv_pemilik;
+public class RasActivity extends AppCompatActivity {
+    @BindView(R.id.rv) RecyclerView rv_ras;
     @BindView(R.id.tv_nodata) TextView tv_nodata;
 
-    private PemilikAdapter pemilikAdapter;
-    private ArrayList<PemilikModel> pemilikArrayList;
-
+    private RasAdapter rasAdapter;
+    private ArrayList<RasModel> rasArrayList;
     private String userToken;
 
     @Override
@@ -54,13 +53,13 @@ public class PemilikActivity extends AppCompatActivity {
         getSupportActionBar().setCustomView(R.layout.actionbar_primary_arrow);
 
         TextView tv_actionbar_title = getSupportActionBar().getCustomView().findViewById(R.id.tv_actionbar_title);
-        tv_actionbar_title.setText("Pemilik");
+        tv_actionbar_title.setText("Ras");
 
         ButterKnife.bind(this);
 
         userToken = SharedPrefManager.getInstance(this).getAccessToken();
-        rv_pemilik.setLayoutManager(new LinearLayoutManager(this));
-        setDataPemilik();
+        rv_ras.setLayoutManager(new LinearLayoutManager(this));
+        setDataRas();
     }
 
     @Override
@@ -75,7 +74,7 @@ public class PemilikActivity extends AppCompatActivity {
 
     @OnClick(R.id.ib_add_data)
     public void addData(){
-        Intent intent = new Intent(PemilikActivity.this, PemilikAddActivity.class);
+        Intent intent = new Intent(RasActivity.this, RasAddActivity.class);
         startActivity(intent);
     }
 
@@ -97,7 +96,7 @@ public class PemilikActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                pemilikAdapter.getFilter().filter(newText);
+                rasAdapter.getFilter().filter(newText);
                 return false;
             }
         });
@@ -105,36 +104,36 @@ public class PemilikActivity extends AppCompatActivity {
         return true;
     }
 
-    private void setDataPemilik() {
+    private void setDataRas() {
         SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         pDialog.setTitleText("Mohon Tunggu");
         pDialog.setCancelable(false);
         pDialog.show();
 
-        Call<PemilikGetResponse> call = RetrofitClient
+        Call<RasGetResponse> call = RetrofitClient
                 .getInstance()
                 .getApi()
-                .getPemilik("Bearer " + this.userToken);
+                .getRas("Bearer " + this.userToken);
 
-        call.enqueue(new Callback<PemilikGetResponse>() {
+        call.enqueue(new Callback<RasGetResponse>() {
             @Override
-            public void onResponse(Call<PemilikGetResponse> call, Response<PemilikGetResponse> response) {
-                PemilikGetResponse resp = response.body();
+            public void onResponse(Call<RasGetResponse> call, Response<RasGetResponse> response) {
+                RasGetResponse resp = response.body();
                 pDialog.cancel();
 
                 if(response.isSuccessful()) {
-                    List<PemilikModel> pemiliks = resp.getPemiliks();
-                    pemilikArrayList = (ArrayList<PemilikModel>)pemiliks;
-                    pemilikAdapter = new PemilikAdapter(PemilikActivity.this, pemilikArrayList);
+                    List<RasModel> ras = resp.getRas();
+                    rasArrayList = (ArrayList<RasModel>)ras;
+                    rasAdapter = new RasAdapter(RasActivity.this, rasArrayList);
 
-                    if (pemilikAdapter.getItemCount() == 0) {
+                    if (rasAdapter.getItemCount() == 0) {
                         tv_nodata.setVisibility(View.VISIBLE);
-                        tv_nodata.setText("Tidak ada data pemilik");
+                        tv_nodata.setText("Tidak ada data ras");
                     } else {
                         tv_nodata.setVisibility(View.GONE);
-                        rv_pemilik.setAdapter(pemilikAdapter);
-                        pemilikAdapter.notifyDataSetChanged();
+                        rv_ras.setAdapter(rasAdapter);
+                        rasAdapter.notifyDataSetChanged();
                     }
                 }
                 else {
@@ -144,7 +143,7 @@ public class PemilikActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<PemilikGetResponse> call, Throwable t) {
+            public void onFailure(Call<RasGetResponse> call, Throwable t) {
                 pDialog.cancel();
                 tv_nodata.setText(t.getMessage());
                 tv_nodata.setVisibility(View.VISIBLE);

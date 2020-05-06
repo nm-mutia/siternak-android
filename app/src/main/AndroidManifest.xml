@@ -76,6 +76,19 @@
         <activity android:name=".activities.data.PenyakitEditActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
+        <!-- ras -->
+        <activity android:name=".activities.data.RasActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".activities.data.RasDetailActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".activities.data.RasAddActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".activities.data.RasEditActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
 
     </application>
 

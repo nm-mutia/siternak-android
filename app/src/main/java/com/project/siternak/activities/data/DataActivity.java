@@ -69,8 +69,8 @@ public class DataActivity extends AppCompatActivity {
 
     @OnClick(R.id.tv_data_ras)
     public void moveToRas(){
-//        Intent intent=new Intent(DataActivity.this, DataRasActivity.class);
-//        startActivity(intent);
+        Intent intent = new Intent(DataActivity.this, RasActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.tv_data_riwayat)

@@ -1,17 +1,31 @@
 package com.project.siternak.models.data;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-public class RasModel {
+import java.io.Serializable;
+
+public class RasModel implements Serializable {
+    @SerializedName("id")
+    @Expose
     Integer id;
-    String jenis_ras;
-    String ket_ras;
+    @SerializedName("jenis_ras")
+    @Expose
+    String jenisRas;
+    @SerializedName("ket_ras")
+    @Expose
+    String ketRas;
+    @SerializedName("created_at")
+    @Expose
     String created_at;
+    @SerializedName("updated_at")
+    @Expose
     String updated_at;
 
-    public RasModel(Integer id, String jenis_ras, String ket_ras, String created_at, String updated_at) {
+    public RasModel(Integer id, String jenisRas, String ketRas, String created_at, String updated_at) {
         this.id = id;
-        this.jenis_ras = jenis_ras;
-        this.ket_ras = ket_ras;
+        this.jenisRas = jenisRas;
+        this.ketRas = ketRas;
         this.created_at = created_at;
         this.updated_at = updated_at;
     }
@@ -24,20 +38,20 @@ public class RasModel {
         this.id = id;
     }
 
-    public String getJenis_ras() {
-        return jenis_ras;
+    public String getJenisRas() {
+        return jenisRas;
     }
 
-    public void setJenis_ras(String jenis_ras) {
-        this.jenis_ras = jenis_ras;
+    public void setJenisRas(String jenisRas) {
+        this.jenisRas = jenisRas;
     }
 
-    public String getKet_ras() {
-        return ket_ras;
+    public String getKetRas() {
+        return ketRas;
     }
 
-    public void setKet_ras(String ket_ras) {
-        this.ket_ras = ket_ras;
+    public void setKetRas(String ketRas) {
+        this.ketRas = ketRas;
     }
 
     public String getCreated_at() {

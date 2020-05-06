@@ -22,7 +22,7 @@
             android:layout_height="match_parent">
 
             <TableLayout
-                android:id="@+id/tl_detail_pemilik"
+                android:id="@+id/tl_detail_ras"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -62,21 +62,21 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="KTP"
+                        android:text="Jenis Ras"
                         android:layout_marginLeft="12dp"
                         android:padding="4dp"
                         android:fontFamily="@font/sourcesanspro_semibold"
                         android:textColor="@color/black"
                         android:textSize="18sp"/>
                     <TextView
-                        android:id="@+id/tv_ktp"
+                        android:id="@+id/tv_jenis_ras"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="ktp"
+                        android:text="jenis"
                         android:layout_marginLeft="12dp"
+                        android:padding="4dp"
                         android:singleLine="false"
                         android:layout_weight="1"
-                        android:padding="4dp"
                         android:fontFamily="@font/sourcesanspro_regular"
                         android:textColor="@color/black"
                         android:textSize="18sp"/>
@@ -88,17 +88,17 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Nama\nPemilik"
+                        android:text="Keterangan"
                         android:layout_marginLeft="12dp"
                         android:padding="4dp"
                         android:fontFamily="@font/sourcesanspro_semibold"
                         android:textColor="@color/black"
                         android:textSize="18sp"/>
                     <TextView
-                        android:id="@+id/tv_nama_pemilik"
+                        android:id="@+id/tv_ket_ras"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="nama"
+                        android:text="ket"
                         android:layout_marginLeft="12dp"
                         android:padding="4dp"
                         android:singleLine="false"
@@ -152,9 +152,9 @@
                         android:layout_height="wrap_content"
                         android:text="update"
                         android:layout_marginLeft="12dp"
-                        android:padding="4dp"
                         android:singleLine="false"
                         android:layout_weight="1"
+                        android:padding="4dp"
                         android:fontFamily="@font/sourcesanspro_regular"
                         android:textColor="@color/black"
                         android:textSize="18sp"/>
