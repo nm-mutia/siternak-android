@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -23,8 +24,6 @@ import com.project.siternak.responses.KematianResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.SharedPrefManager;
 
-import java.io.Serializable;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -33,7 +32,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class EditKematianActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
+public class KematianEditActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
     @BindView(R.id.til_kematian_id) TextInputLayout tilKematianId;
     @BindView(R.id.tiet_kematian_id) TextInputEditText tietKematianId;
     @BindView(R.id.til_kematian_tgl) TextInputLayout tilKematianTgl;
@@ -47,6 +46,7 @@ public class EditKematianActivity extends AppCompatActivity implements DatePicke
 
     private KematianModel kematianData;
     private String userToken;
+    public final static int backFinish = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -134,36 +134,42 @@ public class EditKematianActivity extends AppCompatActivity implements DatePicke
         pDialog.setCancelable(false);
         pDialog.show();
 
-        Integer id = Integer.valueOf(tilKematianId.getEditText().getText().toString());
-        String tgl = tilKematianTgl.getEditText().getText().toString();
-        String waktu = tilKematianWaktu.getEditText().getText().toString();
-        String penyebab = tilKematianPenyebab.getEditText().getText().toString();
-        String kondisi = tilKematianKondisi.getEditText().getText().toString();
+        Integer id = Integer.valueOf(tietKematianId.getText().toString());
+        String tgl = tietKematianTgl.getText().toString();
+        String waktu = tietKematianWaktu.getText().toString();
+        String penyebab = tietKematianPenyebab.getText().toString();
+        String kondisi = tietKematianKondisi.getText().toString();
 
         Call<KematianResponse> calle = RetrofitClient
                 .getInstance()
                 .getApi()
-                .editKematian("Bearer " + userToken, id, tgl, waktu, penyebab, kondisi);
+                .editKematian(id, tgl, waktu, penyebab, kondisi, "Bearer " + userToken);
 
         calle.enqueue(new Callback<KematianResponse>() {
             @Override
             public void onResponse(Call<KematianResponse> call, Response<KematianResponse> response) {
                 KematianResponse resp = response.body();
+                pDialog.dismiss();
 
                 if(response.isSuccessful()){
-                    pDialog.dismiss();
-                    Toast.makeText(EditKematianActivity.this, "Data berhasil diubah: id " + resp.getKematians().getId(), Toast.LENGTH_LONG).show();
+                    if(resp.getStatus().equals("error")){
+                        Toast.makeText(KematianEditActivity.this, "Error data null", Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        KematianModel datas = new KematianModel(id, tgl, waktu, penyebab, kondisi, resp.getKematians().getCreated_at(), resp.getKematians().getUpdated_at());
+                        Toast.makeText(KematianEditActivity.this, "Data berhasil diubah: id " + resp.getKematians().getId(), Toast.LENGTH_LONG).show();
 
-                    Intent intent = new Intent(EditKematianActivity.this, KematianDetailActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("kematian", (Serializable) resp.getKematians());
-                    startActivity(intent);
+                        Intent intent = new Intent(KematianEditActivity.this, KematianDetailActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("kematian", datas);
+                        intent.putExtra("finish", backFinish);
+                        startActivity(intent);
 
-                    EditKematianActivity.this.finish();
+                        KematianEditActivity.this.finish();
+                    }
                 }
                 else{
-                    pDialog.dismiss();
-                    SweetAlertDialog swal = new SweetAlertDialog(EditKematianActivity.this, SweetAlertDialog.ERROR_TYPE);
+                    SweetAlertDialog swal = new SweetAlertDialog(KematianEditActivity.this, SweetAlertDialog.ERROR_TYPE);
                     swal.setTitleText("Error");
                     swal.setContentText(response.message());
                     swal.show();
@@ -173,7 +179,7 @@ public class EditKematianActivity extends AppCompatActivity implements DatePicke
             @Override
             public void onFailure(Call<KematianResponse> call, Throwable t) {
                 pDialog.dismiss();
-                SweetAlertDialog swal = new SweetAlertDialog(EditKematianActivity.this, SweetAlertDialog.ERROR_TYPE);
+                SweetAlertDialog swal = new SweetAlertDialog(KematianEditActivity.this, SweetAlertDialog.ERROR_TYPE);
                 swal.setTitleText("Error");
                 swal.setContentText(t.getMessage());
                 swal.show();
@@ -191,7 +197,7 @@ public class EditKematianActivity extends AppCompatActivity implements DatePicke
 
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-        String dateStr = i+"-"+i1+"-"+i2;
+        String dateStr = i+"-"+(i1+1)+"-"+i2;
         tietKematianTgl.setText(dateStr);
     }
 

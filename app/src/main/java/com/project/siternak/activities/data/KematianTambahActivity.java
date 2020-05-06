@@ -6,12 +6,10 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.DatePicker;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
@@ -20,7 +18,6 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.project.siternak.R;
 import com.project.siternak.fragments.DatePickerFragment;
 import com.project.siternak.fragments.TimePickerFrament;
-import com.project.siternak.models.data.KematianModel;
 import com.project.siternak.responses.KematianResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.SharedPrefManager;
@@ -35,7 +32,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class TambahKematianActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+public class KematianTambahActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     @BindView(R.id.til_kematian_tgl) TextInputLayout tilKematianTgl;
     @BindView(R.id.tiet_kematian_tgl) TextInputEditText tietKematianTgl;
     @BindView(R.id.til_kematian_waktu) TextInputLayout tilKematianWaktu;
@@ -137,17 +134,17 @@ public class TambahKematianActivity extends AppCompatActivity implements DatePic
 
                 if(response.isSuccessful()){
                     pDialog.dismiss();
-                    Toast.makeText(TambahKematianActivity.this, "Data berhasil dibuat: id " + resp.getKematians().getId(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(KematianTambahActivity.this, "Data berhasil dibuat: id " + resp.getKematians().getId(), Toast.LENGTH_LONG).show();
 
-                    Intent intent = new Intent(TambahKematianActivity.this, KematianActivity.class);
+                    Intent intent = new Intent(KematianTambahActivity.this, KematianActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
 
-                    TambahKematianActivity.this.finish();
+                    KematianTambahActivity.this.finish();
                 }
                 else{
                     pDialog.dismiss();
-                    SweetAlertDialog swal = new SweetAlertDialog(TambahKematianActivity.this, SweetAlertDialog.ERROR_TYPE);
+                    SweetAlertDialog swal = new SweetAlertDialog(KematianTambahActivity.this, SweetAlertDialog.ERROR_TYPE);
                     swal.setTitleText("Error");
                     swal.setContentText(response.message());
                     swal.show();
@@ -157,7 +154,7 @@ public class TambahKematianActivity extends AppCompatActivity implements DatePic
             @Override
             public void onFailure(Call<KematianResponse> call, Throwable t) {
                 pDialog.dismiss();
-                SweetAlertDialog swal = new SweetAlertDialog(TambahKematianActivity.this, SweetAlertDialog.ERROR_TYPE);
+                SweetAlertDialog swal = new SweetAlertDialog(KematianTambahActivity.this, SweetAlertDialog.ERROR_TYPE);
                 swal.setTitleText("Error");
                 swal.setContentText(t.getMessage());
                 swal.show();

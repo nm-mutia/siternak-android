@@ -60,7 +60,7 @@
                 android:id="@+id/tv_text1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Waktu"
+                android:text="text"
                 android:textSize="16sp"
                 android:textColor="@color/black"
                 android:fontFamily="@font/sourcesanspro_semibold"/>
@@ -68,7 +68,7 @@
                 android:id="@+id/tv_text2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Penyebab"
+                android:text="text"
                 android:textSize="16sp"
                 android:textColor="@color/black"
                 android:fontFamily="@font/sourcesanspro_semibold"/>
@@ -76,7 +76,7 @@
                 android:id="@+id/tv_text3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Kondisi"
+                android:text="text"
                 android:textSize="16sp"
                 android:textColor="@color/black"
                 android:fontFamily="@font/sourcesanspro_semibold"/>

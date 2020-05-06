@@ -43,10 +43,10 @@
         <activity android:name=".activities.data.KematianDetailActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".activities.data.TambahKematianActivity"
+        <activity android:name=".activities.data.KematianTambahActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".activities.data.EditKematianActivity"
+        <activity android:name=".activities.data.KematianEditActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
 

@@ -75,7 +75,7 @@ public class KematianActivity extends AppCompatActivity {
 
     @OnClick(R.id.ib_add_data)
     public void addData(){
-        Intent intent = new Intent(KematianActivity.this, TambahKematianActivity.class);
+        Intent intent = new Intent(KematianActivity.this, KematianTambahActivity.class);
         startActivity(intent);
     }
 

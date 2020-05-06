@@ -39,8 +39,8 @@ public class DashboardFragment extends Fragment {
         ButterKnife.bind(getActivity());
         mUser = SharedPrefManager.getInstance(getActivity()).getUser();
 
-        if(mUser.getRole() != null && mUser.getRole().equals("peternak")){
-            llPeternak.setVisibility(View.GONE);
+        if(mUser.getRole() != null && mUser.getRole().equals("admin")){
+            llPeternak.setVisibility(View.VISIBLE);
         }
         return view;
     }
@@ -51,41 +51,8 @@ public class DashboardFragment extends Fragment {
         tvFullname.setText(mUser.getName()+ ", " + mUser.getRole());
     }
 
-
-//    private void setMemberDetail(){
-//        if(Authenticated.getInstance().getMember() == null || !Authenticated.getInstance().isValidCacheMember()){
-//            SweetAlertDialog pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
-//            pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-//            pDialog.setTitleText("Loading");
-//            pDialog.setCancelable(false);
-//            pDialog.show();
-//
-//            GetMemberByIDInteractor interactor = new GetMemberByIDInteractor(mUser)
-//                    .setmCallback(new OnInteractListener<Member>() {
-//                        @Override
-//                        public void onSuccess(Member member) {
-//                            Log.w("Home Fragment", "onSuccess");
-//                            mMember = member;
-//                            Authenticated.getInstance().setMember(member);
-//                            if (member.getFirstname() == null) tvFullname.setText(mUser.getUsername());
-//                            else tvFullname.setText(member.getFullname());
-//                            pDialog.dismiss();
-//                        }
-//
-//                        @Override
-//                        public void onFailure(SLException e) {
-//                            pDialog.dismiss();
-//                            SwalUtils.showError(getActivity(), e);
-//                        }
-//                    });
-//            interactor.execute();
-//        }
-//    }
-
     @OnClick(R.id.ll_data)
     public void moveToData(){
-//        if (!verified()) return;
-
         Intent intent=new Intent(getActivity(), DataActivity.class);
         startActivity(intent);
     }
@@ -98,45 +65,26 @@ public class DashboardFragment extends Fragment {
 
     @OnClick(R.id.ll_perkawinan)
     public void moveToMatch(){
-//        if (!verified()) return;
-//
 //        Intent intent=new Intent(getActivity(), CreditDashboardActivity.class);
 //        startActivity(intent);
     }
 
     @OnClick(R.id.ll_grafik)
     public void moveToGrafik(){
-//        if (!verified()) return;
-//
 //        Intent intent=new Intent(getActivity(), ElearningDashboardActivity.class);
 //        startActivity(intent);
     }
 
     @OnClick(R.id.ll_laporan)
     public void moveToLaporan(){
-//        if (!verified()) return;
-//
 //        Intent intent=new Intent(getActivity(), ElearningDashboardActivity.class);
 //        startActivity(intent);
     }
 
     @OnClick(R.id.ll_peternak)
     public void moveToPeternak(){
-        Toast.makeText(getActivity(), "haloha" ,Toast.LENGTH_SHORT).show();
-//        if (!verified()) return; //only admin
-//
 //        Intent intent=new Intent(getActivity(), ElearningDashboardActivity.class);
 //        startActivity(intent);
     }
 
-//    private Boolean verified(){
-//        Boolean res = true;
-//
-//        if (mMember == null || mMember.getCenterVerificationStatus() == null || mMember.getCenterVerificationStatus() != 2){
-//            res = false;
-//            SwalUtils.showUnverifError(getActivity());
-//        }
-//
-//        return res;
-//    }
 }

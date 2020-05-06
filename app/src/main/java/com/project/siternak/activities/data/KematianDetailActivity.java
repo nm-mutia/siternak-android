@@ -38,6 +38,7 @@ public class KematianDetailActivity extends AppCompatActivity {
 
     private KematianModel kematianData;
     private String userToken;
+    public int backFinish;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,12 +56,19 @@ public class KematianDetailActivity extends AppCompatActivity {
         kematianData = (KematianModel) getIntent().getSerializableExtra("kematian");
         tv_actionbar_title.setText("Kematian - " + String.valueOf(kematianData.getId()));
 
+        backFinish = (int) getIntent().getIntExtra("finish", 0); //data from after edit kematian
+
         userToken = SharedPrefManager.getInstance(this).getAccessToken();
         setDataKematian();
     }
 
     @Override
     public void onBackPressed() {
+        if(backFinish == 1){
+            Intent intent = new Intent(KematianDetailActivity.this, KematianActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
         finish();
     }
 
@@ -117,7 +125,7 @@ public class KematianDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.tl_detail_kematian)
     public void editData(){
-        Intent intent = new Intent(KematianDetailActivity.this, EditKematianActivity.class);
+        Intent intent = new Intent(KematianDetailActivity.this, KematianEditActivity.class);
         intent.putExtra("data", kematianData);
         startActivity(intent);
     }
@@ -162,5 +170,10 @@ public class KematianDetailActivity extends AppCompatActivity {
                 Toast.makeText(KematianDetailActivity.this, "Failed", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
     }
 }

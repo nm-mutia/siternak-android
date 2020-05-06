@@ -44,24 +44,23 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("kematian")
     Call<KematianResponse> addKematian(
-            @Header("Authorization") String authToken,
             @Field("tgl_kematian") String tglKematian,
             @Field("waktu_kematian") String waktuKematian,
             @Field("penyebab") String penyebab,
-            @Field("kondisi") String kondisi
+            @Field("kondisi") String kondisi,
+            @Header("Authorization") String authToken
     );
 
-    @Headers({"Content-Type: application/json", "Accept: application/json"})
     @FormUrlEncoded
     @PUT("kematian/{id}")
     Call<KematianResponse> editKematian(
-            @Header("Authorization") String authToken,
             @Path("id") Integer id,
             @Field("tgl_kematian") String tglKematian,
             @Field("waktu_kematian") String waktuKematian,
             @Field("penyebab") String penyebab,
-            @Field("kondisi") String kondisi
-        );
+            @Field("kondisi") String kondisi,
+            @Header("Authorization") String authToken
+    );
 
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @DELETE("kematian/{id}")
