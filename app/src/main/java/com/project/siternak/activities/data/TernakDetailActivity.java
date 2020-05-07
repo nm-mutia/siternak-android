@@ -1,0 +1,217 @@
+package com.project.siternak.activities.data;
+
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.widget.TableLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.project.siternak.R;
+import com.project.siternak.models.data.TernakModel;
+import com.project.siternak.responses.DataDeleteResponse;
+import com.project.siternak.responses.TernakResponse;
+import com.project.siternak.rest.RetrofitClient;
+import com.project.siternak.utils.SharedPrefManager;
+
+import java.io.Serializable;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import cn.pedant.SweetAlert.SweetAlertDialog;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class TernakDetailActivity extends AppCompatActivity {
+    @BindView(R.id.tv_necktag) TextView tvNecktag;
+    @BindView(R.id.tv_ternak_pemilik) TextView tvPemilik;
+    @BindView(R.id.tv_ternak_peternakan) TextView tvPeternakan;
+    @BindView(R.id.tv_ternak_ras) TextView tvRas;
+    @BindView(R.id.tv_ternak_kematian) TextView tvKematian;
+    @BindView(R.id.tv_ternak_jk) TextView tvJk;
+    @BindView(R.id.tv_ternak_tgl_lahir) TextView tvTglLahir;
+    @BindView(R.id.tv_ternak_bobot_lahir) TextView tvBobotLahir;
+    @BindView(R.id.tv_ternak_pukul_lahir) TextView tvPukulLahir;
+    @BindView(R.id.tv_ternak_lama_dikandungan) TextView tvLamaDiKandungan;
+    @BindView(R.id.tv_ternak_lama_laktasi) TextView tvLamaLaktasi;
+    @BindView(R.id.tv_ternak_tgl_lepas_sapih) TextView tvTglLepasSapih;
+    @BindView(R.id.tv_ternak_blood) TextView tvBlood;
+    @BindView(R.id.tv_ternak_necktag_ayah) TextView tvAyah;
+    @BindView(R.id.tv_ternak_necktag_ibu) TextView tvIbu;
+    @BindView(R.id.tv_ternak_bobot_tubuh) TextView tvBobotTubuh;
+    @BindView(R.id.tv_ternak_panjang_tubuh) TextView tvPanjangTubuh;
+    @BindView(R.id.tv_ternak_tinggi_tubuh) TextView tvTinggiTubuh;
+    @BindView(R.id.tv_ternak_cacat_fisik) TextView tvCacatFisik;
+    @BindView(R.id.tv_ternak_ciri_lain) TextView tvCiriLain;
+    @BindView(R.id.tv_ternak_status_ada) TextView tvStatusAda;
+    @BindView(R.id.tv_created_at) TextView tvCreatedAt;
+    @BindView(R.id.tv_updated_at) TextView tvUpdatedAt;
+    @BindView(R.id.tv_deleted_at) TextView tvDeletedAt;
+    @BindView(R.id.tl_detail_ternak) TableLayout tlDetailTernak;
+
+    private TernakModel ternakData;
+    private String userToken;
+    private int backFinish;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_data_ternak);
+
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(R.layout.actionbar_primary_arrow);
+
+        TextView tv_actionbar_title = getSupportActionBar().getCustomView().findViewById(R.id.tv_actionbar_title);
+
+        ButterKnife.bind(this);
+
+        ternakData = (TernakModel) getIntent().getSerializableExtra("ternak");
+        tv_actionbar_title.setText("Ternak - " + ternakData.getNecktag());
+
+        backFinish = (int) getIntent().getIntExtra("finish", 0); //data from after edit ternak
+
+        userToken = SharedPrefManager.getInstance(this).getAccessToken();
+        setDataTernak();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(backFinish == 1){
+            Intent intent = new Intent(TernakDetailActivity.this, TernakActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+        finish();
+    }
+
+    @OnClick(R.id.ib_actionbar_close)
+    public void close(){
+        finish();
+    }
+
+    @OnClick(R.id.ib_delete_data)
+    public void deleteData() {
+        SweetAlertDialog wDialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE);
+        wDialog.setTitleText("Apakah anda yakin untuk menghapus data ini?");
+        wDialog.setContentText("Data ternak id " + ternakData.getNecktag());
+        wDialog.setConfirmText("Ya");
+        wDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sDialog) {
+                sDialog.dismissWithAnimation();
+
+                Call<DataDeleteResponse> calld = RetrofitClient
+                        .getInstance()
+                        .getApi()
+                        .delTernak("Bearer " + userToken, ternakData.getNecktag());
+
+                calld.enqueue(new Callback<DataDeleteResponse>() {
+                    @Override
+                    public void onResponse(Call<DataDeleteResponse> call, Response<DataDeleteResponse> response) {
+                        DataDeleteResponse resp = response.body();
+
+                        if(response.isSuccessful()){
+                            Toast.makeText(TernakDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(TernakDetailActivity.this, TernakActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+
+                            TernakDetailActivity.this.finish();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<DataDeleteResponse> call, Throwable t) {
+                        Toast.makeText(TernakDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+        wDialog.setCancelButton("Batal", new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sDialog) {
+                sDialog.dismissWithAnimation();
+            }
+        });
+        wDialog.show();
+    }
+
+    @OnClick(R.id.tl_detail_ternak)
+    public void editData(){
+        Intent intent = new Intent(TernakDetailActivity.this, TernakEditActivity.class);
+        intent.putExtra("data", (Serializable) ternakData);
+        startActivity(intent);
+    }
+
+    private void setDataTernak() {
+        SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("Mohon Tunggu");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
+        Call<TernakResponse> call = RetrofitClient
+                .getInstance()
+                .getApi()
+                .getTernakDetail("Bearer " + this.userToken, ternakData.getNecktag());
+
+        call.enqueue(new Callback<TernakResponse>() {
+            @Override
+            public void onResponse(Call<TernakResponse> call, Response<TernakResponse> response) {
+                TernakResponse resp = response.body();
+                pDialog.cancel();
+
+                if(response.isSuccessful()){
+                    TernakModel data = resp.getTernaks();
+
+                    tvNecktag.setText(String.valueOf(data.getNecktag()));
+                    tvPemilik.setText(String.valueOf(data.getPemilikId()));
+                    tvPeternakan.setText(String.valueOf(data.getPeternakanId()));
+                    tvRas.setText(String.valueOf(data.getRasId()));
+                    tvKematian.setText(String.valueOf(data.getKematianId()));
+                    tvJk.setText(data.getJenisKelamin());
+                    tvTglLahir.setText(data.getTglLahir());
+                    tvBobotLahir.setText(data.getBobotLahir());
+                    tvPukulLahir.setText(data.getPukulLahir());
+                    tvLamaDiKandungan.setText(data.getLamaDiKandungan());
+                    tvLamaLaktasi.setText(data.getLamaLaktasi());
+                    tvTglLepasSapih.setText(data.getTglLepasSapih());
+                    tvBlood.setText(data.getBlood());
+                    tvAyah.setText(data.getNecktag_ayah());
+                    tvIbu.setText(data.getNecktag_ibu());
+                    tvBobotTubuh.setText(data.getBobotTubuh());
+                    tvPanjangTubuh.setText(data.getPanjangTubuh());
+                    tvTinggiTubuh.setText(data.getTinggiTubuh());
+                    tvCacatFisik.setText(data.getCacatFisik());
+                    tvCiriLain.setText(data.getCiriLain());
+
+                    if(data.getStatusAda() == true){
+                        tvStatusAda.setText("Ada");
+                    }else{
+                        tvStatusAda.setText("Tidak Ada");
+                    }
+
+                    tvCreatedAt.setText(data.getCreated_at());
+                    tvUpdatedAt.setText(data.getUpdated_at());
+                    tvDeletedAt.setText(data.getDeleted_at());
+                }
+                else {
+                    Toast.makeText(TernakDetailActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TernakResponse> call, Throwable t) {
+                pDialog.cancel();
+                Toast.makeText(TernakDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+}

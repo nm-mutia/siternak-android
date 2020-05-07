@@ -1,0 +1,683 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:fillViewport="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TableLayout
+                android:id="@+id/tl_detail_ternak"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/rc_white"
+                android:clipToPadding="false"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginLeft="12dp"
+                android:elevation="4dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_gravity="center"
+                    android:text="ubah data"
+                    android:fontFamily="@font/sourcesanspro_light"
+                    android:textSize="14sp"
+                    android:gravity="right"
+                    android:textColor="@color/colorPrimaryLight"/>
+
+                <TableRow
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Necktag"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                    <TextView
+                        android:id="@+id/tv_necktag"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="necktag"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ID Pemilik"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                    <TextView
+                        android:id="@+id/tv_ternak_pemilik"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="pemilik"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ID Peternakan"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                    <TextView
+                        android:id="@+id/tv_ternak_peternakan"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="peternakan"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ID Ras"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                    <TextView
+                        android:id="@+id/tv_ternak_ras"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="ras"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ID Kematian"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                    <TextView
+                        android:id="@+id/tv_ternak_kematian"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="kematian"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Jenis Kelamin"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                    <TextView
+                        android:id="@+id/tv_ternak_jk"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="jenis kelamin"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tanggal Lahir"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                    <TextView
+                        android:id="@+id/tv_ternak_tgl_lahir"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="tgl lahir"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bobot Lahir"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                    <TextView
+                        android:id="@+id/tv_ternak_bobot_lahir"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="bobot lahir"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pukul Lahir"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                    <TextView
+                        android:id="@+id/tv_ternak_pukul_lahir"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="pukul lahir"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Lama di\nKandungan"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                    <TextView
+                        android:id="@+id/tv_ternak_lama_dikandungan"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="lama dikandungan"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Lama Laktasi"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                    <TextView
+                        android:id="@+id/tv_ternak_lama_laktasi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="lama laktasi"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tanggal\nLepas Sapih"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                    <TextView
+                        android:id="@+id/tv_ternak_tgl_lepas_sapih"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="tgl lepas sapih"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Blood"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                    <TextView
+                        android:id="@+id/tv_ternak_blood"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="blood"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Necktag Ayah"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                    <TextView
+                        android:id="@+id/tv_ternak_necktag_ayah"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="ayah"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Necktag Ibu"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                    <TextView
+                        android:id="@+id/tv_ternak_necktag_ibu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="ibu"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bobot Tubuh"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                    <TextView
+                        android:id="@+id/tv_ternak_bobot_tubuh"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="bobot tubuh"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Panjang Tubuh"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                    <TextView
+                        android:id="@+id/tv_ternak_panjang_tubuh"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="panjang tubuh"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tinggi Tubuh"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                    <TextView
+                        android:id="@+id/tv_ternak_tinggi_tubuh"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="tinggi tubuh"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cacat Fisik"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                    <TextView
+                        android:id="@+id/tv_ternak_cacat_fisik"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="cacat fisik"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ciri Lain"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                    <TextView
+                        android:id="@+id/tv_ternak_ciri_lain"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="ciri lain"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Status Ada"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                    <TextView
+                        android:id="@+id/tv_ternak_status_ada"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="status ada"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Created At"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                    <TextView
+                        android:id="@+id/tv_created_at"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="create"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Updated At"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                    <TextView
+                        android:id="@+id/tv_updated_at"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="update"
+                        android:layout_marginLeft="12dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="16dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Deleted At"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                    <TextView
+                        android:id="@+id/tv_deleted_at"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="delete"
+                        android:layout_marginLeft="12dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                </TableRow>
+            </TableLayout>
+
+            <ImageButton
+                android:id="@+id/ib_delete_data"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_delete"
+                android:background="@color/background"
+                android:layout_below="@id/tl_detail_ternak"
+                android:layout_alignParentRight="true"/>
+
+        </RelativeLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

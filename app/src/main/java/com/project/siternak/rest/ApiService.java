@@ -10,6 +10,8 @@ import com.project.siternak.responses.PenyakitGetResponse;
 import com.project.siternak.responses.PenyakitResponse;
 import com.project.siternak.responses.RasGetResponse;
 import com.project.siternak.responses.RasResponse;
+import com.project.siternak.responses.TernakGetResponse;
+import com.project.siternak.responses.TernakResponse;
 import com.project.siternak.responses.UserDetailsResponse;
 
 import retrofit2.Call;
@@ -160,4 +162,71 @@ public interface ApiService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @DELETE("ras/{id}")
     Call<DataDeleteResponse> delRas(@Header("Authorization") String authToken, @Path("id") Integer id);
+
+
+    // ------------------------------------data ternak--------------------------------------------
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @GET("ternak")
+    Call<TernakGetResponse> getTernak(@Header("Authorization") String authToken);
+
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @GET("ternak/{necktag}")
+    Call<TernakResponse> getTernakDetail(@Header("Authorization") String authToken, @Path("necktag") String necktag);
+
+    @FormUrlEncoded
+    @POST("ternak")
+    Call<TernakResponse> addTernak(
+            @Field("pemilik_id") Integer pemilikId,
+            @Field("peternakan_id") Integer peternakanId,
+            @Field("ras_id") Integer rasId,
+            @Field("kematian_id") Integer kematianId,
+            @Field("jenis_kelamin") String jk,
+            @Field("tgl_lahir") String tglLahir,
+            @Field("bobot_lahir") String bobotLahir,
+            @Field("pukul_lahir") String pukulLahir,
+            @Field("lama_dikandungan") String lamaDiKandungan,
+            @Field("lama_laktasi") String lamaLaktasi,
+            @Field("tgl_lepas_sapih") String tglLepasSapih,
+            @Field("blood") String blood,
+            @Field("necktag_ayah") String ayah,
+            @Field("necktag_ibu") String ibu,
+            @Field("bobot_tubuh") String bobotTubuh,
+            @Field("panjang_tubuh") String panjangTubuh,
+            @Field("tingggi_tubuh") String tinggiTubuh,
+            @Field("cacat_fisik") String cacatFisik,
+            @Field("ciri_lain") String ciriLain,
+            @Field("status_ada") String statusAda,
+            @Header("Authorization") String authToken
+    );
+
+    @FormUrlEncoded
+    @PUT("ternak/{necktag}")
+    Call<TernakResponse> editTernak(
+            @Path("necktag") String necktag,
+            @Field("pemilik_id") Integer pemilikId,
+            @Field("peternakan_id") Integer peternakanId,
+            @Field("ras_id") Integer rasId,
+            @Field("kematian_id") Integer kematianId,
+            @Field("jenis_kelamin") String jk,
+            @Field("tgl_lahir") String tglLahir,
+            @Field("bobot_lahir") String bobotLahir,
+            @Field("pukul_lahir") String pukulLahir,
+            @Field("lama_dikandungan") String lamaDiKandungan,
+            @Field("lama_laktasi") String lamaLaktasi,
+            @Field("tgl_lepas_sapih") String tglLepasSapih,
+            @Field("blood") String blood,
+            @Field("necktag_ayah") String ayah,
+            @Field("necktag_ibu") String ibu,
+            @Field("bobot_tubuh") String bobotTubuh,
+            @Field("panjang_tubuh") String panjangTubuh,
+            @Field("tingggi_tubuh") String tinggiTubuh,
+            @Field("cacat_fisik") String cacatFisik,
+            @Field("ciri_lain") String ciriLain,
+            @Field("status_ada") String statusAda,
+            @Header("Authorization") String authToken
+    );
+
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @DELETE("ternak/{necktag}")
+    Call<DataDeleteResponse> delTernak(@Header("Authorization") String authToken, @Path("necktag") String necktag);
 }

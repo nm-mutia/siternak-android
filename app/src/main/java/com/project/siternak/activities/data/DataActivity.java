@@ -81,8 +81,8 @@ public class DataActivity extends AppCompatActivity {
 
     @OnClick(R.id.tv_data_ternak)
     public void moveToTernak(){
-//        Intent intent=new Intent(DataActivity.this, TernakActivity.class);
-//        startActivity(intent);
+        Intent intent = new Intent(DataActivity.this, TernakActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.tv_data_peternakan)

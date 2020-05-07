@@ -138,7 +138,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/sourcesanspro_regular"
                         android:hint="Penyebab"
-                        android:inputType="text" />
+                        android:inputType="textMultiLine" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -156,7 +156,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/sourcesanspro_regular"
                         android:hint="Kondisi"
-                        android:inputType="text" />
+                        android:inputType="textMultiLine" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 

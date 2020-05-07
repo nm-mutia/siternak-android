@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">SITERNAK</string>
+
+    <string-array name="jenis_kelamin">
+        <item>Jantan</item>
+        <item>Betina</item>
+    </string-array>
+
+    <string-array name="status_ada">
+        <item>Ada</item>
+        <item>Tidak Ada</item>
+    </string-array>
 </resources>

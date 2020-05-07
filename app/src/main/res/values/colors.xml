@@ -10,6 +10,9 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="danger">#C84138</color>
+    <color name="yellowProgress">#f5c330</color>
+    <color name="greenSuccess">#43A047</color>
+    <color name="bluePrimary">#23629F</color>
 
     <color name="tealAccent">#b2d8d8</color>
     <color name="background">#E4E4E4</color>
