@@ -1,7 +1,6 @@
 package com.project.siternak.activities.data;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,9 +17,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.siternak.R;
-import com.project.siternak.adapter.RasAdapter;
-import com.project.siternak.models.data.RasModel;
-import com.project.siternak.responses.RasGetResponse;
+import com.project.siternak.adapter.PeternakanAdapter;
+import com.project.siternak.models.data.PeternakanModel;
+import com.project.siternak.responses.PeternakanGetResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.DialogUtils;
 import com.project.siternak.utils.SharedPrefManager;
@@ -36,12 +35,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RasActivity extends AppCompatActivity {
-    @BindView(R.id.rv) RecyclerView rv_ras;
+public class PeternakanActivity extends AppCompatActivity {
+    @BindView(R.id.rv) RecyclerView rv_peternakan;
     @BindView(R.id.tv_nodata) TextView tv_nodata;
 
-    private RasAdapter rasAdapter;
-    private ArrayList<RasModel> rasArrayList;
+    private PeternakanAdapter peternakanAdapter;
+    private ArrayList<PeternakanModel> peternakanArrayList;
     private String userToken;
 
     @Override
@@ -54,13 +53,13 @@ public class RasActivity extends AppCompatActivity {
         getSupportActionBar().setCustomView(R.layout.actionbar_primary_arrow);
 
         TextView tv_actionbar_title = getSupportActionBar().getCustomView().findViewById(R.id.tv_actionbar_title);
-        tv_actionbar_title.setText("Ras");
+        tv_actionbar_title.setText("Peternakan");
 
         ButterKnife.bind(this);
 
         userToken = SharedPrefManager.getInstance(this).getAccessToken();
-        rv_ras.setLayoutManager(new LinearLayoutManager(this));
-        setDataRas();
+        rv_peternakan.setLayoutManager(new LinearLayoutManager(this));
+        setDataPeternakan();
     }
 
     @Override
@@ -75,7 +74,7 @@ public class RasActivity extends AppCompatActivity {
 
     @OnClick(R.id.ib_add_data)
     public void addData(){
-        Intent intent = new Intent(RasActivity.this, RasAddActivity.class);
+        Intent intent = new Intent(PeternakanActivity.this, PeternakanAddActivity.class);
         startActivity(intent);
     }
 
@@ -97,7 +96,7 @@ public class RasActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                rasAdapter.getFilter().filter(newText);
+                peternakanAdapter.getFilter().filter(newText);
                 return false;
             }
         });
@@ -105,32 +104,32 @@ public class RasActivity extends AppCompatActivity {
         return true;
     }
 
-    private void setDataRas() {
+    private void setDataPeternakan() {
         SweetAlertDialog pDialog = DialogUtils.getLoadingPopup(this);
 
-        Call<RasGetResponse> call = RetrofitClient
+        Call<PeternakanGetResponse> call = RetrofitClient
                 .getInstance()
                 .getApi()
-                .getRas("Bearer " + this.userToken);
+                .getPeternakan("Bearer " + this.userToken);
 
-        call.enqueue(new Callback<RasGetResponse>() {
+        call.enqueue(new Callback<PeternakanGetResponse>() {
             @Override
-            public void onResponse(Call<RasGetResponse> call, Response<RasGetResponse> response) {
-                RasGetResponse resp = response.body();
+            public void onResponse(Call<PeternakanGetResponse> call, Response<PeternakanGetResponse> response) {
+                PeternakanGetResponse resp = response.body();
                 pDialog.cancel();
 
                 if(response.isSuccessful()) {
-                    List<RasModel> ras = resp.getRas();
-                    rasArrayList = (ArrayList<RasModel>)ras;
-                    rasAdapter = new RasAdapter(RasActivity.this, rasArrayList);
+                    List<PeternakanModel> peternakans = resp.getPeternakans();
+                    peternakanArrayList = (ArrayList<PeternakanModel>)peternakans;
+                    peternakanAdapter = new PeternakanAdapter(PeternakanActivity.this, peternakanArrayList);
 
-                    if (rasAdapter.getItemCount() == 0) {
+                    if (peternakanAdapter.getItemCount() == 0) {
                         tv_nodata.setVisibility(View.VISIBLE);
-                        tv_nodata.setText("Tidak ada data ras");
+                        tv_nodata.setText("Tidak ada data peternakan");
                     } else {
                         tv_nodata.setVisibility(View.GONE);
-                        rv_ras.setAdapter(rasAdapter);
-                        rasAdapter.notifyDataSetChanged();
+                        rv_peternakan.setAdapter(peternakanAdapter);
+                        peternakanAdapter.notifyDataSetChanged();
                     }
                 }
                 else {
@@ -140,7 +139,7 @@ public class RasActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<RasGetResponse> call, Throwable t) {
+            public void onFailure(Call<PeternakanGetResponse> call, Throwable t) {
                 pDialog.cancel();
                 tv_nodata.setText(t.getMessage());
                 tv_nodata.setVisibility(View.VISIBLE);

@@ -8,6 +8,8 @@ import com.project.siternak.responses.PemilikGetResponse;
 import com.project.siternak.responses.PemilikResponse;
 import com.project.siternak.responses.PenyakitGetResponse;
 import com.project.siternak.responses.PenyakitResponse;
+import com.project.siternak.responses.PeternakanGetResponse;
+import com.project.siternak.responses.PeternakanResponse;
 import com.project.siternak.responses.RasGetResponse;
 import com.project.siternak.responses.RasResponse;
 import com.project.siternak.responses.TernakGetResponse;
@@ -162,6 +164,37 @@ public interface ApiService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @DELETE("ras/{id}")
     Call<DataDeleteResponse> delRas(@Header("Authorization") String authToken, @Path("id") Integer id);
+
+
+    // ------------------------------------data peternakan--------------------------------------------
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @GET("peternakan")
+    Call<PeternakanGetResponse> getPeternakan(@Header("Authorization") String authToken);
+
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @GET("peternakan/{id}")
+    Call<PeternakanResponse> getPeternakanDetail(@Header("Authorization") String authToken, @Path("id") Integer id);
+
+    @FormUrlEncoded
+    @POST("peternakan")
+    Call<PeternakanResponse> addPeternakan(
+            @Field("nama_peternakan") String namaPeternakan,
+            @Field("keterangan") String ket,
+            @Header("Authorization") String authToken
+    );
+
+    @FormUrlEncoded
+    @PUT("peternakan/{id}")
+    Call<PeternakanResponse> editPeternakan(
+            @Path("id") Integer id,
+            @Field("nama_peternakan") String namaPeternakan,
+            @Field("keterangan") String ket,
+            @Header("Authorization") String authToken
+    );
+
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @DELETE("peternakan/{id}")
+    Call<DataDeleteResponse> delPeternakan(@Header("Authorization") String authToken, @Path("id") Integer id);
 
 
     // ------------------------------------data ternak--------------------------------------------

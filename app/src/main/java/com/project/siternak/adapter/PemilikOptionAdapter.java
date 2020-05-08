@@ -44,13 +44,13 @@ public class PemilikOptionAdapter extends RecyclerView.Adapter<PemilikOptionAdap
 
     @Override
     public void onBindViewHolder(@NonNull PemilikOptionAdapter.OptionHolder holder, int position) {
-        PemilikModel option= arrayList.get(position);
+        PemilikModel option = arrayList.get(position);
         holder.tv_option.setText(option.getId()+"-"+option.getNama_pemilik());
         holder.ll_option.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Intent intent= new Intent();
-                intent.putExtra("data", option);
+                final Intent intent = new Intent();
+                intent.putExtra("pemilik", option);
                 ((Activity)mContext).setResult(Activity.RESULT_OK,intent);
                 ((Activity)mContext).finish();
             }

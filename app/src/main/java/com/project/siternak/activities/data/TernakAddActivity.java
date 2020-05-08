@@ -14,13 +14,18 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.project.siternak.R;
+import com.project.siternak.activities.option.KematianOptionActivity;
 import com.project.siternak.activities.option.PemilikOptionActivity;
+import com.project.siternak.activities.option.PeternakanOptionActivity;
+import com.project.siternak.activities.option.RasOptionActivity;
 import com.project.siternak.fragments.DatePickerFragment;
 import com.project.siternak.fragments.TimePickerFrament;
 import com.project.siternak.models.data.KematianModel;
 import com.project.siternak.models.data.PemilikModel;
+import com.project.siternak.models.data.PeternakanModel;
 import com.project.siternak.models.data.RasModel;
 import com.project.siternak.models.data.TernakModel;
 import com.project.siternak.utils.SharedPrefManager;
@@ -33,9 +38,13 @@ import butterknife.OnClick;
 
 public class TernakAddActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
     @BindView(R.id.til_ternak_pemilik) TextInputLayout tilPemilik;
+    @BindView(R.id.tiet_ternak_pemilik) TextInputEditText tietPemilik;
     @BindView(R.id.til_ternak_peternakan) TextInputLayout tilPeternakan;
+    @BindView(R.id.tiet_ternak_peternakan) TextInputEditText tietPeternakan;
     @BindView(R.id.til_ternak_ras) TextInputLayout tilRas;
+    @BindView(R.id.tiet_ternak_ras) TextInputEditText tietRas;
     @BindView(R.id.til_ternak_kematian) TextInputLayout tilKematian;
+    @BindView(R.id.tiet_ternak_kematian) TextInputEditText tietKematian;
 //    @BindView(R.id.til_ternak_jk) TextInputLayout tilJk;
     @BindView(R.id.til_ternak_tgl_lahir) TextInputLayout tilTglLahir;
     @BindView(R.id.til_ternak_bobot_lahir) TextInputLayout tilBobotLahir;
@@ -101,6 +110,24 @@ public class TernakAddActivity extends AppCompatActivity implements DatePickerDi
         startActivityForResult(intent, REQUEST_CODE_SETPEMILIK);
     }
 
+    @OnClick(R.id.tiet_ternak_peternakan)
+    public void setIdPeternakan(){
+        Intent intent = new Intent(TernakAddActivity.this, PeternakanOptionActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_SETPETERNAKAN);
+    }
+
+    @OnClick(R.id.tiet_ternak_ras)
+    public void setIdRas(){
+        Intent intent = new Intent(TernakAddActivity.this, RasOptionActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_SETRAS);
+    }
+
+    @OnClick(R.id.tiet_ternak_kematian)
+    public void setIdKematian(){
+        Intent intent = new Intent(TernakAddActivity.this, KematianOptionActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_SETKEMATIAN);
+    }
+
 
     @OnClick(R.id.tiet_ternak_tgl_lahir)
     public void setDate1(){
@@ -158,8 +185,20 @@ public class TernakAddActivity extends AppCompatActivity implements DatePickerDi
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == Activity.RESULT_OK) {
             if(requestCode == REQUEST_CODE_SETPEMILIK){
-                PemilikModel result = (PemilikModel) data.getSerializableExtra("data");
-                tilPemilik.getEditText().setText(String.valueOf(result.getId()));
+                PemilikModel result = (PemilikModel) data.getSerializableExtra("pemilik");
+                tietPemilik.setText(String.valueOf(result.getId()));
+            }
+            else if(requestCode == REQUEST_CODE_SETPETERNAKAN){
+                PeternakanModel result = (PeternakanModel) data.getSerializableExtra("peternakan");
+                tietPeternakan.setText(String.valueOf(result.getId()));
+            }
+            else if(requestCode == REQUEST_CODE_SETRAS){
+                RasModel result = (RasModel) data.getSerializableExtra("ras");
+                tietRas.setText(String.valueOf(result.getId()));
+            }
+            else if(requestCode == REQUEST_CODE_SETKEMATIAN){
+                KematianModel result = (KematianModel) data.getSerializableExtra("kematian");
+                tietKematian.setText(String.valueOf(result.getId()));
             }
         }
     }

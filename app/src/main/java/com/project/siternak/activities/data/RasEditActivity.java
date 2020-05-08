@@ -14,6 +14,7 @@ import com.project.siternak.R;
 import com.project.siternak.models.data.RasModel;
 import com.project.siternak.responses.RasResponse;
 import com.project.siternak.rest.RetrofitClient;
+import com.project.siternak.utils.DialogUtils;
 import com.project.siternak.utils.SharedPrefManager;
 
 import java.io.Serializable;
@@ -89,11 +90,7 @@ public class RasEditActivity extends AppCompatActivity {
             return;
         }
 
-        SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("Mohon Tunggu");
-        pDialog.setCancelable(false);
-        pDialog.show();
+        SweetAlertDialog pDialog = DialogUtils.getLoadingPopup(this);
 
         Integer id = Integer.valueOf(tietRasId.getText().toString());
         String jenis = tilRasJenis.getEditText().getText().toString();

@@ -1,7 +1,6 @@
 package com.project.siternak.activities.data;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -10,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.project.siternak.R;
-import com.project.siternak.responses.RasResponse;
+import com.project.siternak.responses.PeternakanResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.DialogUtils;
 import com.project.siternak.utils.SharedPrefManager;
@@ -23,16 +22,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RasAddActivity extends AppCompatActivity {
-    @BindView(R.id.til_ras_jenis) TextInputLayout tilRasJenis;
-    @BindView(R.id.til_ras_ket) TextInputLayout tilRasKet;
+public class PeternakanAddActivity extends AppCompatActivity {
+    @BindView(R.id.til_peternakan_nama) TextInputLayout tilNama;
+    @BindView(R.id.til_peternakan_ket) TextInputLayout tilKet;
 
     private String userToken;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_data_ras_add);
+        setContentView(R.layout.activity_data_peternakan_add);
 
         getSupportActionBar().hide();
         ButterKnife.bind(this);
@@ -40,70 +39,70 @@ public class RasAddActivity extends AppCompatActivity {
         userToken = SharedPrefManager.getInstance(this).getAccessToken();
     }
 
-    public boolean validateJenis(){
-        String p = tilRasJenis.getEditText().getText().toString().trim();
+    public boolean validateNama(){
+        String p = tilNama.getEditText().getText().toString().trim();
         if(p.isEmpty()){
-            tilRasJenis.setError("Wajib diisi");
+            tilNama.setError("Wajib diisi");
             return false;
         }
         else {
-            tilRasJenis.setError(null);
-            tilRasJenis.setErrorEnabled(false);
+            tilNama.setError(null);
+            tilNama.setErrorEnabled(false);
             return true;
         }
     }
 
     public boolean validateKet(){
-        String p = tilRasKet.getEditText().getText().toString().trim();
+        String p = tilKet.getEditText().getText().toString().trim();
         if(p.isEmpty()){
-            tilRasKet.setError("Wajib diisi");
+            tilKet.setError("Wajib diisi");
             return false;
         }
         else {
-            tilRasKet.setError(null);
-            tilRasKet.setErrorEnabled(false);
+            tilKet.setError(null);
+            tilKet.setErrorEnabled(false);
             return true;
         }
     }
 
     @OnClick(R.id.tv_submit)
     public void action_add() {
-        if (!validateJenis() | !validateKet()) {
+        if (!validateNama() | !validateKet()) {
             return;
         }
 
         SweetAlertDialog pDialog = DialogUtils.getLoadingPopup(this);
 
-        String jenis = tilRasJenis.getEditText().getText().toString();
-        String ket = tilRasKet.getEditText().getText().toString();
+        String nama = tilNama.getEditText().getText().toString();
+        String ket = tilKet.getEditText().getText().toString();
 
-        Call<RasResponse> call = RetrofitClient
+        Call<PeternakanResponse> call = RetrofitClient
                 .getInstance()
                 .getApi()
-                .addRas(jenis, ket, "Bearer " + userToken);
+                .addPeternakan(nama, ket, "Bearer " + userToken);
 
-        call.enqueue(new Callback<RasResponse>() {
+        call.enqueue(new Callback<PeternakanResponse>() {
             @Override
-            public void onResponse(Call<RasResponse> call, Response<RasResponse> response) {
-                RasResponse resp = response.body();
+            public void onResponse(Call<PeternakanResponse> call, Response<PeternakanResponse> response) {
+                PeternakanResponse resp = response.body();
                 pDialog.dismiss();
 
                 if(response.isSuccessful()){
                     if(resp.getStatus().equals("error")){
-                        Toast.makeText(RasAddActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(PeternakanAddActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
                     }
                     else{
-                        Toast.makeText(RasAddActivity.this, "Data berhasil dibuat: id " + resp.getRas().getId(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(PeternakanAddActivity.this, "Data berhasil dibuat: id " + resp.getPeternakans().getId(), Toast.LENGTH_LONG).show();
 
-                        Intent intent = new Intent(RasAddActivity.this, RasActivity.class);
+                        Intent intent = new Intent(PeternakanAddActivity.this, PeternakanActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
 
-                        RasAddActivity.this.finish();
+                        PeternakanAddActivity.this.finish();
                     }
                 }
                 else{
-                    SweetAlertDialog swal = new SweetAlertDialog(RasAddActivity.this, SweetAlertDialog.ERROR_TYPE);
+                    SweetAlertDialog swal = new SweetAlertDialog(PeternakanAddActivity.this, SweetAlertDialog.ERROR_TYPE);
                     swal.setTitleText("Error");
                     swal.setContentText(response.message());
                     swal.show();
@@ -111,13 +110,14 @@ public class RasAddActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<RasResponse> call, Throwable t) {
+            public void onFailure(Call<PeternakanResponse> call, Throwable t) {
                 pDialog.dismiss();
-                SweetAlertDialog swal = new SweetAlertDialog(RasAddActivity.this, SweetAlertDialog.ERROR_TYPE);
+                SweetAlertDialog swal = new SweetAlertDialog(PeternakanAddActivity.this, SweetAlertDialog.ERROR_TYPE);
                 swal.setTitleText("Error");
                 swal.setContentText(t.getMessage());
                 swal.show();
             }
         });
     }
+
 }

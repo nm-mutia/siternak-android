@@ -26,7 +26,7 @@
                 android:id="@+id/ll_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorPrimary"
+                android:background="@color/colorPrimaryDark"
                 android:orientation="vertical"
                 android:paddingVertical="24dp"
                 app:layout_constraintBottom_toTopOf="@id/ll_form"
@@ -43,7 +43,7 @@
                     android:layout_marginEnd="24dp"
                     android:layout_marginRight="24dp"
                     android:fontFamily="@font/sourcesanspro_regular"
-                    android:text="Tambah Data"
+                    android:text="Ubah Data"
                     android:textAlignment="center"
                     android:textColor="@color/white"
                     android:textSize="20sp" />
@@ -57,7 +57,7 @@
                     android:layout_marginEnd="24dp"
                     android:layout_marginRight="24dp"
                     android:fontFamily="@font/sourcesanspro_bold"
-                    android:text="Pemilik"
+                    android:text="Peternakan"
                     android:textAlignment="center"
                     android:textColor="@color/white"
                     android:textSize="30sp"
@@ -82,28 +82,7 @@
                 app:layout_constraintStart_toStartOf="parent">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/til_pemilik_ktp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="8dp"
-                    app:errorEnabled="true"
-                    app:helperTextTextColor="@color/danger"
-                    app:hintTextAppearance="@style/TextLabel"
-                    app:counterMaxLength="16"
-                    app:counterEnabled="true">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/tiet_pemilik_ktp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/sourcesanspro_regular"
-                        android:hint="KTP"
-                        android:inputType="number"
-                        android:maxLength="16"/>
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/til_pemilik_nama"
+                    android:id="@+id/til_peternakan_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp"
@@ -112,11 +91,50 @@
                     app:hintTextAppearance="@style/TextLabel">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/tiet_pemilik_nama"
+                        android:id="@+id/tiet_peternakan_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="false"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:hint="ID"
+                        android:inputType="text"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_peternakan_nama"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="8dp"
+                    app:errorEnabled="true"
+                    app:helperTextTextColor="@color/danger"
+                    app:hintTextAppearance="@style/TextLabel">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tiet_peternakan_nama"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/sourcesanspro_regular"
-                        android:hint="Nama"
+                        android:hint="Nama Peternakan"
+                        android:inputType="text"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_peternakan_ket"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="8dp"
+                    app:errorEnabled="true"
+                    app:helperTextTextColor="@color/danger"
+                    app:hintTextAppearance="@style/TextLabel">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tiet_peternakan_ket"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:hint="Keterangan"
                         android:inputType="text" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
@@ -127,15 +145,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/rc_primary"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rc_primary_dark"
                 android:elevation="5dp"
                 android:fontFamily="@font/sourcesanspro_semibold"
                 android:padding="12dp"
-                android:text="Tambah"
+                android:text="Ubah"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="18sp"

@@ -32,8 +32,8 @@ import retrofit2.Response;
 public class PemilikOptionActivity extends AppCompatActivity {
     @BindView(R.id.rv) RecyclerView rv;
     @BindView(R.id.sv) SearchView sv;
-//    ArrayList<PemilikModel> pemilikArrayList;
-    PemilikOptionAdapter pemilikAdapter;
+
+    private PemilikOptionAdapter pemilikAdapter;
     private String userToken;
 
     @Override
@@ -42,7 +42,7 @@ public class PemilikOptionActivity extends AppCompatActivity {
         setContentView(R.layout.layout_option);
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setCustomView(R.layout.actionbar_white);
+        getSupportActionBar().setCustomView(R.layout.actionbar_cross);
         TextView tv_actionbar_title=getSupportActionBar().getCustomView().findViewById(R.id.tv_actionbar_title);
         tv_actionbar_title.setText("ID Pemilik");
 
@@ -93,8 +93,8 @@ public class PemilikOptionActivity extends AppCompatActivity {
                 loadingDialog.cancel();
                 PemilikGetResponse resp = response.body();
 
-                List<PemilikModel> pemiliks = resp.getPemiliks();
-                pemilikAdapter = new PemilikOptionAdapter(PemilikOptionActivity.this, pemiliks);
+                List<PemilikModel> datas = resp.getPemiliks();
+                pemilikAdapter = new PemilikOptionAdapter(PemilikOptionActivity.this, datas);
                 rv.setAdapter(pemilikAdapter);
             }
 
