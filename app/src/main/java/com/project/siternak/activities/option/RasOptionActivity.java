@@ -49,7 +49,7 @@ public class RasOptionActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         userToken = SharedPrefManager.getInstance(this).getAccessToken();
-        setPemilikData();
+        setData();
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -75,9 +75,9 @@ public class RasOptionActivity extends AppCompatActivity {
         this.onBackPressed();
     }
 
-    private void setPemilikData() {
-        LinearLayoutManager llmPemilik = new LinearLayoutManager(this);
-        rv.setLayoutManager(llmPemilik);
+    private void setData() {
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        rv.setLayoutManager(llm);
         rv.setHasFixedSize(true);
 
         SweetAlertDialog loadingDialog = DialogUtils.getLoadingPopup(this);

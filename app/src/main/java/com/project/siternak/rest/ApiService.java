@@ -228,7 +228,7 @@ public interface ApiService {
             @Field("tingggi_tubuh") String tinggiTubuh,
             @Field("cacat_fisik") String cacatFisik,
             @Field("ciri_lain") String ciriLain,
-            @Field("status_ada") String statusAda,
+            @Field("status_ada") Boolean statusAda,
             @Header("Authorization") String authToken
     );
 
@@ -255,7 +255,7 @@ public interface ApiService {
             @Field("tingggi_tubuh") String tinggiTubuh,
             @Field("cacat_fisik") String cacatFisik,
             @Field("ciri_lain") String ciriLain,
-            @Field("status_ada") String statusAda,
+            @Field("status_ada") Boolean statusAda,
             @Header("Authorization") String authToken
     );
 

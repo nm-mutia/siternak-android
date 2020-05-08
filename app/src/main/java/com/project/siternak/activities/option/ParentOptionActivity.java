@@ -12,9 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.siternak.R;
-import com.project.siternak.adapter.PemilikOptionAdapter;
-import com.project.siternak.models.data.PemilikModel;
-import com.project.siternak.responses.PemilikGetResponse;
+import com.project.siternak.adapter.ParentOptionAdapter;
+import com.project.siternak.models.data.TernakModel;
+import com.project.siternak.responses.TernakGetResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.DialogUtils;
 import com.project.siternak.utils.SharedPrefManager;
@@ -29,12 +29,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PemilikOptionActivity extends AppCompatActivity {
-    @BindView(R.id.rv) RecyclerView rv;
-    @BindView(R.id.sv) SearchView sv;
+public class ParentOptionActivity extends AppCompatActivity {
+    @BindView(R.id.rv)
+    RecyclerView rv;
+    @BindView(R.id.sv)
+    SearchView sv;
 
-    private PemilikOptionAdapter pemilikAdapter;
+    private ParentOptionAdapter adapter;
     private String userToken;
+    private int parent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,9 +47,16 @@ public class PemilikOptionActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.actionbar_cross);
         TextView tv_actionbar_title=getSupportActionBar().getCustomView().findViewById(R.id.tv_actionbar_title);
-        tv_actionbar_title.setText("ID Pemilik");
 
         ButterKnife.bind(this);
+        parent = (int) getIntent().getIntExtra("parent", 0);
+
+        if(parent == 5){
+            tv_actionbar_title.setText("Necktag Ayah");
+        }
+        else if(parent == 6){
+            tv_actionbar_title.setText("Necktag Ibu");
+        }
 
         userToken = SharedPrefManager.getInstance(this).getAccessToken();
         setData();
@@ -58,7 +68,7 @@ public class PemilikOptionActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                pemilikAdapter.getFilter().filter(newText);
+                adapter.getFilter().filter(newText);
                 return false;
             }
         });
@@ -82,24 +92,40 @@ public class PemilikOptionActivity extends AppCompatActivity {
 
         SweetAlertDialog loadingDialog = DialogUtils.getLoadingPopup(this);
 
-        Call<PemilikGetResponse> call = RetrofitClient
+        Call<TernakGetResponse> call = RetrofitClient
                 .getInstance()
                 .getApi()
-                .getPemilik("Bearer " + this.userToken);
+                .getTernak("Bearer " + this.userToken);
 
-        call.enqueue(new Callback<PemilikGetResponse>() {
+        call.enqueue(new Callback<TernakGetResponse>() {
             @Override
-            public void onResponse(Call<PemilikGetResponse> call, Response<PemilikGetResponse> response) {
+            public void onResponse(Call<TernakGetResponse> call, Response<TernakGetResponse> response) {
                 loadingDialog.cancel();
-                PemilikGetResponse resp = response.body();
+                TernakGetResponse resp = response.body();
 
-                List<PemilikModel> datas = resp.getPemiliks();
-                pemilikAdapter = new PemilikOptionAdapter(PemilikOptionActivity.this, datas);
-                rv.setAdapter(pemilikAdapter);
+                List<TernakModel> datas = resp.getTernaks();
+
+                if(parent == 5){
+                    for(int i=0; i<datas.size(); i++){
+                        if(datas.get(i).getJenisKelamin().equals("Betina")){ //hapus data betina (ayah)
+                            datas.remove(i);
+                        }
+                    }
+                }
+                else if(parent == 6){
+                    for(int i=0; i<datas.size(); i++){
+                        if(datas.get(i).getJenisKelamin().equals("Jantan")){ //hapus data jantan (ibu)
+                            datas.remove(i);
+                        }
+                    }
+                }
+
+                adapter = new ParentOptionAdapter(ParentOptionActivity.this, datas);
+                rv.setAdapter(adapter);
             }
 
             @Override
-            public void onFailure(Call<PemilikGetResponse> call, Throwable t) {
+            public void onFailure(Call<TernakGetResponse> call, Throwable t) {
                 loadingDialog.cancel();
             }
         });

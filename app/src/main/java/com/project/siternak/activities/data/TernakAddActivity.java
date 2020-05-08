@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +19,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.project.siternak.R;
 import com.project.siternak.activities.option.KematianOptionActivity;
+import com.project.siternak.activities.option.ParentOptionActivity;
 import com.project.siternak.activities.option.PemilikOptionActivity;
 import com.project.siternak.activities.option.PeternakanOptionActivity;
 import com.project.siternak.activities.option.RasOptionActivity;
@@ -28,6 +30,9 @@ import com.project.siternak.models.data.PemilikModel;
 import com.project.siternak.models.data.PeternakanModel;
 import com.project.siternak.models.data.RasModel;
 import com.project.siternak.models.data.TernakModel;
+import com.project.siternak.responses.TernakResponse;
+import com.project.siternak.rest.RetrofitClient;
+import com.project.siternak.utils.DialogUtils;
 import com.project.siternak.utils.SharedPrefManager;
 
 import java.util.Calendar;
@@ -35,6 +40,10 @@ import java.util.Calendar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.pedant.SweetAlert.SweetAlertDialog;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class TernakAddActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
     @BindView(R.id.til_ternak_pemilik) TextInputLayout tilPemilik;
@@ -45,7 +54,6 @@ public class TernakAddActivity extends AppCompatActivity implements DatePickerDi
     @BindView(R.id.tiet_ternak_ras) TextInputEditText tietRas;
     @BindView(R.id.til_ternak_kematian) TextInputLayout tilKematian;
     @BindView(R.id.tiet_ternak_kematian) TextInputEditText tietKematian;
-//    @BindView(R.id.til_ternak_jk) TextInputLayout tilJk;
     @BindView(R.id.til_ternak_tgl_lahir) TextInputLayout tilTglLahir;
     @BindView(R.id.til_ternak_bobot_lahir) TextInputLayout tilBobotLahir;
     @BindView(R.id.til_ternak_pukul_lahir) TextInputLayout tilPukulLahir;
@@ -54,13 +62,14 @@ public class TernakAddActivity extends AppCompatActivity implements DatePickerDi
     @BindView(R.id.til_ternak_tgl_lepas_sapih) TextInputLayout tilTglLepasSapih;
     @BindView(R.id.til_ternak_blood) TextInputLayout tilBlood;
     @BindView(R.id.til_ternak_ayah) TextInputLayout tilAyah;
+    @BindView(R.id.tiet_ternak_ayah) TextInputEditText tietAyah;
     @BindView(R.id.til_ternak_ibu) TextInputLayout tilIbu;
+    @BindView(R.id.tiet_ternak_ibu) TextInputEditText tietIbu;
     @BindView(R.id.til_ternak_bobot_tubuh) TextInputLayout tilBobotTubuh;
     @BindView(R.id.til_ternak_panjang_tubuh) TextInputLayout tilPanjangTubuh;
     @BindView(R.id.til_ternak_tinggi_tubuh) TextInputLayout tilTinggiTubuh;
     @BindView(R.id.til_ternak_cacat_fisik) TextInputLayout tilCacatFisik;
     @BindView(R.id.til_ternak_ciri_lain) TextInputLayout tilCiriLain;
-//    @BindView(R.id.til_ternak_status_ada) TextInputLayout tilStatusAda;
     @BindView(R.id.s_ternak_jk) Spinner sJk;
     @BindView(R.id.s_ternak_status_ada) Spinner sStatusAda;
 
@@ -71,14 +80,10 @@ public class TernakAddActivity extends AppCompatActivity implements DatePickerDi
     private static final int REQUEST_CODE_SETAYAH = 5;
     private static final int REQUEST_CODE_SETIBU = 6;
 
-//    private PemilikModel idPemilik;
-//    private PeternakanModel idPeternakan;
-//    private RasModel idRas;
-//    private KematianModel idKematian;
-//    private TernakModel idAyah, idIbu;
-
     private String userToken;
     private int clickedTgl;
+
+    private Integer pemilik, ras, kematian;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -126,6 +131,20 @@ public class TernakAddActivity extends AppCompatActivity implements DatePickerDi
     public void setIdKematian(){
         Intent intent = new Intent(TernakAddActivity.this, KematianOptionActivity.class);
         startActivityForResult(intent, REQUEST_CODE_SETKEMATIAN);
+    }
+
+    @OnClick(R.id.tiet_ternak_ayah)
+    public void setAyah(){
+        Intent intent = new Intent(TernakAddActivity.this, ParentOptionActivity.class);
+        intent.putExtra("parent", REQUEST_CODE_SETAYAH);
+        startActivityForResult(intent, REQUEST_CODE_SETAYAH);
+    }
+
+    @OnClick(R.id.tiet_ternak_ibu)
+    public void setIbu(){
+        Intent intent = new Intent(TernakAddActivity.this, ParentOptionActivity.class);
+        intent.putExtra("parent", REQUEST_CODE_SETIBU);
+        startActivityForResult(intent, REQUEST_CODE_SETIBU);
     }
 
 
@@ -200,6 +219,192 @@ public class TernakAddActivity extends AppCompatActivity implements DatePickerDi
                 KematianModel result = (KematianModel) data.getSerializableExtra("kematian");
                 tietKematian.setText(String.valueOf(result.getId()));
             }
+            else if(requestCode == REQUEST_CODE_SETAYAH){
+                TernakModel result = (TernakModel) data.getSerializableExtra("parent");
+                tietAyah.setText(result.getNecktag());
+            }
+            else if(requestCode == REQUEST_CODE_SETIBU){
+                TernakModel result = (TernakModel) data.getSerializableExtra("parent");
+                tietIbu.setText(result.getNecktag());
+            }
         }
     }
+
+    public boolean validatePeternakan(){
+        String p = tilPeternakan.getEditText().getText().toString().trim();
+        if(p.isEmpty()){
+            tilPeternakan.setError("Wajib diisi");
+            return false;
+        }
+        else {
+            tilPeternakan.setError(null);
+            tilPeternakan.setErrorEnabled(false);
+            return true;
+        }
+    }
+
+    public boolean validateRas(){
+        String p = tilRas.getEditText().getText().toString().trim();
+        if(p.isEmpty()){
+            tilRas.setError("Wajib diisi");
+            return false;
+        }
+        else {
+            tilRas.setError(null);
+            tilRas.setErrorEnabled(false);
+            return true;
+        }
+    }
+
+    public boolean validateTglLahir(){
+        String p = tilTglLahir.getEditText().getText().toString().trim();
+        if(p.isEmpty()){
+            tilTglLahir.setError("Wajib diisi");
+            return false;
+        }
+        else {
+            tilTglLahir.setError(null);
+            tilTglLahir.setErrorEnabled(false);
+            return true;
+        }
+    }
+
+    public boolean validateJk(){
+        String p = sJk.getSelectedItem().toString().trim();
+        if(p.isEmpty()){
+            Toast.makeText(TernakAddActivity.this, "Jenis Kelamin - wajib diisi", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    public boolean validateBlood(){
+        String p = tilBlood.getEditText().getText().toString().trim();
+        if(p.isEmpty()){
+            tilBlood.setError("Wajib diisi");
+            return false;
+        }
+        else {
+            tilBlood.setError(null);
+            tilBlood.setErrorEnabled(false);
+            return true;
+        }
+    }
+
+    public boolean validateStatus(){
+        String p = sStatusAda.getSelectedItem().toString().trim();
+        if(p.isEmpty()){
+            Toast.makeText(TernakAddActivity.this, "Status Ada - wajib diisi", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    public void checkIfNull(){
+        if(tilPemilik.getEditText().getText().toString().equals("")){
+            pemilik = null;
+        }else{
+            pemilik = Integer.valueOf(tilPemilik.getEditText().getText().toString());
+        }
+
+        if(tilRas.getEditText().getText().toString().equals("")){
+            ras = null;
+        }else{
+            ras = Integer.valueOf(tilRas.getEditText().getText().toString());
+        }
+
+        if(tilKematian.getEditText().getText().toString().equals("")){
+            kematian = null;
+        }else{
+            kematian = Integer.valueOf(tilKematian.getEditText().getText().toString());
+        }
+    }
+
+    @OnClick(R.id.tv_submit)
+    public void action_add() {
+        if (!validatePeternakan() | !validateTglLahir() | !validateRas() | !validateJk() | !validateBlood() | !validateStatus()) {
+            Toast.makeText(TernakAddActivity.this, "Tolong isi data!", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        SweetAlertDialog pDialog = DialogUtils.getLoadingPopup(this);
+
+        checkIfNull();
+
+        Integer peternakan = Integer.valueOf(tilPeternakan.getEditText().getText().toString());
+        String jk = sJk.getSelectedItem().toString();
+        String tglLahir = tilTglLahir.getEditText().getText().toString();
+        String bobotLahir = tilBobotLahir.getEditText().getText().toString();
+        String pukulLahir = tilPukulLahir.getEditText().getText().toString();
+        String lamaDiKandungan = tilLamaDikandungan.getEditText().getText().toString();
+        String lamaLaktasi = tilLamaLaktasi.getEditText().getText().toString();
+        String tglLepasSapih = tilTglLepasSapih.getEditText().getText().toString();
+        String blood = tilBlood.getEditText().getText().toString().toUpperCase();
+        String ayah = tilAyah.getEditText().getText().toString();
+        String ibu = tilIbu.getEditText().getText().toString();
+        String bobotTubuh = tilBobotTubuh.getEditText().getText().toString();
+        String panjangTubuh = tilPanjangTubuh.getEditText().getText().toString();
+        String tinggiTubuh = tilTinggiTubuh.getEditText().getText().toString();
+        String cacatFisik = tilCacatFisik.getEditText().getText().toString();
+        String ciriLain = tilCiriLain.getEditText().getText().toString();
+        boolean statusAda;
+
+        if(sStatusAda.getSelectedItem().toString().equals("Ada")){
+            statusAda = true;
+        }else{
+            statusAda = false;
+        }
+
+        Call<TernakResponse> call = RetrofitClient
+                .getInstance()
+                .getApi()
+                .addTernak(pemilik, peternakan, ras, kematian,
+                        jk, tglLahir, bobotLahir, pukulLahir, lamaDiKandungan, lamaLaktasi,
+                        tglLepasSapih, blood, ayah, ibu, bobotTubuh, panjangTubuh,tinggiTubuh,
+                        cacatFisik, ciriLain, statusAda, "Bearer " + userToken);
+
+        call.enqueue(new Callback<TernakResponse>() {
+            @Override
+            public void onResponse(Call<TernakResponse> call, Response<TernakResponse> response) {
+                TernakResponse resp = response.body();
+                pDialog.dismiss();
+
+                if(response.isSuccessful()){
+                    if(resp.getStatus().equals("error")){
+                        Toast.makeText(TernakAddActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
+                    }
+                    else{
+                        Toast.makeText(TernakAddActivity.this, "Data berhasil dibuat: necktag " + resp.getTernaks().getNecktag(), Toast.LENGTH_LONG).show();
+
+                        Intent intent = new Intent(TernakAddActivity.this, TernakActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+
+                        TernakAddActivity.this.finish();
+                    }
+                }
+                else{
+                    SweetAlertDialog swal = new SweetAlertDialog(TernakAddActivity.this, SweetAlertDialog.ERROR_TYPE);
+                    swal.setTitleText("Error");
+                    swal.setContentText(response.message());
+                    swal.show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TernakResponse> call, Throwable t) {
+                pDialog.dismiss();
+                SweetAlertDialog swal = new SweetAlertDialog(TernakAddActivity.this, SweetAlertDialog.ERROR_TYPE);
+                swal.setTitleText("Error");
+                swal.setContentText(t.getMessage());
+                swal.show();
+            }
+        });
+    }
+
+
 }
