@@ -19,7 +19,47 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:clipToPadding="false">
+
+            <RelativeLayout
+                android:id="@+id/rl_top"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_alignParentTop="true">
+                <Button
+                    android:id="@+id/b_restore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_restore_black_24dp"
+                    android:background="@drawable/rc_warning"
+                    android:padding="6dp"
+                    android:text=" Restore "
+                    android:fontFamily="@font/sourcesanspro_regular"
+                    android:textSize="14sp"
+                    android:layout_gravity="start"
+                    android:layout_marginLeft="16dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:visibility="gone"/>
+
+                <Button
+                    android:id="@+id/b_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_delete_forever_black_24dp"
+                    android:background="@drawable/rc_danger"
+                    android:padding="6dp"
+                    android:text="Delete "
+                    android:fontFamily="@font/sourcesanspro_regular"
+                    android:textSize="14sp"
+                    android:layout_gravity="end"
+                    android:layout_marginRight="16dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:visibility="gone"/>
+            </RelativeLayout>
 
             <TableLayout
                 android:id="@+id/tl_detail_ternak"
@@ -29,10 +69,13 @@
                 android:background="@drawable/rc_white"
                 android:clipToPadding="false"
                 android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
                 android:layout_marginRight="12dp"
                 android:layout_marginLeft="12dp"
-                android:elevation="4dp">
+                android:elevation="4dp"
+                android:layout_below="@id/rl_top">
                 <TextView
+                    android:id="@+id/tv_ubah"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
@@ -47,7 +90,8 @@
 
                 <TableRow
                     android:paddingLeft="12dp"
-                    android:paddingRight="12dp">
+                    android:paddingRight="12dp"
+                    android:layout_marginTop="15dp">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

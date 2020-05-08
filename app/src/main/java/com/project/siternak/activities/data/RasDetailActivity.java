@@ -1,7 +1,6 @@
 package com.project.siternak.activities.data;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -13,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.project.siternak.R;
 import com.project.siternak.models.data.RasModel;
-import com.project.siternak.responses.DataDeleteResponse;
+import com.project.siternak.responses.DataResponse;
 import com.project.siternak.responses.RasResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.DialogUtils;
@@ -75,7 +74,7 @@ public class RasDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.ib_actionbar_close)
     public void close(){
-        finish();
+        onBackPressed();
     }
 
     @OnClick(R.id.ib_delete_data)
@@ -89,15 +88,15 @@ public class RasDetailActivity extends AppCompatActivity {
             public void onClick(SweetAlertDialog sDialog) {
                 sDialog.dismissWithAnimation();
 
-                Call<DataDeleteResponse> calld = RetrofitClient
+                Call<DataResponse> calld = RetrofitClient
                         .getInstance()
                         .getApi()
                         .delRas("Bearer " + userToken, rasData.getId());
 
-                calld.enqueue(new Callback<DataDeleteResponse>() {
+                calld.enqueue(new Callback<DataResponse>() {
                     @Override
-                    public void onResponse(Call<DataDeleteResponse> call, Response<DataDeleteResponse> response) {
-                        DataDeleteResponse resp = response.body();
+                    public void onResponse(Call<DataResponse> call, Response<DataResponse> response) {
+                        DataResponse resp = response.body();
 
                         if(response.isSuccessful()){
                             Toast.makeText(RasDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
@@ -110,7 +109,7 @@ public class RasDetailActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<DataDeleteResponse> call, Throwable t) {
+                    public void onFailure(Call<DataResponse> call, Throwable t) {
                         Toast.makeText(RasDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
                     }
                 });

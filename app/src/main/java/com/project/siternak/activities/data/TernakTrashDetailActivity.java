@@ -1,8 +1,10 @@
 package com.project.siternak.activities.data;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,8 +21,6 @@ import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.DialogUtils;
 import com.project.siternak.utils.SharedPrefManager;
 
-import java.io.Serializable;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -29,7 +29,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class TernakDetailActivity extends AppCompatActivity {
+public class TernakTrashDetailActivity extends AppCompatActivity {
     @BindView(R.id.tv_necktag) TextView tvNecktag;
     @BindView(R.id.tv_ternak_pemilik) TextView tvPemilik;
     @BindView(R.id.tv_ternak_peternakan) TextView tvPeternakan;
@@ -55,10 +55,14 @@ public class TernakDetailActivity extends AppCompatActivity {
     @BindView(R.id.tv_updated_at) TextView tvUpdatedAt;
     @BindView(R.id.tv_deleted_at) TextView tvDeletedAt;
     @BindView(R.id.tl_detail_ternak) TableLayout tlDetailTernak;
+    @BindView(R.id.b_restore) Button bRestore;
+    @BindView(R.id.b_delete) Button bDelete;
+    @BindView(R.id.tv_ubah) TextView tvUbah;
+    @BindView(R.id.ib_delete_data) ImageButton ibDeleteData;
 
     private TernakModel ternakData;
     private String userToken;
-    private int backFinish;
+    public final static int backFinish = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,10 +77,13 @@ public class TernakDetailActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        ternakData = (TernakModel) getIntent().getSerializableExtra("ternak");
-        tv_actionbar_title.setText("Ternak - " + ternakData.getNecktag());
+        bRestore.setVisibility(View.VISIBLE);
+        bDelete.setVisibility(View.VISIBLE);
+        tvUbah.setVisibility(View.GONE);
+        ibDeleteData.setVisibility(View.GONE);
 
-        backFinish = (int) getIntent().getIntExtra("finish", 0); //data from after edit ternak
+        ternakData = (TernakModel) getIntent().getSerializableExtra("ternak");
+        tv_actionbar_title.setText("Tong Sampah - " + ternakData.getNecktag());
 
         userToken = SharedPrefManager.getInstance(this).getAccessToken();
         setDataTernak();
@@ -84,53 +91,49 @@ public class TernakDetailActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(backFinish == 1){
-            Intent intent = new Intent(TernakDetailActivity.this, TernakActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        }
         finish();
     }
 
     @OnClick(R.id.ib_actionbar_close)
     public void close(){
-        onBackPressed();
+        finish();
     }
 
-    @OnClick(R.id.ib_delete_data)
-    public void deleteData() {
+    @OnClick(R.id.b_restore)
+    public void restore(){
         SweetAlertDialog wDialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE);
-        wDialog.setTitleText("Apakah anda yakin untuk menghapus data ini?");
-        wDialog.setContentText("Data ternak id " + ternakData.getNecktag());
+        wDialog.setTitleText("Apakah anda yakin ingin mengembalikan data ini?");
+        wDialog.setContentText("Data ternak id " + tvNecktag.getText().toString() + " akan dikembalikan dari tong sampah");
         wDialog.setConfirmText("Ya");
         wDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
             @Override
             public void onClick(SweetAlertDialog sDialog) {
                 sDialog.dismissWithAnimation();
 
-                Call<DataResponse> calld = RetrofitClient
+                Call<DataResponse> callr = RetrofitClient
                         .getInstance()
                         .getApi()
-                        .delTernak("Bearer " + userToken, ternakData.getNecktag());
+                        .restoreTernak("Bearer " + userToken, tvNecktag.getText().toString());
 
-                calld.enqueue(new Callback<DataResponse>() {
+                callr.enqueue(new Callback<DataResponse>() {
                     @Override
                     public void onResponse(Call<DataResponse> call, Response<DataResponse> response) {
                         DataResponse resp = response.body();
 
-                        if(response.isSuccessful()){
-                            Toast.makeText(TernakDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(TernakDetailActivity.this, TernakActivity.class);
+                        if (response.isSuccessful()) {
+                            Toast.makeText(TernakTrashDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(TernakTrashDetailActivity.this, TernakTrashActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.putExtra("finish", backFinish);
                             startActivity(intent);
 
-                            TernakDetailActivity.this.finish();
+                            TernakTrashDetailActivity.this.finish();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<DataResponse> call, Throwable t) {
-                        Toast.makeText(TernakDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(TernakTrashDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -144,11 +147,52 @@ public class TernakDetailActivity extends AppCompatActivity {
         wDialog.show();
     }
 
-    @OnClick(R.id.tl_detail_ternak)
-    public void editData(){
-        Intent intent = new Intent(TernakDetailActivity.this, TernakEditActivity.class);
-        intent.putExtra("data", (Serializable) ternakData);
-        startActivity(intent);
+    @OnClick(R.id.b_delete)
+    public void delete(){
+        SweetAlertDialog wDialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE);
+        wDialog.setTitleText("Apakah anda yakin ingin menghapus permanen data ini?");
+        wDialog.setContentText("Data ternak id " + tvNecktag.getText().toString() + " akan dihapus permanen!");
+        wDialog.setConfirmText("Ya");
+        wDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sDialog) {
+                sDialog.dismissWithAnimation();
+
+                Call<DataResponse> callr = RetrofitClient
+                        .getInstance()
+                        .getApi()
+                        .fdelTernak("Bearer " + userToken, tvNecktag.getText().toString());
+
+                callr.enqueue(new Callback<DataResponse>() {
+                    @Override
+                    public void onResponse(Call<DataResponse> call, Response<DataResponse> response) {
+                        DataResponse resp = response.body();
+
+                        if (response.isSuccessful()) {
+                            Toast.makeText(TernakTrashDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(TernakTrashDetailActivity.this, TernakTrashActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.putExtra("finish", 2);
+                            startActivity(intent);
+
+                            TernakTrashDetailActivity.this.finish();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<DataResponse> call, Throwable t) {
+                        Toast.makeText(TernakTrashDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+        wDialog.setCancelButton("Batal", new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sDialog) {
+                sDialog.dismissWithAnimation();
+            }
+        });
+        wDialog.show();
     }
 
     private void setDataTernak() {
@@ -157,7 +201,7 @@ public class TernakDetailActivity extends AppCompatActivity {
         Call<TernakResponse> call = RetrofitClient
                 .getInstance()
                 .getApi()
-                .getTernakDetail("Bearer " + this.userToken, ternakData.getNecktag());
+                .getTernakTrashDetail("Bearer " + this.userToken, ternakData.getNecktag());
 
         call.enqueue(new Callback<TernakResponse>() {
             @Override
@@ -200,14 +244,14 @@ public class TernakDetailActivity extends AppCompatActivity {
                     tvDeletedAt.setText(data.getDeleted_at());
                 }
                 else {
-                    Toast.makeText(TernakDetailActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(TernakTrashDetailActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<TernakResponse> call, Throwable t) {
                 pDialog.cancel();
-                Toast.makeText(TernakDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
+                Toast.makeText(TernakTrashDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
             }
         });
     }

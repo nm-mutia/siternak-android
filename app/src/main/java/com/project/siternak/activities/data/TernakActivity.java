@@ -1,7 +1,6 @@
 package com.project.siternak.activities.data;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,6 +21,7 @@ import com.project.siternak.adapter.TernakAdapter;
 import com.project.siternak.models.data.TernakModel;
 import com.project.siternak.responses.TernakGetResponse;
 import com.project.siternak.rest.RetrofitClient;
+import com.project.siternak.utils.DialogUtils;
 import com.project.siternak.utils.SharedPrefManager;
 
 import java.util.ArrayList;
@@ -36,6 +36,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class TernakActivity extends AppCompatActivity {
+    @BindView(R.id.tv_trash) TextView tvTrash;
     @BindView(R.id.rv) RecyclerView rv_ternak;
     @BindView(R.id.tv_nodata) TextView tv_nodata;
 
@@ -46,7 +47,7 @@ public class TernakActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_data_list);
+        setContentView(R.layout.activity_data_list_ternak);
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
@@ -57,6 +58,7 @@ public class TernakActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        tvTrash.setVisibility(View.VISIBLE);
         userToken = SharedPrefManager.getInstance(this).getAccessToken();
         rv_ternak.setLayoutManager(new LinearLayoutManager(this));
         setDataTernak();
@@ -75,6 +77,12 @@ public class TernakActivity extends AppCompatActivity {
     @OnClick(R.id.ib_add_data)
     public void addData(){
         Intent intent = new Intent(TernakActivity.this, TernakAddActivity.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.tv_trash)
+    public void trash(){
+        Intent intent = new Intent(TernakActivity.this, TernakTrashActivity.class);
         startActivity(intent);
     }
 
@@ -105,11 +113,7 @@ public class TernakActivity extends AppCompatActivity {
     }
 
     private void setDataTernak() {
-        SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("Mohon Tunggu");
-        pDialog.setCancelable(false);
-        pDialog.show();
+        SweetAlertDialog pDialog = DialogUtils.getLoadingPopup(this);
 
         Call<TernakGetResponse> call = RetrofitClient
                 .getInstance()

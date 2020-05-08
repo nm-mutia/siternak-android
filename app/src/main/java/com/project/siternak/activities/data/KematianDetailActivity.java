@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.project.siternak.R;
 import com.project.siternak.models.data.KematianModel;
-import com.project.siternak.responses.DataDeleteResponse;
+import com.project.siternak.responses.DataResponse;
 import com.project.siternak.responses.KematianResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.SharedPrefManager;
@@ -74,7 +74,7 @@ public class KematianDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.ib_actionbar_close)
     public void close(){
-        finish();
+        onBackPressed();
     }
 
     @OnClick(R.id.ib_delete_data)
@@ -88,15 +88,15 @@ public class KematianDetailActivity extends AppCompatActivity {
             public void onClick(SweetAlertDialog sDialog) {
                 sDialog.dismissWithAnimation();
 
-                Call<DataDeleteResponse> calls = RetrofitClient
+                Call<DataResponse> calls = RetrofitClient
                         .getInstance()
                         .getApi()
                         .delKematian("Bearer " + userToken, kematianData.getId());
 
-                calls.enqueue(new Callback<DataDeleteResponse>() {
+                calls.enqueue(new Callback<DataResponse>() {
                     @Override
-                    public void onResponse(Call<DataDeleteResponse> call, Response<DataDeleteResponse> response) {
-                        DataDeleteResponse resp = response.body();
+                    public void onResponse(Call<DataResponse> call, Response<DataResponse> response) {
+                        DataResponse resp = response.body();
 
                         if(response.isSuccessful()){
                             Toast.makeText(KematianDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
@@ -108,7 +108,7 @@ public class KematianDetailActivity extends AppCompatActivity {
                         }
                     }
                     @Override
-                    public void onFailure(Call<DataDeleteResponse> call, Throwable t) {
+                    public void onFailure(Call<DataResponse> call, Throwable t) {
                         Toast.makeText(KematianDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
                     }
                 });

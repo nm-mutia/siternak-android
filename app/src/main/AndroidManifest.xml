@@ -102,6 +102,12 @@
         <activity android:name=".activities.data.TernakEditActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".activities.data.TernakTrashActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".activities.data.TernakTrashDetailActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
         <!-- peternakan -->
         <activity android:name=".activities.data.PeternakanActivity"
             android:screenOrientation="portrait"

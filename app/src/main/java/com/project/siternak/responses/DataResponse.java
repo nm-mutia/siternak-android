@@ -3,7 +3,7 @@ package com.project.siternak.responses;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class DataDeleteResponse {
+public class DataResponse {
     @SerializedName("status")
     @Expose
     private String status;

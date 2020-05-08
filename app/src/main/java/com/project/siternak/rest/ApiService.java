@@ -1,6 +1,6 @@
 package com.project.siternak.rest;
 
-import com.project.siternak.responses.DataDeleteResponse;
+import com.project.siternak.responses.DataResponse;
 import com.project.siternak.responses.KematianResponse;
 import com.project.siternak.responses.KematianGetResponse;
 import com.project.siternak.responses.LoginResponse;
@@ -70,7 +70,7 @@ public interface ApiService {
 
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @DELETE("kematian/{id}")
-    Call<DataDeleteResponse> delKematian(@Header("Authorization") String authToken, @Path("id") Integer id);
+    Call<DataResponse> delKematian(@Header("Authorization") String authToken, @Path("id") Integer id);
 
 
     // ------------------------------------data pemilik--------------------------------------------
@@ -101,7 +101,7 @@ public interface ApiService {
 
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @DELETE("pemilik/{id}")
-    Call<DataDeleteResponse> delPemilik(@Header("Authorization") String authToken, @Path("id") Integer id);
+    Call<DataResponse> delPemilik(@Header("Authorization") String authToken, @Path("id") Integer id);
 
 
     // ------------------------------------data penyakit--------------------------------------------
@@ -132,7 +132,7 @@ public interface ApiService {
 
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @DELETE("penyakit/{id}")
-    Call<DataDeleteResponse> delPenyakit(@Header("Authorization") String authToken, @Path("id") Integer id);
+    Call<DataResponse> delPenyakit(@Header("Authorization") String authToken, @Path("id") Integer id);
 
 
     // ------------------------------------data ras--------------------------------------------
@@ -163,7 +163,7 @@ public interface ApiService {
 
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @DELETE("ras/{id}")
-    Call<DataDeleteResponse> delRas(@Header("Authorization") String authToken, @Path("id") Integer id);
+    Call<DataResponse> delRas(@Header("Authorization") String authToken, @Path("id") Integer id);
 
 
     // ------------------------------------data peternakan--------------------------------------------
@@ -194,7 +194,7 @@ public interface ApiService {
 
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @DELETE("peternakan/{id}")
-    Call<DataDeleteResponse> delPeternakan(@Header("Authorization") String authToken, @Path("id") Integer id);
+    Call<DataResponse> delPeternakan(@Header("Authorization") String authToken, @Path("id") Integer id);
 
 
     // ------------------------------------data ternak--------------------------------------------
@@ -261,5 +261,32 @@ public interface ApiService {
 
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @DELETE("ternak/{necktag}")
-    Call<DataDeleteResponse> delTernak(@Header("Authorization") String authToken, @Path("necktag") String necktag);
+    Call<DataResponse> delTernak(@Header("Authorization") String authToken, @Path("necktag") String necktag);
+
+
+    //-----------------------------trash-----------------------------
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @GET("ternaktrash")
+    Call<TernakGetResponse> getTernakTrash(@Header("Authorization") String authToken);
+
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @GET("ternaktrash/{necktag}")
+    Call<TernakResponse> getTernakTrashDetail(@Header("Authorization") String authToken, @Path("necktag") String necktag);
+
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @GET("ternaktrash/restore")
+    Call<DataResponse> restoreTernakAll(@Header("Authorization") String authToken);
+
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @GET("ternaktrash/restore/{necktag}")
+    Call<DataResponse> restoreTernak(@Header("Authorization") String authToken, @Path("necktag") String necktag);
+
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @DELETE("ternaktrash/fdelete")
+    Call<DataResponse> fdelTernakAll(@Header("Authorization") String authToken);
+
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @DELETE("ternaktrash/fdelete/{necktag}")
+    Call<DataResponse> fdelTernak(@Header("Authorization") String authToken, @Path("necktag") String necktag);
+
 }

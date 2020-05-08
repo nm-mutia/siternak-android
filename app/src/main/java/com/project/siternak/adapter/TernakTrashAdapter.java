@@ -14,7 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.siternak.R;
-import com.project.siternak.activities.data.TernakDetailActivity;
+import com.project.siternak.activities.data.TernakTrashActivity;
+import com.project.siternak.activities.data.TernakTrashDetailActivity;
 import com.project.siternak.models.data.TernakModel;
 
 import java.io.Serializable;
@@ -24,12 +25,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TernakAdapter extends RecyclerView.Adapter<TernakAdapter.DataTernakHolder> implements Filterable {
+public class TernakTrashAdapter extends RecyclerView.Adapter<TernakTrashAdapter.DataTernakHolder> implements Filterable {
     private ArrayList<TernakModel> ternakArrayList;
     private ArrayList<TernakModel> ternakArrayListFull;
     private Context mContext;
 
-    public TernakAdapter(Context mContext, ArrayList<TernakModel> ternakArrayList) {
+    public TernakTrashAdapter(Context mContext, ArrayList<TernakModel> ternakArrayList) {
         this.ternakArrayList = ternakArrayList;
         this.mContext = mContext;
         ternakArrayListFull = new ArrayList<>(ternakArrayList);
@@ -59,7 +60,7 @@ public class TernakAdapter extends RecyclerView.Adapter<TernakAdapter.DataTernak
         holder.llDataTernak.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), TernakDetailActivity.class);
+                Intent intent = new Intent(view.getContext(), TernakTrashDetailActivity.class);
                 intent.putExtra("ternak", (Serializable) data);
                 mContext.startActivity(intent);
             }

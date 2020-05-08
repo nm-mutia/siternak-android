@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.project.siternak.R;
 import com.project.siternak.models.data.PeternakanModel;
-import com.project.siternak.responses.DataDeleteResponse;
+import com.project.siternak.responses.DataResponse;
 import com.project.siternak.responses.PeternakanResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.DialogUtils;
@@ -74,7 +74,7 @@ public class PeternakanDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.ib_actionbar_close)
     public void close(){
-        finish();
+        onBackPressed();
     }
 
     @OnClick(R.id.ib_delete_data)
@@ -88,15 +88,15 @@ public class PeternakanDetailActivity extends AppCompatActivity {
             public void onClick(SweetAlertDialog sDialog) {
                 sDialog.dismissWithAnimation();
 
-                Call<DataDeleteResponse> calld = RetrofitClient
+                Call<DataResponse> calld = RetrofitClient
                         .getInstance()
                         .getApi()
                         .delPeternakan("Bearer " + userToken, peternakanData.getId());
 
-                calld.enqueue(new Callback<DataDeleteResponse>() {
+                calld.enqueue(new Callback<DataResponse>() {
                     @Override
-                    public void onResponse(Call<DataDeleteResponse> call, Response<DataDeleteResponse> response) {
-                        DataDeleteResponse resp = response.body();
+                    public void onResponse(Call<DataResponse> call, Response<DataResponse> response) {
+                        DataResponse resp = response.body();
 
                         if(response.isSuccessful()){
                             Toast.makeText(PeternakanDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
@@ -109,7 +109,7 @@ public class PeternakanDetailActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<DataDeleteResponse> call, Throwable t) {
+                    public void onFailure(Call<DataResponse> call, Throwable t) {
                         Toast.makeText(PeternakanDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
                     }
                 });
