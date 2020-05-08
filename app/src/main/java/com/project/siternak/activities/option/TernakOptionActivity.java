@@ -29,7 +29,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ParentOptionActivity extends AppCompatActivity {
+public class TernakOptionActivity extends AppCompatActivity {
     @BindView(R.id.rv)
     RecyclerView rv;
     @BindView(R.id.sv)
@@ -37,7 +37,7 @@ public class ParentOptionActivity extends AppCompatActivity {
 
     private ParentOptionAdapter adapter;
     private String userToken;
-    private int parent;
+    private int parent, kawin;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +50,7 @@ public class ParentOptionActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
         parent = (int) getIntent().getIntExtra("parent", 0);
+        kawin = (int) getIntent().getIntExtra("necktag", 0);
 
         if(parent == 5){
             tv_actionbar_title.setText("Necktag Ayah");
@@ -120,7 +121,7 @@ public class ParentOptionActivity extends AppCompatActivity {
                     }
                 }
 
-                adapter = new ParentOptionAdapter(ParentOptionActivity.this, datas);
+                adapter = new ParentOptionAdapter(TernakOptionActivity.this, datas);
                 rv.setAdapter(adapter);
             }
 

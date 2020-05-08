@@ -1,7 +1,6 @@
 package com.project.siternak.activities.data;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -12,9 +11,9 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.project.siternak.R;
-import com.project.siternak.models.data.KematianModel;
+import com.project.siternak.models.data.PerkawinanModel;
 import com.project.siternak.responses.DataResponse;
-import com.project.siternak.responses.KematianResponse;
+import com.project.siternak.responses.PerkawinanResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.DialogUtils;
 import com.project.siternak.utils.SharedPrefManager;
@@ -27,24 +26,23 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class KematianDetailActivity extends AppCompatActivity {
+public class PerkawinanDetailActivity extends AppCompatActivity {
     @BindView(R.id.tv_id) TextView tvId;
+    @BindView(R.id.tv_necktag) TextView tvNecktag;
+    @BindView(R.id.tv_necktag_psg) TextView tvNecktagPsg;
     @BindView(R.id.tv_tgl) TextView tvTgl;
-    @BindView(R.id.tv_waktu) TextView tvWaktu;
-    @BindView(R.id.tv_penyebab) TextView tvPenyebab;
-    @BindView(R.id.tv_kondisi) TextView tvKondisi;
     @BindView(R.id.tv_created_at) TextView tvCreatedAt;
     @BindView(R.id.tv_updated_at) TextView tvUpdatedAt;
-    @BindView(R.id.tl_detail_kematian) TableLayout tlDetailKematian;
+    @BindView(R.id.tl_detail_perkawinan) TableLayout tlDetailPerkawinan;
 
-    private KematianModel kematianData;
+    private PerkawinanModel perkawinanData;
     private String userToken;
     private int backFinish;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_data_kematian);
+        setContentView(R.layout.activity_data_perkawinan);
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
@@ -54,19 +52,19 @@ public class KematianDetailActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        kematianData = (KematianModel) getIntent().getSerializableExtra("kematian");
-        tv_actionbar_title.setText("Kematian - " + String.valueOf(kematianData.getId()));
+        perkawinanData = (PerkawinanModel) getIntent().getSerializableExtra("perkawinan");
+        tv_actionbar_title.setText("Perkawinan - " + String.valueOf(perkawinanData.getId()));
 
-        backFinish = (int) getIntent().getIntExtra("finish", 0); //data from after edit kematian
+        backFinish = (int) getIntent().getIntExtra("finish", 0); //data from after edit perkawinan
 
         userToken = SharedPrefManager.getInstance(this).getAccessToken();
-        setDataKematian();
+        setDataPerkawinan();
     }
 
     @Override
     public void onBackPressed() {
         if(backFinish == 1){
-            Intent intent = new Intent(KematianDetailActivity.this, KematianActivity.class);
+            Intent intent = new Intent(PerkawinanDetailActivity.this, PerkawinanActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
@@ -82,7 +80,7 @@ public class KematianDetailActivity extends AppCompatActivity {
     public void deleteData(){
         SweetAlertDialog wDialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE);
         wDialog.setTitleText("Apakah anda yakin untuk menghapus data ini?");
-        wDialog.setContentText("Data kematian id " + kematianData.getId());
+        wDialog.setContentText("Data perkawinan id " + perkawinanData.getId());
         wDialog.setConfirmText("Ya");
         wDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
             @Override
@@ -92,7 +90,7 @@ public class KematianDetailActivity extends AppCompatActivity {
                 Call<DataResponse> calls = RetrofitClient
                         .getInstance()
                         .getApi()
-                        .delKematian("Bearer " + userToken, kematianData.getId());
+                        .delPerkawinan("Bearer " + userToken, perkawinanData.getId());
 
                 calls.enqueue(new Callback<DataResponse>() {
                     @Override
@@ -100,17 +98,17 @@ public class KematianDetailActivity extends AppCompatActivity {
                         DataResponse resp = response.body();
 
                         if(response.isSuccessful()){
-                            Toast.makeText(KematianDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(KematianDetailActivity.this, KematianActivity.class);
+                            Toast.makeText(PerkawinanDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(PerkawinanDetailActivity.this, PerkawinanActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
 
-                            KematianDetailActivity.this.finish();
+                            PerkawinanDetailActivity.this.finish();
                         }
                     }
                     @Override
                     public void onFailure(Call<DataResponse> call, Throwable t) {
-                        Toast.makeText(KematianDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PerkawinanDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -124,46 +122,46 @@ public class KematianDetailActivity extends AppCompatActivity {
         wDialog.show();
     }
 
-    @OnClick(R.id.tl_detail_kematian)
+    @OnClick(R.id.tl_detail_perkawinan)
     public void editData(){
-        Intent intent = new Intent(KematianDetailActivity.this, KematianEditActivity.class);
-        intent.putExtra("data", kematianData);
+        Intent intent = new Intent(PerkawinanDetailActivity.this, PerkawinanEditActivity.class);
+        intent.putExtra("data", perkawinanData);
         startActivity(intent);
     }
 
-    private void setDataKematian() {
+    private void setDataPerkawinan() {
         SweetAlertDialog pDialog = DialogUtils.getLoadingPopup(this);
 
-        Call<KematianResponse> call = RetrofitClient
+        Call<PerkawinanResponse> call = RetrofitClient
                 .getInstance()
                 .getApi()
-                .getKematianDetail("Bearer " + this.userToken, kematianData.getId());
+                .getPerkawinanDetail("Bearer " + this.userToken, perkawinanData.getId());
 
-        call.enqueue(new Callback<KematianResponse>() {
+        call.enqueue(new Callback<PerkawinanResponse>() {
             @Override
-            public void onResponse(Call<KematianResponse> call, Response<KematianResponse> response) {
-                KematianResponse resp = response.body();
+            public void onResponse(Call<PerkawinanResponse> call, Response<PerkawinanResponse> response) {
+                PerkawinanResponse resp = response.body();
                 pDialog.cancel();
 
                 if(response.isSuccessful()){
-                    KematianModel data = resp.getKematians();
+                    PerkawinanModel data = resp.getPerkawinans();
 
                     tvId.setText(String.valueOf(data.getId()));
-                    tvTgl.setText(data.getTgl_kematian());
-                    tvWaktu.setText(data.getWaktu_kematian());
-                    tvPenyebab.setText(data.getPenyebab());
-                    tvKondisi.setText(data.getKondisi());
+                    tvNecktag.setText(data.getNecktag());
+                    tvNecktagPsg.setText(data.getNecktag_psg());
+                    tvTgl.setText(data.getTgl());
                     tvCreatedAt.setText(data.getCreated_at());
                     tvUpdatedAt.setText(data.getUpdated_at());
                 }
                 else {
-                    Toast.makeText(KematianDetailActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PerkawinanDetailActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
-            public void onFailure(Call<KematianResponse> call, Throwable t) {
+            public void onFailure(Call<PerkawinanResponse> call, Throwable t) {
                 pDialog.cancel();
-                Toast.makeText(KematianDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PerkawinanDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -8,6 +8,8 @@ import com.project.siternak.responses.PemilikGetResponse;
 import com.project.siternak.responses.PemilikResponse;
 import com.project.siternak.responses.PenyakitGetResponse;
 import com.project.siternak.responses.PenyakitResponse;
+import com.project.siternak.responses.PerkawinanGetResponse;
+import com.project.siternak.responses.PerkawinanResponse;
 import com.project.siternak.responses.PeternakanGetResponse;
 import com.project.siternak.responses.PeternakanResponse;
 import com.project.siternak.responses.RasGetResponse;
@@ -26,6 +28,7 @@ import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface ApiService {
     // ------------------------------------auth--------------------------------------------
@@ -288,5 +291,37 @@ public interface ApiService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @DELETE("ternaktrash/fdelete/{necktag}")
     Call<DataResponse> fdelTernak(@Header("Authorization") String authToken, @Path("necktag") String necktag);
+
+
+    // ------------------------------------data perkawinan--------------------------------------------
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @GET("perkawinan")
+    Call<PerkawinanGetResponse> getPerkawinan(@Header("Authorization") String authToken);
+
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @GET("perkawinan/{id}")
+    Call<PerkawinanResponse> getPerkawinanDetail(@Header("Authorization") String authToken, @Path("id") Integer id);
+
+    @FormUrlEncoded
+    @POST("perkawinan")
+    Call<PerkawinanResponse> addPerkawinan(
+            @Field("necktag") String necktag,
+            @Field("necktag_psg") String necktagPsg,
+            @Field("tgl") String tgl,
+            @Header("Authorization") String authToken
+    );
+
+    @PUT("perkawinan/{id}")
+    Call<PerkawinanResponse> editPerkawinan(
+            @Path("id") Integer id,
+            @Query("necktag") String necktag,
+            @Query("necktag_psg") String necktagPsg,
+            @Query("tgl") String tgl,
+            @Header("Authorization") String authToken
+    );
+
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @DELETE("perkawinan/{id}")
+    Call<DataResponse> delPerkawinan(@Header("Authorization") String authToken, @Path("id") Integer id);
 
 }

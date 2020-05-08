@@ -1,7 +1,6 @@
 package com.project.siternak.activities.data;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,9 +17,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.siternak.R;
-import com.project.siternak.adapter.PenyakitAdapter;
-import com.project.siternak.models.data.PenyakitModel;
-import com.project.siternak.responses.PenyakitGetResponse;
+import com.project.siternak.adapter.PerkawinanAdapter;
+import com.project.siternak.models.data.PerkawinanModel;
+import com.project.siternak.responses.PerkawinanGetResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.DialogUtils;
 import com.project.siternak.utils.SharedPrefManager;
@@ -36,12 +35,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PenyakitActivity extends AppCompatActivity {
-    @BindView(R.id.rv) RecyclerView rv_penyakit;
-    @BindView(R.id.tv_nodata) TextView tv_nodata;
+public class PerkawinanActivity extends AppCompatActivity {
+    @BindView(R.id.rv)
+    RecyclerView rv_perkawinan;
+    @BindView(R.id.tv_nodata)
+    TextView tv_nodata;
 
-    private PenyakitAdapter penyakitAdapter;
-    private ArrayList<PenyakitModel> penyakitArrayList;
+    private PerkawinanAdapter perkawinanAdapter;
+    private ArrayList<PerkawinanModel> perkawinanArrayList;
+
     private String userToken;
 
     @Override
@@ -54,13 +56,13 @@ public class PenyakitActivity extends AppCompatActivity {
         getSupportActionBar().setCustomView(R.layout.actionbar_primary_arrow);
 
         TextView tv_actionbar_title = getSupportActionBar().getCustomView().findViewById(R.id.tv_actionbar_title);
-        tv_actionbar_title.setText("Penyakit");
+        tv_actionbar_title.setText("Perkawinan");
 
         ButterKnife.bind(this);
 
         userToken = SharedPrefManager.getInstance(this).getAccessToken();
-        rv_penyakit.setLayoutManager(new LinearLayoutManager(this));
-        setDataPemilik();
+        rv_perkawinan.setLayoutManager(new LinearLayoutManager(this));
+        setDataPerkawinan();
     }
 
     @Override
@@ -75,7 +77,7 @@ public class PenyakitActivity extends AppCompatActivity {
 
     @OnClick(R.id.ib_add_data)
     public void addData(){
-        Intent intent = new Intent(PenyakitActivity.this, PenyakitAddActivity.class);
+        Intent intent = new Intent(PerkawinanActivity.this, PerkawinanAddActivity.class);
         startActivity(intent);
     }
 
@@ -97,7 +99,7 @@ public class PenyakitActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                penyakitAdapter.getFilter().filter(newText);
+                perkawinanAdapter.getFilter().filter(newText);
                 return false;
             }
         });
@@ -105,32 +107,32 @@ public class PenyakitActivity extends AppCompatActivity {
         return true;
     }
 
-    private void setDataPemilik() {
+    private void setDataPerkawinan() {
         SweetAlertDialog pDialog = DialogUtils.getLoadingPopup(this);
 
-        Call<PenyakitGetResponse> call = RetrofitClient
+        Call<PerkawinanGetResponse> call = RetrofitClient
                 .getInstance()
                 .getApi()
-                .getPenyakit("Bearer " + this.userToken);
+                .getPerkawinan("Bearer " + this.userToken);
 
-        call.enqueue(new Callback<PenyakitGetResponse>() {
+        call.enqueue(new Callback<PerkawinanGetResponse>() {
             @Override
-            public void onResponse(Call<PenyakitGetResponse> call, Response<PenyakitGetResponse> response) {
-                PenyakitGetResponse resp = response.body();
+            public void onResponse(Call<PerkawinanGetResponse> call, Response<PerkawinanGetResponse> response) {
+                PerkawinanGetResponse resp = response.body();
                 pDialog.cancel();
 
                 if(response.isSuccessful()) {
-                    List<PenyakitModel> penyakits = resp.getPenyakits();
-                    penyakitArrayList = (ArrayList<PenyakitModel>)penyakits;
-                    penyakitAdapter = new PenyakitAdapter(PenyakitActivity.this, penyakitArrayList);
+                    List<PerkawinanModel> perkawinans = resp.getPerkawinans();
+                    perkawinanArrayList = (ArrayList<PerkawinanModel>)perkawinans;
+                    perkawinanAdapter = new PerkawinanAdapter(PerkawinanActivity.this, perkawinanArrayList);
 
-                    if (penyakitAdapter.getItemCount() == 0) {
+                    if (perkawinanAdapter.getItemCount() == 0) {
                         tv_nodata.setVisibility(View.VISIBLE);
-                        tv_nodata.setText("Tidak ada data penyakit");
+                        tv_nodata.setText("Tidak ada data perkawinan");
                     } else {
                         tv_nodata.setVisibility(View.GONE);
-                        rv_penyakit.setAdapter(penyakitAdapter);
-                        penyakitAdapter.notifyDataSetChanged();
+                        rv_perkawinan.setAdapter(perkawinanAdapter);
+                        perkawinanAdapter.notifyDataSetChanged();
                     }
                 }
                 else {
@@ -140,7 +142,7 @@ public class PenyakitActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<PenyakitGetResponse> call, Throwable t) {
+            public void onFailure(Call<PerkawinanGetResponse> call, Throwable t) {
                 pDialog.cancel();
                 tv_nodata.setText(t.getMessage());
                 tv_nodata.setVisibility(View.VISIBLE);

@@ -121,6 +121,19 @@
         <activity android:name=".activities.data.PeternakanEditActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
+        <!-- perkawinan -->
+        <activity android:name=".activities.data.PerkawinanActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".activities.data.PerkawinanAddActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".activities.data.PerkawinanDetailActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".activities.data.PerkawinanEditActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
 
         <!-- option -->
         <activity android:name=".activities.option.PemilikOptionActivity"
@@ -135,7 +148,7 @@
         <activity android:name=".activities.option.KematianOptionActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".activities.option.ParentOptionActivity"
+        <activity android:name=".activities.option.TernakOptionActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
 

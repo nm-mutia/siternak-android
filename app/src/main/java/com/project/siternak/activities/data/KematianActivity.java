@@ -22,6 +22,7 @@ import com.project.siternak.adapter.KematianAdapter;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.responses.KematianGetResponse;
 import com.project.siternak.models.data.KematianModel;
+import com.project.siternak.utils.DialogUtils;
 import com.project.siternak.utils.SharedPrefManager;
 
 import java.util.ArrayList;
@@ -106,11 +107,7 @@ public class KematianActivity extends AppCompatActivity {
     }
 
     private void setDataKematian() {
-        SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("Mohon Tunggu");
-        pDialog.setCancelable(false);
-        pDialog.show();
+        SweetAlertDialog pDialog = DialogUtils.getLoadingPopup(this);
 
         Call<KematianGetResponse> call = RetrofitClient
                 .getInstance()

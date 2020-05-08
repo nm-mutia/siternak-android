@@ -14,6 +14,7 @@ import com.project.siternak.R;
 import com.project.siternak.models.data.PenyakitModel;
 import com.project.siternak.responses.PenyakitResponse;
 import com.project.siternak.rest.RetrofitClient;
+import com.project.siternak.utils.DialogUtils;
 import com.project.siternak.utils.SharedPrefManager;
 
 import java.io.Serializable;
@@ -89,11 +90,7 @@ public class PenyakitEditActivity extends AppCompatActivity {
             return;
         }
 
-        SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("Mohon Tunggu");
-        pDialog.setCancelable(false);
-        pDialog.show();
+        SweetAlertDialog pDialog = DialogUtils.getLoadingPopup(this);
 
         Integer id = Integer.valueOf(tietPenyakitId.getText().toString());
         String nama = tilPenyakitNama.getEditText().getText().toString();

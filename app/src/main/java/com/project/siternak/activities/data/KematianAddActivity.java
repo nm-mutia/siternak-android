@@ -20,6 +20,7 @@ import com.project.siternak.fragments.DatePickerFragment;
 import com.project.siternak.fragments.TimePickerFrament;
 import com.project.siternak.responses.KematianResponse;
 import com.project.siternak.rest.RetrofitClient;
+import com.project.siternak.utils.DialogUtils;
 import com.project.siternak.utils.SharedPrefManager;
 
 import java.util.Calendar;
@@ -111,11 +112,7 @@ public class KematianAddActivity extends AppCompatActivity implements DatePicker
             return;
         }
 
-        SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("Mohon Tunggu");
-        pDialog.setCancelable(false);
-        pDialog.show();
+        SweetAlertDialog pDialog = DialogUtils.getLoadingPopup(this);
 
         String tgl = tilKematianTgl.getEditText().getText().toString();
         String waktu = tilKematianWaktu.getEditText().getText().toString();

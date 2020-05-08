@@ -12,6 +12,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.project.siternak.R;
 import com.project.siternak.responses.PenyakitResponse;
 import com.project.siternak.rest.RetrofitClient;
+import com.project.siternak.utils.DialogUtils;
 import com.project.siternak.utils.SharedPrefManager;
 
 import butterknife.BindView;
@@ -71,11 +72,7 @@ public class PenyakitAddActivity extends AppCompatActivity {
             return;
         }
 
-        SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("Mohon Tunggu");
-        pDialog.setCancelable(false);
-        pDialog.show();
+        SweetAlertDialog pDialog = DialogUtils.getLoadingPopup(this);
 
         String nama = tilPenyakitNama.getEditText().getText().toString();
         String ket = tilPenyakitKet.getEditText().getText().toString();

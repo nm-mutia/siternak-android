@@ -22,6 +22,7 @@ import com.project.siternak.adapter.PemilikAdapter;
 import com.project.siternak.models.data.PemilikModel;
 import com.project.siternak.responses.PemilikGetResponse;
 import com.project.siternak.rest.RetrofitClient;
+import com.project.siternak.utils.DialogUtils;
 import com.project.siternak.utils.SharedPrefManager;
 
 import java.util.ArrayList;
@@ -106,11 +107,7 @@ public class PemilikActivity extends AppCompatActivity {
     }
 
     private void setDataPemilik() {
-        SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("Mohon Tunggu");
-        pDialog.setCancelable(false);
-        pDialog.show();
+        SweetAlertDialog pDialog = DialogUtils.getLoadingPopup(this);
 
         Call<PemilikGetResponse> call = RetrofitClient
                 .getInstance()

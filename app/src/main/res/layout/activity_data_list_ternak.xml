@@ -22,7 +22,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
+            <Button
                 android:id="@+id/tv_trash"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -31,9 +31,10 @@
                 android:layout_marginLeft="16dp"
                 android:paddingHorizontal="20dp"
                 android:paddingVertical="15dp"
+                android:drawableLeft="@drawable/ic_delete_sweep"
                 android:background="@drawable/rc_danger_to_acc_side"
                 android:fontFamily="@font/sourcesanspro_bold"
-                android:gravity="end"
+                android:gravity="center"
                 android:text="Tong Sampah"
                 android:textAlignment="center"
                 android:textColor="@color/white"

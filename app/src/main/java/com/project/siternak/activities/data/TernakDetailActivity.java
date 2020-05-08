@@ -119,12 +119,17 @@ public class TernakDetailActivity extends AppCompatActivity {
                         DataResponse resp = response.body();
 
                         if(response.isSuccessful()){
-                            Toast.makeText(TernakDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(TernakDetailActivity.this, TernakActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
+                            if(resp.getStatus().equals("error")){
+                                Toast.makeText(TernakDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                            else{
+                                Toast.makeText(TernakDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(TernakDetailActivity.this, TernakActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
 
-                            TernakDetailActivity.this.finish();
+                                TernakDetailActivity.this.finish();
+                            }
                         }
                     }
 

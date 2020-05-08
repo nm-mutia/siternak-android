@@ -63,8 +63,8 @@ public class DataActivity extends AppCompatActivity {
 
     @OnClick(R.id.tv_data_perkawinan)
     public void moveToPerkawinan(){
-//        Intent intent=new Intent(DataActivity.this, DataPerkawinanActivity.class);
-//        startActivity(intent);
+        Intent intent = new Intent(DataActivity.this, PerkawinanActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.tv_data_ras)
@@ -75,8 +75,8 @@ public class DataActivity extends AppCompatActivity {
 
     @OnClick(R.id.tv_data_riwayat)
     public void moveToRiwayat(){
-//        Intent intent=new Intent(DataActivity.this, DataRiwayatPenyakitActivity.class);
-//        startActivity(intent);
+        Intent intent = new Intent(DataActivity.this, RiwayatPenyakitActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.tv_data_ternak)
