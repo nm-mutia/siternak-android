@@ -1,6 +1,7 @@
 package com.project.siternak.activities.option;
 
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -114,7 +115,9 @@ public class TernakPerkawinanOptionActivity extends AppCompatActivity {
 //                        }
 //                    }
                     String jk= nPsg.getJenisKelamin();
-                    datas.removeIf(n -> (n.getJenisKelamin().equals(jk)));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        datas.removeIf(n -> (n.getJenisKelamin().equals(jk)));
+                    }
                 }
 
                 adapter = new TernakOptionAdapter(TernakPerkawinanOptionActivity.this, datas);

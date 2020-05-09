@@ -1,6 +1,7 @@
 package com.project.siternak.activities.option;
 
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -111,7 +112,9 @@ public class TernakParentOptionActivity extends AppCompatActivity {
 //                            datas.remove(i);
 //                        }
 //                    }
-                    datas.removeIf(n -> (n.getJenisKelamin().equals("Betina")));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        datas.removeIf(n -> (n.getJenisKelamin().equals("Betina")));
+                    }
                 }
                 else if(parent == 6){
 //                    for(int i=0; i<datas.size(); i++){
@@ -119,7 +122,9 @@ public class TernakParentOptionActivity extends AppCompatActivity {
 //                            datas.remove(i);
 //                        }
 //                    }
-                    datas.removeIf(n -> (n.getJenisKelamin().equals("Jantan")));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        datas.removeIf(n -> (n.getJenisKelamin().equals("Jantan")));
+                    }
                 }
 
                 adapter = new TernakOptionAdapter(TernakParentOptionActivity.this, datas);
