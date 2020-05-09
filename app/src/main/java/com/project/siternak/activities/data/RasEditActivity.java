@@ -85,7 +85,7 @@ public class RasEditActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.tv_submit)
-    public void action_add() {
+    public void action_edit() {
         if (!validateJenis() | !validateKet()) {
             return;
         }

@@ -14,6 +14,8 @@ import com.project.siternak.responses.PeternakanGetResponse;
 import com.project.siternak.responses.PeternakanResponse;
 import com.project.siternak.responses.RasGetResponse;
 import com.project.siternak.responses.RasResponse;
+import com.project.siternak.responses.RiwayatPenyakitGetResponse;
+import com.project.siternak.responses.RiwayatPenyakitResponse;
 import com.project.siternak.responses.TernakGetResponse;
 import com.project.siternak.responses.TernakResponse;
 import com.project.siternak.responses.UserDetailsResponse;
@@ -311,17 +313,57 @@ public interface ApiService {
             @Header("Authorization") String authToken
     );
 
+    @FormUrlEncoded
     @PUT("perkawinan/{id}")
     Call<PerkawinanResponse> editPerkawinan(
             @Path("id") Integer id,
-            @Query("necktag") String necktag,
-            @Query("necktag_psg") String necktagPsg,
-            @Query("tgl") String tgl,
+            @Field("necktag") String necktag,
+            @Field("necktag_psg") String necktagPsg,
+            @Field("tgl") String tgl,
             @Header("Authorization") String authToken
     );
 
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @DELETE("perkawinan/{id}")
     Call<DataResponse> delPerkawinan(@Header("Authorization") String authToken, @Path("id") Integer id);
+
+
+    // ------------------------------------data riwayat--------------------------------------------
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @GET("riwayat")
+    Call<RiwayatPenyakitGetResponse> getRiwayat(@Header("Authorization") String authToken);
+
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @GET("riwayat/{id}")
+    Call<RiwayatPenyakitResponse> getRiwayatDetail(@Header("Authorization") String authToken, @Path("id") Integer id);
+
+    @FormUrlEncoded
+    @POST("riwayat")
+    Call<RiwayatPenyakitResponse> addRiwayat(
+            @Field("penyakit_id") Integer penyakit,
+            @Field("necktag") String necktag,
+            @Field("tgl_sakit") String tgl,
+            @Field("obat") String obat,
+            @Field("lama_sakit") Integer lamaSakit,
+            @Field("keterangan") String ket,
+            @Header("Authorization") String authToken
+    );
+
+    @FormUrlEncoded
+    @PUT("riwayat/{id}")
+    Call<RiwayatPenyakitResponse> editRiwayat(
+            @Path("id") Integer id,
+            @Field("penyakit_id") Integer penyakit,
+            @Field("necktag") String necktag,
+            @Field("tgl_sakit") String tgl,
+            @Field("obat") String obat,
+            @Field("lama_sakit") Integer lamaSakit,
+            @Field("keterangan") String ket,
+            @Header("Authorization") String authToken
+    );
+
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @DELETE("riwayat/{id}")
+    Call<DataResponse> delRiwayat(@Header("Authorization") String authToken, @Path("id") Integer id);
 
 }

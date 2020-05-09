@@ -19,7 +19,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.project.siternak.R;
 import com.project.siternak.activities.option.KematianOptionActivity;
-import com.project.siternak.activities.option.ParentOptionActivity;
+import com.project.siternak.activities.option.TernakParentOptionActivity;
 import com.project.siternak.activities.option.PemilikOptionActivity;
 import com.project.siternak.activities.option.PeternakanOptionActivity;
 import com.project.siternak.activities.option.RasOptionActivity;
@@ -135,14 +135,14 @@ public class TernakAddActivity extends AppCompatActivity implements DatePickerDi
 
     @OnClick(R.id.tiet_ternak_ayah)
     public void setAyah(){
-        Intent intent = new Intent(TernakAddActivity.this, ParentOptionActivity.class);
+        Intent intent = new Intent(TernakAddActivity.this, TernakParentOptionActivity.class);
         intent.putExtra("parent", REQUEST_CODE_SETAYAH);
         startActivityForResult(intent, REQUEST_CODE_SETAYAH);
     }
 
     @OnClick(R.id.tiet_ternak_ibu)
     public void setIbu(){
-        Intent intent = new Intent(TernakAddActivity.this, ParentOptionActivity.class);
+        Intent intent = new Intent(TernakAddActivity.this, TernakParentOptionActivity.class);
         intent.putExtra("parent", REQUEST_CODE_SETIBU);
         startActivityForResult(intent, REQUEST_CODE_SETIBU);
     }

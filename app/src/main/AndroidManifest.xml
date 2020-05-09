@@ -134,6 +134,19 @@
         <activity android:name=".activities.data.PerkawinanEditActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
+        <!-- riwayat penyakit -->
+        <activity android:name=".activities.data.RiwayatPenyakitActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".activities.data.RiwayatPenyakitAddActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".activities.data.RiwayatPenyakitDetailActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".activities.data.RiwayatPenyakitEditActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
 
         <!-- option -->
         <activity android:name=".activities.option.PemilikOptionActivity"
@@ -148,10 +161,16 @@
         <activity android:name=".activities.option.KematianOptionActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".activities.option.ParentOptionActivity"
+        <activity android:name=".activities.option.TernakParentOptionActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".activities.option.PerkawinanOptionActivity"
+        <activity android:name=".activities.option.TernakPerkawinanOptionActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".activities.option.TernakRiwayatOptionActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".activities.option.PenyakitOptionActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
 

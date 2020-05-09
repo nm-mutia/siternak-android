@@ -29,7 +29,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ParentOptionActivity extends AppCompatActivity {
+public class TernakPerkawinanOptionActivity extends AppCompatActivity {
     @BindView(R.id.rv)
     RecyclerView rv;
     @BindView(R.id.sv)
@@ -37,7 +37,8 @@ public class ParentOptionActivity extends AppCompatActivity {
 
     private TernakOptionAdapter adapter;
     private String userToken;
-    private int parent;
+    private int kawin;
+    private TernakModel nPsg;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,16 +47,17 @@ public class ParentOptionActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.actionbar_cross);
-        TextView tv_actionbar_title=getSupportActionBar().getCustomView().findViewById(R.id.tv_actionbar_title);
+        TextView tv_actionbar_title = getSupportActionBar().getCustomView().findViewById(R.id.tv_actionbar_title);
 
         ButterKnife.bind(this);
-        parent = (int) getIntent().getIntExtra("parent", 0);
+        kawin = (int) getIntent().getIntExtra("kawin", 0);
 
-        if(parent == 5){
-            tv_actionbar_title.setText("Necktag Ayah");
+        if(kawin == 1){
+            tv_actionbar_title.setText("Necktag");
         }
-        else if(parent == 6){
-            tv_actionbar_title.setText("Necktag Ibu");
+        else if(kawin == 2){
+            nPsg = (TernakModel) getIntent().getSerializableExtra("necktag");
+            tv_actionbar_title.setText("Necktag Pasangan");
         }
 
         userToken = SharedPrefManager.getInstance(this).getAccessToken();
@@ -105,24 +107,17 @@ public class ParentOptionActivity extends AppCompatActivity {
 
                 List<TernakModel> datas = resp.getTernaks();
 
-                if(parent == 5){
+                if(kawin == 2 && nPsg != null){
 //                    for(int i=0; i<datas.size(); i++){
-//                        if(datas.get(i).getJenisKelamin().equals("Betina")){ //hapus data betina (ayah)
+//                        if(datas.get(i).getJenisKelamin().equals(nPsg.getJenisKelamin())){ //hapus data jika jk sama
 //                            datas.remove(i);
 //                        }
 //                    }
-                    datas.removeIf(n -> (n.getJenisKelamin().equals("Betina")));
-                }
-                else if(parent == 6){
-//                    for(int i=0; i<datas.size(); i++){
-//                        if(datas.get(i).getJenisKelamin().equals("Jantan")){ //hapus data jantan (ibu)
-//                            datas.remove(i);
-//                        }
-//                    }
-                    datas.removeIf(n -> (n.getJenisKelamin().equals("Jantan")));
+                    String jk= nPsg.getJenisKelamin();
+                    datas.removeIf(n -> (n.getJenisKelamin().equals(jk)));
                 }
 
-                adapter = new TernakOptionAdapter(ParentOptionActivity.this, datas);
+                adapter = new TernakOptionAdapter(TernakPerkawinanOptionActivity.this, datas);
                 rv.setAdapter(adapter);
             }
 

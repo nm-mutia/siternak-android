@@ -14,8 +14,7 @@ import androidx.fragment.app.DialogFragment;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.project.siternak.R;
-import com.project.siternak.activities.option.ParentOptionActivity;
-import com.project.siternak.activities.option.PerkawinanOptionActivity;
+import com.project.siternak.activities.option.TernakPerkawinanOptionActivity;
 import com.project.siternak.fragments.DatePickerFragment;
 import com.project.siternak.models.data.TernakModel;
 import com.project.siternak.responses.PerkawinanResponse;
@@ -62,7 +61,7 @@ public class PerkawinanAddActivity extends AppCompatActivity implements DatePick
 
     @OnClick(R.id.tiet_perkawinan_necktag)
     public void setNecktag(){
-        Intent intent = new Intent(PerkawinanAddActivity.this, PerkawinanOptionActivity.class);
+        Intent intent = new Intent(PerkawinanAddActivity.this, TernakPerkawinanOptionActivity.class);
         intent.putExtra("kawin", REQUEST_CODE_SETNECKTAG);
         startActivityForResult(intent, REQUEST_CODE_SETNECKTAG);
     }
@@ -73,7 +72,7 @@ public class PerkawinanAddActivity extends AppCompatActivity implements DatePick
             Toast.makeText(getApplicationContext(), "Anda belum memilih Necktag",Toast.LENGTH_LONG).show();
         }
         else{
-            Intent intent = new Intent(PerkawinanAddActivity.this, PerkawinanOptionActivity.class);
+            Intent intent = new Intent(PerkawinanAddActivity.this, TernakPerkawinanOptionActivity.class);
             intent.putExtra("kawin", REQUEST_CODE_SETNECKTAG_PSG);
             intent.putExtra("necktag", n1);
             startActivityForResult(intent, REQUEST_CODE_SETNECKTAG_PSG);

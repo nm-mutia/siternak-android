@@ -14,7 +14,7 @@ import androidx.fragment.app.DialogFragment;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.project.siternak.R;
-import com.project.siternak.activities.option.PerkawinanOptionActivity;
+import com.project.siternak.activities.option.TernakPerkawinanOptionActivity;
 import com.project.siternak.fragments.DatePickerFragment;
 import com.project.siternak.models.data.PerkawinanModel;
 import com.project.siternak.models.data.TernakModel;
@@ -76,7 +76,7 @@ public class PerkawinanEditActivity extends AppCompatActivity implements DatePic
 
     @OnClick(R.id.tiet_perkawinan_necktag)
     public void setNecktag(){
-        Intent intent = new Intent(PerkawinanEditActivity.this, PerkawinanOptionActivity.class);
+        Intent intent = new Intent(PerkawinanEditActivity.this, TernakPerkawinanOptionActivity.class);
         intent.putExtra("kawin", REQUEST_CODE_SETNECKTAG);
         startActivityForResult(intent, REQUEST_CODE_SETNECKTAG);
     }
@@ -87,7 +87,7 @@ public class PerkawinanEditActivity extends AppCompatActivity implements DatePic
             Toast.makeText(getApplicationContext(), "Anda belum memilih Necktag",Toast.LENGTH_LONG).show();
         }
         else{
-            Intent intent = new Intent(PerkawinanEditActivity.this, PerkawinanOptionActivity.class);
+            Intent intent = new Intent(PerkawinanEditActivity.this, TernakPerkawinanOptionActivity.class);
             intent.putExtra("kawin", REQUEST_CODE_SETNECKTAG_PSG);
             intent.putExtra("necktag", n1);
             startActivityForResult(intent, REQUEST_CODE_SETNECKTAG_PSG);
@@ -128,7 +128,7 @@ public class PerkawinanEditActivity extends AppCompatActivity implements DatePic
 
     public boolean validateNecktag(){
         String p = tilPerkawinanNecktag.getEditText().getText().toString().trim();
-        if(p.isEmpty() || n1 == null){
+        if(p.isEmpty() && n1 == null){
             tilPerkawinanNecktag.setError("Wajib diisi");
             return false;
         }
@@ -141,7 +141,7 @@ public class PerkawinanEditActivity extends AppCompatActivity implements DatePic
 
     public boolean validateNecktagPsg(){
         String k = tilPerkawinanNecktagPsg.getEditText().getText().toString().trim();
-        if(k.isEmpty() || n2 == null){
+        if(k.isEmpty() && n2 == null){
             tilPerkawinanNecktagPsg.setError("Wajib diisi");
             return false;
         }

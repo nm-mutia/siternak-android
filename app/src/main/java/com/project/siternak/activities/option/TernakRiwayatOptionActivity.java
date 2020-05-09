@@ -29,7 +29,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PerkawinanOptionActivity extends AppCompatActivity {
+public class TernakRiwayatOptionActivity extends AppCompatActivity {
     @BindView(R.id.rv)
     RecyclerView rv;
     @BindView(R.id.sv)
@@ -37,8 +37,6 @@ public class PerkawinanOptionActivity extends AppCompatActivity {
 
     private TernakOptionAdapter adapter;
     private String userToken;
-    private int kawin;
-    private TernakModel nPsg;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,18 +45,11 @@ public class PerkawinanOptionActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.actionbar_cross);
-        TextView tv_actionbar_title = getSupportActionBar().getCustomView().findViewById(R.id.tv_actionbar_title);
+
+        TextView tv_actionbar_title=getSupportActionBar().getCustomView().findViewById(R.id.tv_actionbar_title);
+        tv_actionbar_title.setText("Necktag");
 
         ButterKnife.bind(this);
-        kawin = (int) getIntent().getIntExtra("kawin", 0);
-
-        if(kawin == 1){
-            tv_actionbar_title.setText("Necktag");
-        }
-        else if(kawin == 2){
-            nPsg = (TernakModel) getIntent().getSerializableExtra("necktag");
-            tv_actionbar_title.setText("Necktag Pasangan");
-        }
 
         userToken = SharedPrefManager.getInstance(this).getAccessToken();
         setData();
@@ -106,18 +97,7 @@ public class PerkawinanOptionActivity extends AppCompatActivity {
                 TernakGetResponse resp = response.body();
 
                 List<TernakModel> datas = resp.getTernaks();
-
-                if(kawin == 2 && nPsg != null){
-//                    for(int i=0; i<datas.size(); i++){
-//                        if(datas.get(i).getJenisKelamin().equals(nPsg.getJenisKelamin())){ //hapus data jika jk sama
-//                            datas.remove(i);
-//                        }
-//                    }
-                    String jk= nPsg.getJenisKelamin();
-                    datas.removeIf(n -> (n.getJenisKelamin().equals(jk)));
-                }
-
-                adapter = new TernakOptionAdapter(PerkawinanOptionActivity.this, datas);
+                adapter = new TernakOptionAdapter(TernakRiwayatOptionActivity.this, datas);
                 rv.setAdapter(adapter);
             }
 
