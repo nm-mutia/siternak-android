@@ -148,7 +148,10 @@
         <activity android:name=".activities.option.KematianOptionActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".activities.option.TernakOptionActivity"
+        <activity android:name=".activities.option.ParentOptionActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".activities.option.PerkawinanOptionActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
 

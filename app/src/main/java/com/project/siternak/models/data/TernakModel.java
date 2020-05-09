@@ -79,6 +79,17 @@ public class TernakModel implements Serializable {
     @Expose
     String deleted_at;
 
+    public TernakModel(String necktag, Integer rasId, String jenisKelamin, String tglLahir, String blood, String necktag_ayah, String necktag_ibu, Boolean statusAda) {
+        this.necktag = necktag;
+        this.rasId = rasId;
+        this.jenisKelamin = jenisKelamin;
+        this.tglLahir = tglLahir;
+        this.blood = blood;
+        this.necktag_ayah = necktag_ayah;
+        this.necktag_ibu = necktag_ibu;
+        this.statusAda = statusAda;
+    }
+
     public TernakModel(String necktag, Integer pemilikId, Integer peternakanId, Integer rasId,
                        Integer kematianId, String jenisKelamin, String tglLahir, String bobotLahir,
                        String pukulLahir, String lamaDiKandungan, String lamaLaktasi, String tglLepasSapih,

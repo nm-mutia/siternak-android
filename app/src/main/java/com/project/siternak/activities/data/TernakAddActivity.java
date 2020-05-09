@@ -19,7 +19,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.project.siternak.R;
 import com.project.siternak.activities.option.KematianOptionActivity;
-import com.project.siternak.activities.option.TernakOptionActivity;
+import com.project.siternak.activities.option.ParentOptionActivity;
 import com.project.siternak.activities.option.PemilikOptionActivity;
 import com.project.siternak.activities.option.PeternakanOptionActivity;
 import com.project.siternak.activities.option.RasOptionActivity;
@@ -135,14 +135,14 @@ public class TernakAddActivity extends AppCompatActivity implements DatePickerDi
 
     @OnClick(R.id.tiet_ternak_ayah)
     public void setAyah(){
-        Intent intent = new Intent(TernakAddActivity.this, TernakOptionActivity.class);
+        Intent intent = new Intent(TernakAddActivity.this, ParentOptionActivity.class);
         intent.putExtra("parent", REQUEST_CODE_SETAYAH);
         startActivityForResult(intent, REQUEST_CODE_SETAYAH);
     }
 
     @OnClick(R.id.tiet_ternak_ibu)
     public void setIbu(){
-        Intent intent = new Intent(TernakAddActivity.this, TernakOptionActivity.class);
+        Intent intent = new Intent(TernakAddActivity.this, ParentOptionActivity.class);
         intent.putExtra("parent", REQUEST_CODE_SETIBU);
         startActivityForResult(intent, REQUEST_CODE_SETIBU);
     }
@@ -220,11 +220,11 @@ public class TernakAddActivity extends AppCompatActivity implements DatePickerDi
                 tietKematian.setText(String.valueOf(result.getId()));
             }
             else if(requestCode == REQUEST_CODE_SETAYAH){
-                TernakModel result = (TernakModel) data.getSerializableExtra("parent");
+                TernakModel result = (TernakModel) data.getSerializableExtra("necktag");
                 tietAyah.setText(result.getNecktag());
             }
             else if(requestCode == REQUEST_CODE_SETIBU){
-                TernakModel result = (TernakModel) data.getSerializableExtra("parent");
+                TernakModel result = (TernakModel) data.getSerializableExtra("necktag");
                 tietIbu.setText(result.getNecktag());
             }
         }
@@ -336,21 +336,21 @@ public class TernakAddActivity extends AppCompatActivity implements DatePickerDi
         checkIfNull();
 
         Integer peternakan = Integer.valueOf(tilPeternakan.getEditText().getText().toString());
-        String jk = sJk.getSelectedItem().toString();
-        String tglLahir = tilTglLahir.getEditText().getText().toString();
-        String bobotLahir = tilBobotLahir.getEditText().getText().toString();
-        String pukulLahir = tilPukulLahir.getEditText().getText().toString();
-        String lamaDiKandungan = tilLamaDikandungan.getEditText().getText().toString();
-        String lamaLaktasi = tilLamaLaktasi.getEditText().getText().toString();
-        String tglLepasSapih = tilTglLepasSapih.getEditText().getText().toString();
-        String blood = tilBlood.getEditText().getText().toString().toUpperCase();
-        String ayah = tilAyah.getEditText().getText().toString();
-        String ibu = tilIbu.getEditText().getText().toString();
-        String bobotTubuh = tilBobotTubuh.getEditText().getText().toString();
-        String panjangTubuh = tilPanjangTubuh.getEditText().getText().toString();
-        String tinggiTubuh = tilTinggiTubuh.getEditText().getText().toString();
-        String cacatFisik = tilCacatFisik.getEditText().getText().toString();
-        String ciriLain = tilCiriLain.getEditText().getText().toString();
+        String jk = sJk.getSelectedItem().toString().trim();
+        String tglLahir = tilTglLahir.getEditText().getText().toString().trim();
+        String bobotLahir = tilBobotLahir.getEditText().getText().toString().trim();
+        String pukulLahir = tilPukulLahir.getEditText().getText().toString().trim();
+        String lamaDiKandungan = tilLamaDikandungan.getEditText().getText().toString().trim();
+        String lamaLaktasi = tilLamaLaktasi.getEditText().getText().toString().trim();
+        String tglLepasSapih = tilTglLepasSapih.getEditText().getText().toString().trim();
+        String blood = tilBlood.getEditText().getText().toString().toUpperCase().trim();
+        String ayah = tilAyah.getEditText().getText().toString().trim();
+        String ibu = tilIbu.getEditText().getText().toString().trim();
+        String bobotTubuh = tilBobotTubuh.getEditText().getText().toString().trim();
+        String panjangTubuh = tilPanjangTubuh.getEditText().getText().toString().trim();
+        String tinggiTubuh = tilTinggiTubuh.getEditText().getText().toString().trim();
+        String cacatFisik = tilCacatFisik.getEditText().getText().toString().trim();
+        String ciriLain = tilCiriLain.getEditText().getText().toString().trim();
         boolean statusAda;
 
         if(sStatusAda.getSelectedItem().toString().equals("Ada")){

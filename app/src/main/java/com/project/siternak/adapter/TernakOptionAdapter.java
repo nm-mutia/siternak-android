@@ -23,12 +23,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ParentOptionAdapter extends RecyclerView.Adapter<ParentOptionAdapter.OptionHolder> implements Filterable {
+public class TernakOptionAdapter extends RecyclerView.Adapter<TernakOptionAdapter.OptionHolder> implements Filterable {
     private List<TernakModel> arrayList;
     private List<TernakModel> arrayListFull;
     private Context mContext;
 
-    public ParentOptionAdapter(Context mContext, List<TernakModel> arrayList) {
+    public TernakOptionAdapter(Context mContext, List<TernakModel> arrayList) {
         this.arrayList = arrayList;
         this.mContext = mContext;
         arrayListFull = new ArrayList<>(arrayList);
@@ -36,21 +36,21 @@ public class ParentOptionAdapter extends RecyclerView.Adapter<ParentOptionAdapte
 
     @NonNull
     @Override
-    public ParentOptionAdapter.OptionHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TernakOptionAdapter.OptionHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(R.layout.row_option, parent, false);
         return new OptionHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ParentOptionAdapter.OptionHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TernakOptionAdapter.OptionHolder holder, int position) {
         TernakModel option = arrayList.get(position);
         holder.tv_option.setText(option.getNecktag()+"-"+option.getJenisKelamin()+"-"+option.getBlood());
         holder.ll_option.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final Intent intent = new Intent();
-                intent.putExtra("parent", option);
+                intent.putExtra("necktag", option);
                 ((Activity)mContext).setResult(Activity.RESULT_OK,intent);
                 ((Activity)mContext).finish();
             }

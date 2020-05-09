@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.siternak.R;
-import com.project.siternak.adapter.ParentOptionAdapter;
+import com.project.siternak.adapter.TernakOptionAdapter;
 import com.project.siternak.models.data.TernakModel;
 import com.project.siternak.responses.TernakGetResponse;
 import com.project.siternak.rest.RetrofitClient;
@@ -29,15 +29,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class TernakOptionActivity extends AppCompatActivity {
+public class ParentOptionActivity extends AppCompatActivity {
     @BindView(R.id.rv)
     RecyclerView rv;
     @BindView(R.id.sv)
     SearchView sv;
 
-    private ParentOptionAdapter adapter;
+    private TernakOptionAdapter adapter;
     private String userToken;
-    private int parent, kawin;
+    private int parent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,7 +50,6 @@ public class TernakOptionActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
         parent = (int) getIntent().getIntExtra("parent", 0);
-        kawin = (int) getIntent().getIntExtra("necktag", 0);
 
         if(parent == 5){
             tv_actionbar_title.setText("Necktag Ayah");
@@ -107,21 +106,23 @@ public class TernakOptionActivity extends AppCompatActivity {
                 List<TernakModel> datas = resp.getTernaks();
 
                 if(parent == 5){
-                    for(int i=0; i<datas.size(); i++){
-                        if(datas.get(i).getJenisKelamin().equals("Betina")){ //hapus data betina (ayah)
-                            datas.remove(i);
-                        }
-                    }
+//                    for(int i=0; i<datas.size(); i++){
+//                        if(datas.get(i).getJenisKelamin().equals("Betina")){ //hapus data betina (ayah)
+//                            datas.remove(i);
+//                        }
+//                    }
+                    datas.removeIf(n -> (n.getJenisKelamin().equals("Betina")));
                 }
                 else if(parent == 6){
-                    for(int i=0; i<datas.size(); i++){
-                        if(datas.get(i).getJenisKelamin().equals("Jantan")){ //hapus data jantan (ibu)
-                            datas.remove(i);
-                        }
-                    }
+//                    for(int i=0; i<datas.size(); i++){
+//                        if(datas.get(i).getJenisKelamin().equals("Jantan")){ //hapus data jantan (ibu)
+//                            datas.remove(i);
+//                        }
+//                    }
+                    datas.removeIf(n -> (n.getJenisKelamin().equals("Jantan")));
                 }
 
-                adapter = new ParentOptionAdapter(TernakOptionActivity.this, datas);
+                adapter = new TernakOptionAdapter(ParentOptionActivity.this, datas);
                 rv.setAdapter(adapter);
             }
 
