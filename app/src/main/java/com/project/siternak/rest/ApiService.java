@@ -50,7 +50,6 @@ public interface ApiService {
     Call<ScanResponse> getScanResult(@Header("Authorization") String authToken, @Path("id") String necktag);
 
 
-
     // ------------------------------------data kematian--------------------------------------------
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @GET("kematian")

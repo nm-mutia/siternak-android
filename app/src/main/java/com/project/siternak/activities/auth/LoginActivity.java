@@ -57,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    @OnClick(R.id.tv_login)
+    @OnClick(R.id.b_login)
     public void moveToAfterLogin(View view) {
         String email = editTextEmail.getText().toString();
         String password = editTextPassword.getText().toString();

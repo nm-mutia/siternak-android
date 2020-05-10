@@ -56,8 +56,8 @@
                 android:inputType="textPassword"
                 android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/tv_login"
+            <Button
+                android:id="@+id/b_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="48dp"
@@ -70,8 +70,6 @@
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="18sp"
-                android:elevation="4dp"
-                android:translationZ="4dp"
                 android:foreground="?attr/selectableItemBackground"/>
 
         </LinearLayout>

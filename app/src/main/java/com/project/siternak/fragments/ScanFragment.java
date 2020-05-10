@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,14 +18,16 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.project.siternak.R;
 import com.project.siternak.activities.home.ScanCaptureActivity;
+import com.project.siternak.activities.home.ScanResultActivity;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class ScanFragment extends Fragment {
+    @BindView(R.id.et_cari) EditText etCari;
 
-    private static final int REQUEST_CAMERA = 1;
     private Unbinder unbinder;
 
     @Nullable
@@ -59,7 +62,8 @@ public class ScanFragment extends Fragment {
             if(result.getContents() != null){
                 Toast.makeText(getActivity(), result.getContents(), Toast.LENGTH_LONG).show();
 
-                scanResult();
+                scanResult(result.getContents());
+
 //                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 //                builder.setMessage(result.getContents());
 //                builder.setTitle("Hasil Scan");
@@ -89,16 +93,20 @@ public class ScanFragment extends Fragment {
     }
 
     @OnClick(R.id.b_cari)
-    public void btnCari(){
+    public void submitCari(){
+        String necktag = etCari.getText().toString();
 
+        if(necktag.isEmpty()){
+            this.etCari.setError("Masukkan necktag");
+        }
+        else {
+            scanResult(necktag);
+        }
     }
 
-    @OnClick(R.id.et_cari)
-    public void submit(){
-
-    }
-
-    private void scanResult(){
-
+    private void scanResult(String result){
+        Intent intent = new Intent(getActivity(), ScanResultActivity.class);
+        intent.putExtra("result", result);
+        startActivity(intent);
     }
 }

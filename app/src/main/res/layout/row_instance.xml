@@ -3,9 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingHorizontal="8dp"
     android:clipToPadding="false"
-    android:layout_marginTop="2dp"
     android:orientation="vertical">
         <TableLayout
             android:layout_width="match_parent"
@@ -17,7 +15,7 @@
             android:layout_gravity="center_horizontal"
             android:gravity="center"
             android:layout_marginRight="10dp"
-            android:layout_marginBottom="2dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/rc_white">
             <TextView
                 android:id="@+id/tv_inst_title"
@@ -189,10 +187,4 @@
                     android:fontFamily="@font/sourcesanspro_regular"/>
             </TableRow>
         </TableLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@color/black"/>
 </LinearLayout>
