@@ -16,6 +16,7 @@ import com.project.siternak.responses.RasGetResponse;
 import com.project.siternak.responses.RasResponse;
 import com.project.siternak.responses.RiwayatPenyakitGetResponse;
 import com.project.siternak.responses.RiwayatPenyakitResponse;
+import com.project.siternak.responses.ScanResponse;
 import com.project.siternak.responses.TernakGetResponse;
 import com.project.siternak.responses.TernakResponse;
 import com.project.siternak.responses.UserDetailsResponse;
@@ -41,6 +42,13 @@ public interface ApiService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @GET("profile")
     Call<UserDetailsResponse> userDetails(@Header("Authorization") String authToken);
+
+
+    // ------------------------------------scan--------------------------------------------
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @GET("scan/{id}")
+    Call<ScanResponse> getScanResult(@Header("Authorization") String authToken, @Path("id") String necktag);
+
 
 
     // ------------------------------------data kematian--------------------------------------------
@@ -365,5 +373,8 @@ public interface ApiService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @DELETE("riwayat/{id}")
     Call<DataResponse> delRiwayat(@Header("Authorization") String authToken, @Path("id") Integer id);
+
+
+
 
 }

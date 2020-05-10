@@ -58,32 +58,47 @@ public class ScanFragment extends Fragment {
         if(result != null){
             if(result.getContents() != null){
                 Toast.makeText(getActivity(), result.getContents(), Toast.LENGTH_LONG).show();
-                
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage(result.getContents());
-                builder.setTitle("Hasil Scan");
-                builder.setPositiveButton("Scan Lagi", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        scanCode();
-                    }
-                }).setNegativeButton("finish", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        //
-                    }
-                });
 
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                scanResult();
+//                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//                builder.setMessage(result.getContents());
+//                builder.setTitle("Hasil Scan");
+//                builder.setPositiveButton("Scan Lagi", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        scanCode();
+//                    }
+//                }).setNegativeButton("finish", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                    }
+//                });
+//
+//                AlertDialog dialog = builder.create();
+//                dialog.show();
             }
             else {
-                Toast.makeText(getActivity(), "No results", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Tidak ada hasil", Toast.LENGTH_LONG).show();
             }
         }
         else {
             super.onActivityResult(requestCode, resultCode, data);
-            Toast.makeText(getActivity(), "No results", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Tidak ada hasil", Toast.LENGTH_LONG).show();
         }
+    }
+
+    @OnClick(R.id.b_cari)
+    public void btnCari(){
+
+    }
+
+    @OnClick(R.id.et_cari)
+    public void submit(){
+
+    }
+
+    private void scanResult(){
+
     }
 }
