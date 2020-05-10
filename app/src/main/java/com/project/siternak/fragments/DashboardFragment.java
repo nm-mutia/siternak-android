@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import com.project.siternak.R;
 import com.project.siternak.activities.data.DataActivity;
+import com.project.siternak.activities.perkawinan.MatchActivity;
 import com.project.siternak.models.auth.UserModel;
 import com.project.siternak.utils.SharedPrefManager;
 
@@ -53,7 +54,7 @@ public class DashboardFragment extends Fragment {
 
     @OnClick(R.id.ll_data)
     public void moveToData(){
-        Intent intent=new Intent(getActivity(), DataActivity.class);
+        Intent intent = new Intent(getActivity(), DataActivity.class);
         startActivity(intent);
     }
 
@@ -65,8 +66,8 @@ public class DashboardFragment extends Fragment {
 
     @OnClick(R.id.ll_perkawinan)
     public void moveToMatch(){
-//        Intent intent=new Intent(getActivity(), CreditDashboardActivity.class);
-//        startActivity(intent);
+        Intent intent = new Intent(getActivity(), MatchActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.ll_grafik)

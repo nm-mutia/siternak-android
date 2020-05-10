@@ -78,7 +78,6 @@ public class ScanFragment extends Fragment {
 //
 //                    }
 //                });
-//
 //                AlertDialog dialog = builder.create();
 //                dialog.show();
             }

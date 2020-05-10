@@ -38,7 +38,7 @@ public class TernakParentOptionActivity extends AppCompatActivity {
 
     private TernakOptionAdapter adapter;
     private String userToken;
-    private int parent;
+    private int parent, jenisKelamin;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,12 +51,20 @@ public class TernakParentOptionActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
         parent = (int) getIntent().getIntExtra("parent", 0);
+        jenisKelamin = (int) getIntent().getIntExtra("match", 0);
 
         if(parent == 5){
             tv_actionbar_title.setText("Necktag Ayah");
         }
         else if(parent == 6){
             tv_actionbar_title.setText("Necktag Ibu");
+        }
+
+        if(jenisKelamin == 1){
+            tv_actionbar_title.setText("Necktag Jantan");
+        }
+        else if(jenisKelamin == 2){
+            tv_actionbar_title.setText("Necktag Betina");
         }
 
         userToken = SharedPrefManager.getInstance(this).getAccessToken();
@@ -106,24 +114,14 @@ public class TernakParentOptionActivity extends AppCompatActivity {
 
                 List<TernakModel> datas = resp.getTernaks();
 
-                if(parent == 5){
-//                    for(int i=0; i<datas.size(); i++){
-//                        if(datas.get(i).getJenisKelamin().equals("Betina")){ //hapus data betina (ayah)
-//                            datas.remove(i);
-//                        }
-//                    }
+                if(parent == 5 || jenisKelamin == 1){
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        datas.removeIf(n -> (n.getJenisKelamin().equals("Betina")));
+                        datas.removeIf(n -> (n.getJenisKelamin().equals("Betina"))); //hapus data betina -> ayah/jantan
                     }
                 }
-                else if(parent == 6){
-//                    for(int i=0; i<datas.size(); i++){
-//                        if(datas.get(i).getJenisKelamin().equals("Jantan")){ //hapus data jantan (ibu)
-//                            datas.remove(i);
-//                        }
-//                    }
+                else if(parent == 6 || jenisKelamin == 2){
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        datas.removeIf(n -> (n.getJenisKelamin().equals("Jantan")));
+                        datas.removeIf(n -> (n.getJenisKelamin().equals("Jantan"))); //hapus data jantan -> ibu/betina
                     }
                 }
 

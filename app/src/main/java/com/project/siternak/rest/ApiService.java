@@ -4,6 +4,7 @@ import com.project.siternak.responses.DataResponse;
 import com.project.siternak.responses.KematianResponse;
 import com.project.siternak.responses.KematianGetResponse;
 import com.project.siternak.responses.LoginResponse;
+import com.project.siternak.responses.MatchResponse;
 import com.project.siternak.responses.PemilikGetResponse;
 import com.project.siternak.responses.PemilikResponse;
 import com.project.siternak.responses.PenyakitGetResponse;
@@ -48,6 +49,16 @@ public interface ApiService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @GET("scan/{id}")
     Call<ScanResponse> getScanResult(@Header("Authorization") String authToken, @Path("id") String necktag);
+
+
+    // ------------------------------------perkawinan--------------------------------------------
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @GET("match")
+    Call<MatchResponse> getMatchResult(
+            @Header("Authorization") String authToken,
+            @Query("necktag_jt") String jantan,
+            @Query("necktag_bt") String betina
+    );
 
 
     // ------------------------------------data kematian--------------------------------------------

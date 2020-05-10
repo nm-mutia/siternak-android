@@ -1,6 +1,5 @@
 package com.project.siternak.activities.home;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TableLayout;
@@ -12,10 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.zxing.integration.android.IntentIntegrator;
 import com.project.siternak.R;
 import com.project.siternak.adapter.ScanResultAdapter;
-import com.project.siternak.fragments.ScanFragment;
 import com.project.siternak.models.scan.Family;
 import com.project.siternak.models.scan.Instance;
 import com.project.siternak.responses.ScanResponse;
@@ -72,7 +69,7 @@ public class ScanResultActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        necktag = (String) getIntent().getStringExtra("result");
+        necktag = getIntent().getStringExtra("result");
         userToken = SharedPrefManager.getInstance(this).getAccessToken();
 
         setDetailTernak();
@@ -144,7 +141,7 @@ public class ScanResultActivity extends AppCompatActivity {
 
                         List<Instance> child = fam.getChild();
                         rvChild.setLayoutManager(new LinearLayoutManager(ScanResultActivity.this));
-                        instanceArrayList = (ArrayList<Instance>)sibling;
+                        instanceArrayList = (ArrayList<Instance>)child;
                         scanAdapter = new ScanResultAdapter(ScanResultActivity.this, instanceArrayList, "Anak");
                         if (scanAdapter.getItemCount() != 0) {
                             rvChild.setAdapter(scanAdapter);
@@ -153,7 +150,7 @@ public class ScanResultActivity extends AppCompatActivity {
 
                         List<Instance> gparent = fam.getGparent();
                         rvGParent.setLayoutManager(new LinearLayoutManager(ScanResultActivity.this));
-                        instanceArrayList = (ArrayList<Instance>)sibling;
+                        instanceArrayList = (ArrayList<Instance>)gparent;
                         scanAdapter = new ScanResultAdapter(ScanResultActivity.this, instanceArrayList, "Kakek - Nenek");
                         if (scanAdapter.getItemCount() != 0) {
                             rvGParent.setAdapter(scanAdapter);
@@ -162,7 +159,7 @@ public class ScanResultActivity extends AppCompatActivity {
 
                         List<Instance> gchild = fam.getGchild();
                         rvGChild.setLayoutManager(new LinearLayoutManager(ScanResultActivity.this));
-                        instanceArrayList = (ArrayList<Instance>)sibling;
+                        instanceArrayList = (ArrayList<Instance>)gchild;
                         scanAdapter = new ScanResultAdapter(ScanResultActivity.this, instanceArrayList, "Cucu");
                         if (scanAdapter.getItemCount() != 0) {
                             rvGChild.setAdapter(scanAdapter);
