@@ -60,7 +60,6 @@ public class ScanFragment extends Fragment {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if(result != null){
             if(result.getContents() != null){
-                Toast.makeText(getActivity(), result.getContents(), Toast.LENGTH_LONG).show();
 
                 scanResult(result.getContents());
 

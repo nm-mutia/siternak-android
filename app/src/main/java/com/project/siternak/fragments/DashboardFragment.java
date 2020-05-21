@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.project.siternak.R;
 import com.project.siternak.activities.data.DataActivity;
 import com.project.siternak.activities.perkawinan.MatchActivity;
+import com.project.siternak.activities.peternak.PeternakActivity;
 import com.project.siternak.models.auth.UserModel;
 import com.project.siternak.utils.SharedPrefManager;
 
@@ -84,8 +85,8 @@ public class DashboardFragment extends Fragment {
 
     @OnClick(R.id.ll_peternak)
     public void moveToPeternak(){
-//        Intent intent=new Intent(getActivity(), ElearningDashboardActivity.class);
-//        startActivity(intent);
+        Intent intent = new Intent(getActivity(), PeternakActivity.class);
+        startActivity(intent);
     }
 
 }

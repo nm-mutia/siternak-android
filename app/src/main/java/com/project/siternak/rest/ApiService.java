@@ -11,6 +11,8 @@ import com.project.siternak.responses.PenyakitGetResponse;
 import com.project.siternak.responses.PenyakitResponse;
 import com.project.siternak.responses.PerkawinanGetResponse;
 import com.project.siternak.responses.PerkawinanResponse;
+import com.project.siternak.responses.PeternakGetResponse;
+import com.project.siternak.responses.PeternakResponse;
 import com.project.siternak.responses.PeternakanGetResponse;
 import com.project.siternak.responses.PeternakanResponse;
 import com.project.siternak.responses.RasGetResponse;
@@ -59,6 +61,39 @@ public interface ApiService {
             @Query("necktag_jt") String jantan,
             @Query("necktag_bt") String betina
     );
+
+
+    // ------------------------------------peternak--------------------------------------------
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @GET("peternak")
+    Call<PeternakGetResponse> getPeternak(@Header("Authorization") String authToken);
+
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @GET("peternak/{id}")
+    Call<PeternakResponse> getPeternakDetail(@Header("Authorization") String authToken, @Path("id") Integer id);
+
+    @FormUrlEncoded
+    @POST("peternak")
+    Call<PeternakResponse> addPeternak(
+            @Field("peternakan_id") Integer peternakanId,
+            @Field("nama_peternak") String namaPeternak,
+            @Field("username") String username,
+            @Field("email") String email,
+            @Header("Authorization") String authToken
+    );
+
+    @FormUrlEncoded
+    @PUT("peternak/{id}")
+    Call<PeternakResponse> editPeternak(
+            @Path("id") Integer id,
+            @Field("peternakan_id") Integer peternakanId,
+            @Field("nama_peternak") String namaPeternak,
+            @Header("Authorization") String authToken
+    );
+
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @DELETE("peternak/{id}")
+    Call<DataResponse> delPeternak(@Header("Authorization") String authToken, @Path("id") Integer id);
 
 
     // ------------------------------------data kematian--------------------------------------------
