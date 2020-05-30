@@ -15,9 +15,14 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.CombinedData;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.project.siternak.R;
 import com.project.siternak.responses.GrafikResponse;
@@ -44,6 +49,9 @@ public class GrafikFragment extends Fragment {
 
     private Unbinder unbinder;
     private String userToken;
+    private List<Entry> dataLine;
+    private List<BarEntry> dataBar, jantanBar, betinaBar;
+    private List<String> label, data, jantan, betina;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -78,127 +86,93 @@ public class GrafikFragment extends Fragment {
                     combinedChart1.setVisibility(View.GONE);
                     combinedChart2.setVisibility(View.GONE);
 
-                    float groupSpace = 0.04f;
-                    float barSpace = 0.02f;
-                    float barWidth = 0.3f;
+                    dataLine = new ArrayList<>();
+                    dataBar = new ArrayList<>();
+                    jantanBar = new ArrayList<>();
+                    betinaBar = new ArrayList<>();
 
-                    if(grafik.equals("umur")){
-                        List<String> umLabel = resp.getUmur().getLabel();
-                        List<String> umData = resp.getUmur().getData();
-                        List<String> umJantan = resp.getUmur().getJantan();
-                        List<String> umBetina = resp.getUmur().getBetina();
+                    Description desc = new Description();
 
-                        List<BarEntry> umurData = new ArrayList<>();
-                        List<BarEntry> umurJantan = new ArrayList<>();
-                        List<BarEntry> umurBetina = new ArrayList<>();
+                    switch(grafik){
+                        case "umur":
+                            label = resp.getUmur().getLabel();
+                            data = resp.getUmur().getData();
+                            jantan = resp.getUmur().getJantan();
+                            betina = resp.getUmur().getBetina();
 
-                        for(int i = 0; i < umLabel.size(); i++) {
-                            umurData.add(new BarEntry(i, Integer.valueOf(umData.get(i))));
-                            umurJantan.add(new BarEntry(i, Integer.valueOf(umJantan.get(i))));
-                            umurBetina.add(new BarEntry(i, Integer.valueOf(umBetina.get(i))));
-                        }
-
-                        BarDataSet set1 = new BarDataSet(umurData, "Jumlah Ternak");
-                        set1.setColor(Color.parseColor("#B2DFDB"));
-                        BarDataSet set2 = new BarDataSet(umurJantan, "Jantan");
-                        set2.setColor(Color.parseColor("#36A7C9"));
-                        BarDataSet set3 = new BarDataSet(umurBetina, "Betina");
-                        set3.setColor(Color.parseColor("#F8B195"));
-
-                        BarData data = new BarData();
-                        data.addDataSet(set1);
-                        data.addDataSet(set2);
-                        data.addDataSet(set3);
-
-                        XAxis xAxis = barChart1.getXAxis();
-                        xAxis.setValueFormatter(new IndexAxisValueFormatter(umLabel));
-                        xAxis.setCenterAxisLabels(true);
-//                        xAxis.setSpaceMin(data.getBarWidth() / 2f);
-//                        xAxis.setSpaceMax(data.getBarWidth() / 2f);
-
-                        barChart1.setVisibility(View.VISIBLE);
-//                        barChart.setDrawBarShadow(false);
-//                        barChart.setDrawValueAboveBar(true);
-//                        barChart.setDrawGridBackground(false);
-
-                        barChart1.setData(data);
-                        barChart1.setFitBars(true);
-                        barChart1.setVisibleXRangeMaximum(6);
-                        barChart1.getBarData().setBarWidth(barWidth);
-                        barChart1.groupBars(0f, groupSpace, barSpace);
-
-                        Description desc = new Description();
-                        desc.setText("Grafik jumlah ternak berdasarkan umur");
-                        barChart1.setDescription(desc);
-                        barChart1.invalidate();
-                    }
-
-                    else if(grafik.equals("ras")){
-                        List<String> rasLabel = resp.getRas().getLabel();
-                        List<String> rasData = resp.getRas().getData();
-                        List<String> rasJantan = resp.getRas().getJantan();
-                        List<String> rasBetina = resp.getRas().getBetina();
-
-                        List<BarEntry> rasDataBar = new ArrayList<>();
-                        List<BarEntry> rasJantanBar = new ArrayList<>();
-                        List<BarEntry> rasBetinaBar = new ArrayList<>();
-
-                        for(int i = 0; i < rasLabel.size(); i++) {
-                            rasDataBar.add(new BarEntry(i, Integer.valueOf(rasData.get(i))));
-
-                            if(rasJantan.get(i) == null){
-                                rasJantanBar.add(new BarEntry(i, 0f));
-                            }
-                            else {
-                                rasJantanBar.add(new BarEntry(i, Integer.valueOf(rasJantan.get(i))));
+                            for(int i = 0; i < label.size(); i++) {
+                                dataBar.add(new BarEntry(i, Integer.valueOf(data.get(i))));
+                                jantanBar.add(new BarEntry(i, Integer.valueOf(jantan.get(i))));
+                                betinaBar.add(new BarEntry(i, Integer.valueOf(betina.get(i))));
                             }
 
-                            if(rasBetina.get(i) == null){
-                                rasBetinaBar.add(new BarEntry(i, 0f));
+                            barChart1.setData(setDataBarChart());
+                            setBarChart(barChart1);
+
+                            desc.setText("Grafik jumlah ternak berdasarkan umur");
+                            barChart1.setDescription(desc);
+                            barChart1.invalidate();
+                            break;
+                        case "ras":
+                            label = resp.getRas().getLabel();
+                            data = resp.getRas().getData();
+                            jantan = resp.getRas().getJantan();
+                            betina = resp.getRas().getBetina();
+
+                            for(int i = 0; i < label.size(); i++) {
+                                dataBar.add(new BarEntry(i, Integer.valueOf(data.get(i))));
+                                jantanBar.add(new BarEntry(i, Integer.valueOf(jantan.get(i))));
+                                betinaBar.add(new BarEntry(i, Integer.valueOf(betina.get(i))));
                             }
-                            else {
-                                rasBetinaBar.add(new BarEntry(i, Integer.valueOf(rasBetina.get(i))));
+
+                            barChart2.setData(setDataBarChart());
+                            setBarChart(barChart2);
+
+                            desc.setText("Grafik jumlah ternak berdasarkan ras");
+                            barChart2.setDescription(desc);
+                            barChart2.invalidate();
+                            break;
+                        case "lahir":
+                            label = resp.getLahir().getLabel();
+                            data = resp.getLahir().getData();
+                            jantan = resp.getLahir().getJantan();
+                            betina = resp.getLahir().getBetina();
+
+                            for(int i = 0; i < label.size(); i++) {
+                                dataLine.add(new Entry(i, Integer.valueOf(data.get(i))));
+                                jantanBar.add(new BarEntry(i, Integer.valueOf(jantan.get(i))));
+                                betinaBar.add(new BarEntry(i, Integer.valueOf(betina.get(i))));
                             }
-                        }
 
-                        BarDataSet set1 = new BarDataSet(rasDataBar, "Jumlah Ternak");
-                        set1.setColor(Color.parseColor("#B2DFDB"));
-                        BarDataSet set2 = new BarDataSet(rasJantanBar, "Jantan");
-                        set2.setColor(Color.parseColor("#36A7C9"));
-                        BarDataSet set3 = new BarDataSet(rasBetinaBar, "Betina");
-                        set3.setColor(Color.parseColor("#F8B195"));
+                            combinedChart1.setData(setDataCombinedChart());
+                            setCombinedChart(combinedChart1);
 
-                        BarData dataRas = new BarData();
-                        dataRas.addDataSet(set1);
-                        dataRas.addDataSet(set2);
-                        dataRas.addDataSet(set3);
+                            desc.setText("Grafik jumlah ternak berdasarkan kelahiran");
+                            combinedChart1.setDescription(desc);
+                            combinedChart1.invalidate();
+                            break;
+                        case "mati":
+                            label = resp.getMati().getLabel();
+                            data = resp.getMati().getData();
+                            jantan = resp.getMati().getJantan();
+                            betina = resp.getMati().getBetina();
 
-                        XAxis xAxis = barChart2.getXAxis();
-                        xAxis.setValueFormatter(new IndexAxisValueFormatter(rasLabel));
-                        xAxis.setCenterAxisLabels(true);
+                            for(int i = 0; i < label.size(); i++) {
+                                dataLine.add(new Entry(i, Integer.valueOf(data.get(i))));
+                                jantanBar.add(new BarEntry(i, Integer.valueOf(jantan.get(i))));
+                                betinaBar.add(new BarEntry(i, Integer.valueOf(betina.get(i))));
+                            }
 
-                        barChart2.setVisibility(View.VISIBLE);
+                            combinedChart2.setData(setDataCombinedChart());
+                            setCombinedChart(combinedChart2);
 
-                        barChart2.setData(dataRas);
-                        barChart2.setFitBars(true);
-                        barChart2.setVisibleXRangeMaximum(6);
-                        barChart2.getBarData().setBarWidth(barWidth);
-                        barChart2.groupBars(0f, groupSpace, barSpace);
-
-                        Description desc = new Description();
-                        desc.setText("Grafik jumlah ternak berdasarkan ras");
-                        barChart2.setDescription(desc);
-                        barChart2.invalidate();
+                            desc.setText("Grafik jumlah ternak berdasarkan kematian");
+                            combinedChart2.setDescription(desc);
+                            combinedChart2.invalidate();
+                            break;
+                        default:
+                            break;
                     }
-
-                    else if(grafik.equals("lahir")){
-
-                    }
-
-                    else if(grafik.equals("mati")){
-
-                    }
-
                 }
                 else {
                     Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
@@ -211,5 +185,94 @@ public class GrafikFragment extends Fragment {
                 Toast.makeText(getActivity(), "Gagal", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private BarData setDataBarChart(){
+        BarDataSet set1 = new BarDataSet(dataBar, "Jumlah Ternak");
+        BarDataSet set2 = new BarDataSet(jantanBar, "Jantan");
+        BarDataSet set3 = new BarDataSet(betinaBar, "Betina");
+        set1.setColor(Color.parseColor("#B2DFDB"));
+        set2.setColor(Color.parseColor("#36A7C9"));
+        set3.setColor(Color.parseColor("#F8B195"));
+
+        BarData datas = new BarData();
+        datas.addDataSet(set1);
+        datas.addDataSet(set2);
+        datas.addDataSet(set3);
+
+        return datas;
+    }
+
+    private void setBarChart(BarChart barChart){
+        float groupSpace = 0.04f;
+        float barSpace = 0.02f;
+        float barWidth = 0.3f;
+
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(label));
+        xAxis.setGranularity(1f);
+        xAxis.setCenterAxisLabels(true);
+        xAxis.setAxisMinimum(0f);
+
+        YAxis yAxis = barChart.getAxisLeft();
+        yAxis.setDrawGridLines(true);
+        yAxis.setGranularity(1f);
+        yAxis.setAxisMinimum(0f);
+
+        barChart.setVisibility(View.VISIBLE);
+        barChart.getAxisRight().setEnabled(false);
+        barChart.setDrawValueAboveBar(true);
+        barChart.setFitBars(false);
+        barChart.setVisibleXRangeMaximum(5);
+        barChart.getBarData().setBarWidth(barWidth);
+        barChart.groupBars(0f, groupSpace, barSpace);
+        barChart.getXAxis().setAxisMaximum(setDataBarChart().getXMax() + 0.25f);
+    }
+
+    private CombinedData setDataCombinedChart(){
+        LineDataSet set1 = new LineDataSet(dataLine, "Jumlah Ternak");
+        BarDataSet set2 = new BarDataSet(jantanBar, "Jantan");
+        BarDataSet set3 = new BarDataSet(betinaBar, "Betina");
+        set1.setColor(Color.parseColor("#B2DFDB"));
+        set2.setColor(Color.parseColor("#36A7C9"));
+        set3.setColor(Color.parseColor("#F8B195"));
+
+        LineData lineData = new LineData();
+        BarData barData = new BarData();
+
+        lineData.addDataSet(set1);
+        barData.addDataSet(set2);
+        barData.addDataSet(set3);
+
+        CombinedData combinedData = new CombinedData();
+        combinedData.setData(barData);
+        combinedData.setData(lineData);
+
+        return combinedData;
+    }
+
+    private void setCombinedChart(CombinedChart combinedChart){
+        float groupSpace = 0.04f;
+        float barSpace = 0.02f;
+        float barWidth = 0.46f;
+
+        XAxis xAxis = combinedChart.getXAxis();
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(label));
+        xAxis.setGranularity(1f);
+        xAxis.setCenterAxisLabels(true);
+        xAxis.setAxisMinimum(0f);
+
+        YAxis yAxis = combinedChart.getAxisLeft();
+        yAxis.setDrawGridLines(true);
+        yAxis.setGranularity(1f);
+        yAxis.setAxisMinimum(-0.1f);
+
+        combinedChart.setVisibility(View.VISIBLE);
+        combinedChart.getBarData().setBarWidth(barWidth);
+        combinedChart.getBarData().groupBars(0f, groupSpace, barSpace);
+        combinedChart.getAxisRight().setEnabled(false);
+        combinedChart.setVisibleXRangeMaximum(4);
+        combinedChart.getXAxis().setAxisMinimum(setDataCombinedChart().getXMin() - 0.25f);
+        combinedChart.getXAxis().setAxisMaximum(setDataCombinedChart().getXMax() + 0.5f);
     }
 }
