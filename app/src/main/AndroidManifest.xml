@@ -43,8 +43,26 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
 
+        <!-- barcode -->
+        <activity android:name=".activities.barcode.BarcodeActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+
         <!-- perkawinan -->
         <activity android:name=".activities.perkawinan.MatchActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+
+        <!-- grafik -->
+        <activity android:name=".activities.grafik.GrafikActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".activities.grafik.GrafikFragmentActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+
+        <!-- laporan -->
+        <activity android:name=".activities.laporan.LaporanActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
 

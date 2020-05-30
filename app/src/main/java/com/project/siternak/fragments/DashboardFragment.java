@@ -7,14 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.project.siternak.R;
+import com.project.siternak.activities.barcode.BarcodeActivity;
 import com.project.siternak.activities.data.DataActivity;
+import com.project.siternak.activities.grafik.GrafikActivity;
+import com.project.siternak.activities.laporan.LaporanActivity;
 import com.project.siternak.activities.perkawinan.MatchActivity;
 import com.project.siternak.activities.peternak.PeternakActivity;
 import com.project.siternak.models.auth.UserModel;
@@ -61,8 +63,8 @@ public class DashboardFragment extends Fragment {
 
     @OnClick(R.id.ll_barcode)
     public void moveToBarcode(){
-//        Intent intent=new Intent(getActivity(), SubmissionDashboardActivity.class);
-//        startActivity(intent);
+        Intent intent = new Intent(getActivity(), BarcodeActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.ll_perkawinan)
@@ -73,14 +75,14 @@ public class DashboardFragment extends Fragment {
 
     @OnClick(R.id.ll_grafik)
     public void moveToGrafik(){
-//        Intent intent=new Intent(getActivity(), ElearningDashboardActivity.class);
-//        startActivity(intent);
+        Intent intent = new Intent(getActivity(), GrafikActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.ll_laporan)
     public void moveToLaporan(){
-//        Intent intent=new Intent(getActivity(), ElearningDashboardActivity.class);
-//        startActivity(intent);
+        Intent intent = new Intent(getActivity(), LaporanActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.ll_peternak)

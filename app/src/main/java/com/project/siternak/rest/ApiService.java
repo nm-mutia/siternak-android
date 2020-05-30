@@ -1,6 +1,7 @@
 package com.project.siternak.rest;
 
 import com.project.siternak.responses.DataResponse;
+import com.project.siternak.responses.GrafikResponse;
 import com.project.siternak.responses.KematianResponse;
 import com.project.siternak.responses.KematianGetResponse;
 import com.project.siternak.responses.LoginResponse;
@@ -61,6 +62,12 @@ public interface ApiService {
             @Query("necktag_jt") String jantan,
             @Query("necktag_bt") String betina
     );
+
+
+    // -------------------------------------grafik---------------------------------------------
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @GET("grafik")
+    Call<GrafikResponse> getGrafikData(@Header("Authorization") String authToken);
 
 
     // ------------------------------------peternak--------------------------------------------
