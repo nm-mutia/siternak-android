@@ -2,6 +2,7 @@ package com.project.siternak.rest;
 
 import com.project.siternak.responses.DataResponse;
 import com.project.siternak.responses.GrafikResponse;
+import com.project.siternak.responses.GrafikYearResponse;
 import com.project.siternak.responses.KematianResponse;
 import com.project.siternak.responses.KematianGetResponse;
 import com.project.siternak.responses.LoginResponse;
@@ -68,6 +69,20 @@ public interface ApiService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @GET("grafik")
     Call<GrafikResponse> getGrafikData(@Header("Authorization") String authToken);
+
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @GET("grafik/lahir")
+    Call<GrafikYearResponse> getGrafikLahirData(
+            @Header("Authorization") String authToken,
+            @Query("tahun") Integer tahun
+    );
+
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @GET("grafik/mati")
+    Call<GrafikYearResponse> getGrafikMatiData(
+            @Header("Authorization") String authToken,
+            @Query("tahun") Integer tahun
+    );
 
 
     // ------------------------------------peternak--------------------------------------------

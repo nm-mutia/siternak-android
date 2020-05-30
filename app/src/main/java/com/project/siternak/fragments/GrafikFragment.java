@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,11 +29,13 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.project.siternak.R;
 import com.project.siternak.responses.GrafikResponse;
+import com.project.siternak.responses.GrafikYearResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.DialogUtils;
 import com.project.siternak.utils.SharedPrefManager;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
@@ -46,6 +51,7 @@ public class GrafikFragment extends Fragment {
     @BindView(R.id.bar_chart2) BarChart barChart2;
     @BindView(R.id.combined_chart1) CombinedChart combinedChart1;
     @BindView(R.id.combined_chart2) CombinedChart combinedChart2;
+    @BindView(R.id.spinner_chart) Spinner spinner;
 
     private Unbinder unbinder;
     private String userToken;
@@ -61,9 +67,26 @@ public class GrafikFragment extends Fragment {
         ButterKnife.bind(getActivity());
 
         userToken = SharedPrefManager.getInstance(getActivity()).getAccessToken();
-        getGrafik(getArguments().getString("grafik"));
+        String chart = getArguments().getString("grafik");
+        getGrafik(chart);
+
+        if(chart.equals("lahir") || chart.equals("mati")){
+            setSpinner();
+        }
 
         return view;
+    }
+
+    private void setSpinner(){
+        ArrayList<String> years = new ArrayList<>();
+        int yearNow = Calendar.getInstance().get(Calendar.YEAR);
+        for (int i = yearNow; i > yearNow - 5; i--){
+            years.add(Integer.toString(i));
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, years);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
     }
 
     private void getGrafik(String grafik){
@@ -85,6 +108,7 @@ public class GrafikFragment extends Fragment {
                     barChart2.setVisibility(View.GONE);
                     combinedChart1.setVisibility(View.GONE);
                     combinedChart2.setVisibility(View.GONE);
+                    spinner.setVisibility(View.GONE);
 
                     dataLine = new ArrayList<>();
                     dataBar = new ArrayList<>();
@@ -106,7 +130,6 @@ public class GrafikFragment extends Fragment {
                                 betinaBar.add(new BarEntry(i, Integer.valueOf(betina.get(i))));
                             }
 
-                            barChart1.setData(setDataBarChart());
                             setBarChart(barChart1);
 
                             desc.setText("Grafik jumlah ternak berdasarkan umur");
@@ -125,7 +148,6 @@ public class GrafikFragment extends Fragment {
                                 betinaBar.add(new BarEntry(i, Integer.valueOf(betina.get(i))));
                             }
 
-                            barChart2.setData(setDataBarChart());
                             setBarChart(barChart2);
 
                             desc.setText("Grafik jumlah ternak berdasarkan ras");
@@ -133,6 +155,8 @@ public class GrafikFragment extends Fragment {
                             barChart2.invalidate();
                             break;
                         case "lahir":
+                            spinner.setVisibility(View.VISIBLE);
+
                             label = resp.getLahir().getLabel();
                             data = resp.getLahir().getData();
                             jantan = resp.getLahir().getJantan();
@@ -144,14 +168,26 @@ public class GrafikFragment extends Fragment {
                                 betinaBar.add(new BarEntry(i, Integer.valueOf(betina.get(i))));
                             }
 
-                            combinedChart1.setData(setDataCombinedChart());
                             setCombinedChart(combinedChart1);
 
                             desc.setText("Grafik jumlah ternak berdasarkan kelahiran");
                             combinedChart1.setDescription(desc);
                             combinedChart1.invalidate();
+
+                            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                @Override
+                                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                                    Integer year = Integer.valueOf(adapterView.getItemAtPosition(i).toString());
+                                    changeYearLahir(year);
+                                }
+
+                                @Override
+                                public void onNothingSelected(AdapterView<?> adapterView) {}
+                            });
                             break;
                         case "mati":
+                            spinner.setVisibility(View.VISIBLE);
+
                             label = resp.getMati().getLabel();
                             data = resp.getMati().getData();
                             jantan = resp.getMati().getJantan();
@@ -163,12 +199,22 @@ public class GrafikFragment extends Fragment {
                                 betinaBar.add(new BarEntry(i, Integer.valueOf(betina.get(i))));
                             }
 
-                            combinedChart2.setData(setDataCombinedChart());
                             setCombinedChart(combinedChart2);
 
                             desc.setText("Grafik jumlah ternak berdasarkan kematian");
                             combinedChart2.setDescription(desc);
                             combinedChart2.invalidate();
+
+                            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                @Override
+                                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                                    Integer year = Integer.valueOf(adapterView.getItemAtPosition(i).toString());
+                                    changeYearMati(year);
+                                }
+
+                                @Override
+                                public void onNothingSelected(AdapterView<?> adapterView) {}
+                            });
                             break;
                         default:
                             break;
@@ -215,12 +261,15 @@ public class GrafikFragment extends Fragment {
         xAxis.setAxisMinimum(0f);
 
         YAxis yAxis = barChart.getAxisLeft();
-        yAxis.setDrawGridLines(true);
         yAxis.setGranularity(1f);
         yAxis.setAxisMinimum(0f);
 
+        YAxis yrAxis = barChart.getAxisRight();
+        yrAxis.setGranularity(1f);
+        yrAxis.setAxisMinimum(0f);
+
         barChart.setVisibility(View.VISIBLE);
-        barChart.getAxisRight().setEnabled(false);
+        barChart.setData(setDataBarChart());
         barChart.setDrawValueAboveBar(true);
         barChart.setFitBars(false);
         barChart.setVisibleXRangeMaximum(5);
@@ -263,16 +312,105 @@ public class GrafikFragment extends Fragment {
         xAxis.setAxisMinimum(0f);
 
         YAxis yAxis = combinedChart.getAxisLeft();
-        yAxis.setDrawGridLines(true);
         yAxis.setGranularity(1f);
         yAxis.setAxisMinimum(-0.1f);
 
+        YAxis yrAxis = combinedChart.getAxisRight();
+        yrAxis.setGranularity(1f);
+        yrAxis.setAxisMinimum(-0.1f);
+
         combinedChart.setVisibility(View.VISIBLE);
+        combinedChart.notifyDataSetChanged();
+        combinedChart.setData(setDataCombinedChart());
         combinedChart.getBarData().setBarWidth(barWidth);
         combinedChart.getBarData().groupBars(0f, groupSpace, barSpace);
-        combinedChart.getAxisRight().setEnabled(false);
         combinedChart.setVisibleXRangeMaximum(4);
         combinedChart.getXAxis().setAxisMinimum(setDataCombinedChart().getXMin() - 0.25f);
         combinedChart.getXAxis().setAxisMaximum(setDataCombinedChart().getXMax() + 0.5f);
+    }
+
+    private void changeYearLahir(Integer year){
+        SweetAlertDialog pDialog = DialogUtils.getLoadingPopup(getActivity());
+
+        Call<GrafikYearResponse> call = RetrofitClient
+                .getInstance()
+                .getApi()
+                .getGrafikLahirData("Bearer " + this.userToken, year);
+
+        call.enqueue(new Callback<GrafikYearResponse>() {
+            @Override
+            public void onResponse(Call<GrafikYearResponse> call, Response<GrafikYearResponse> response) {
+                GrafikYearResponse resp = response.body();
+                pDialog.cancel();
+
+                if(response.isSuccessful()){
+                    updateCombinedChart(combinedChart1, resp);
+
+                    Description desc = new Description();
+                    desc.setText("Grafik jumlah ternak berdasarkan kelahiran");
+                    combinedChart1.setDescription(desc);
+                    combinedChart1.invalidate();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GrafikYearResponse> call, Throwable t) {
+                pDialog.cancel();
+                Toast.makeText(getActivity(), "Gagal", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void changeYearMati(Integer year){
+        SweetAlertDialog pDialog = DialogUtils.getLoadingPopup(getActivity());
+
+        Call<GrafikYearResponse> call = RetrofitClient
+                .getInstance()
+                .getApi()
+                .getGrafikMatiData("Bearer " + this.userToken, year);
+
+        call.enqueue(new Callback<GrafikYearResponse>() {
+            @Override
+            public void onResponse(Call<GrafikYearResponse> call, Response<GrafikYearResponse> response) {
+                GrafikYearResponse resp = response.body();
+                pDialog.cancel();
+
+                if(response.isSuccessful()) {
+                    updateCombinedChart(combinedChart2, resp);
+
+                    Description desc = new Description();
+                    desc.setText("Grafik jumlah ternak berdasarkan kematian");
+                    combinedChart2.setDescription(desc);
+                    combinedChart2.invalidate();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GrafikYearResponse> call, Throwable t) {
+                pDialog.cancel();
+                Toast.makeText(getActivity(), "Gagal", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void updateCombinedChart(CombinedChart combinedChart, GrafikYearResponse resp){
+        dataLine = new ArrayList<>();
+        jantanBar = new ArrayList<>();
+        betinaBar = new ArrayList<>();
+
+        label = resp.getData().getLabel();
+        data = resp.getData().getData();
+        jantan = resp.getData().getJantan();
+        betina = resp.getData().getBetina();
+
+        for(int i = 0; i < label.size(); i++) {
+            dataLine.add(new Entry(i, Integer.valueOf(data.get(i))));
+            jantanBar.add(new BarEntry(i, Integer.valueOf(jantan.get(i))));
+            betinaBar.add(new BarEntry(i, Integer.valueOf(betina.get(i))));
+        }
+
+        combinedChart.notifyDataSetChanged();
+        combinedChart.setData(setDataCombinedChart());
+        setCombinedChart(combinedChart);
     }
 }
