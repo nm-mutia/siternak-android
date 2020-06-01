@@ -58,6 +58,7 @@ public class GrafikFragment extends Fragment {
     private List<Entry> dataLine;
     private List<BarEntry> dataBar, jantanBar, betinaBar;
     private List<String> label, data, jantan, betina;
+    private boolean isSpinnerinitial = true;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -169,16 +170,21 @@ public class GrafikFragment extends Fragment {
                             }
 
                             setCombinedChart(combinedChart1);
-
                             desc.setText("Grafik jumlah ternak berdasarkan kelahiran");
                             combinedChart1.setDescription(desc);
+                            combinedChart1.notifyDataSetChanged();
                             combinedChart1.invalidate();
 
                             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                 @Override
                                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                                    Integer year = Integer.valueOf(adapterView.getItemAtPosition(i).toString());
-                                    changeYearLahir(year);
+                                    if(isSpinnerinitial){
+                                        isSpinnerinitial = false;
+                                    }
+                                    else {
+                                        Integer year = Integer.valueOf(adapterView.getItemAtPosition(i).toString());
+                                        changeYearLahir(year);
+                                    }
                                 }
 
                                 @Override
@@ -200,16 +206,21 @@ public class GrafikFragment extends Fragment {
                             }
 
                             setCombinedChart(combinedChart2);
-
                             desc.setText("Grafik jumlah ternak berdasarkan kematian");
                             combinedChart2.setDescription(desc);
+                            combinedChart2.notifyDataSetChanged();
                             combinedChart2.invalidate();
 
                             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                 @Override
                                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                                    Integer year = Integer.valueOf(adapterView.getItemAtPosition(i).toString());
-                                    changeYearMati(year);
+                                    if(isSpinnerinitial){
+                                        isSpinnerinitial = false;
+                                    }
+                                    else {
+                                        Integer year = Integer.valueOf(adapterView.getItemAtPosition(i).toString());
+                                        changeYearMati(year);
+                                    }
                                 }
 
                                 @Override
@@ -288,7 +299,6 @@ public class GrafikFragment extends Fragment {
 
         LineData lineData = new LineData();
         BarData barData = new BarData();
-
         lineData.addDataSet(set1);
         barData.addDataSet(set2);
         barData.addDataSet(set3);
@@ -320,7 +330,6 @@ public class GrafikFragment extends Fragment {
         yrAxis.setAxisMinimum(-0.1f);
 
         combinedChart.setVisibility(View.VISIBLE);
-        combinedChart.notifyDataSetChanged();
         combinedChart.setData(setDataCombinedChart());
         combinedChart.getBarData().setBarWidth(barWidth);
         combinedChart.getBarData().groupBars(0f, groupSpace, barSpace);
@@ -349,6 +358,7 @@ public class GrafikFragment extends Fragment {
                     Description desc = new Description();
                     desc.setText("Grafik jumlah ternak berdasarkan kelahiran");
                     combinedChart1.setDescription(desc);
+                    combinedChart1.notifyDataSetChanged();
                     combinedChart1.invalidate();
                 }
             }
@@ -381,6 +391,7 @@ public class GrafikFragment extends Fragment {
                     Description desc = new Description();
                     desc.setText("Grafik jumlah ternak berdasarkan kematian");
                     combinedChart2.setDescription(desc);
+                    combinedChart2.notifyDataSetChanged();
                     combinedChart2.invalidate();
                 }
             }
@@ -394,9 +405,9 @@ public class GrafikFragment extends Fragment {
     }
 
     private void updateCombinedChart(CombinedChart combinedChart, GrafikYearResponse resp){
-        dataLine = new ArrayList<>();
-        jantanBar = new ArrayList<>();
-        betinaBar = new ArrayList<>();
+        dataLine.clear();
+        jantanBar.clear();
+        betinaBar.clear();
 
         label = resp.getData().getLabel();
         data = resp.getData().getData();
@@ -409,7 +420,8 @@ public class GrafikFragment extends Fragment {
             betinaBar.add(new BarEntry(i, Integer.valueOf(betina.get(i))));
         }
 
-        combinedChart.notifyDataSetChanged();
+        combinedChart.invalidate();
+        combinedChart.clear();
         combinedChart.setData(setDataCombinedChart());
         setCombinedChart(combinedChart);
     }
