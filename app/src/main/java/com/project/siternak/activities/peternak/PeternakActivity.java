@@ -31,8 +31,8 @@ import retrofit2.Response;
 
 public class PeternakActivity extends AppCompatActivity {
     @BindView(R.id.rv) RecyclerView rvPeternak;
-    @BindView(R.id.sv) SearchView sv;
     @BindView(R.id.tv_nodata) TextView tv_nodata;
+    @BindView(R.id.sv) SearchView sv;
 
     private PeternakAdapter peternakAdapter;
     private ArrayList<PeternakModel> peternakArrayList;

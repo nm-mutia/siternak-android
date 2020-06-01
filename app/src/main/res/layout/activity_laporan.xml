@@ -38,7 +38,7 @@
             android:layout_marginEnd="24dp"
             android:layout_marginRight="24dp"
             android:fontFamily="@font/sourcesanspro_bold"
-            android:text="Barcode"
+            android:text="Laporan"
             android:textColor="@color/white"
             android:textSize="30sp" />
     </LinearLayout>
@@ -57,11 +57,10 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/btn_barcode_download"
+                android:id="@+id/tv_barcode_laporan"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="6dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginLeft="16dp"
                 android:paddingHorizontal="20dp"
@@ -70,34 +69,12 @@
                 android:background="@drawable/rc_primary_to_acc_side"
                 android:fontFamily="@font/sourcesanspro_bold"
                 android:gravity="center"
-                android:text="Unduh file barcode"
+                android:text="Unduh file laporan"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:elevation="4dp"/>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/row_barcode"/>
-                <TextView
-                    android:id="@+id/tv_nodata"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="15dp"
-                    android:layout_marginVertical="15dp"
-                    android:layout_gravity="center"
-                    android:text="Tidak ada data"
-                    android:fontFamily="@font/sourcesanspro_semibold"
-                    android:textSize="16sp"
-                    android:gravity="center"
-                    android:visibility="gone"/>
-            </RelativeLayout>
 
         </LinearLayout>
 

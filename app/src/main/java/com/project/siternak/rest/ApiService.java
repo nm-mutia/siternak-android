@@ -65,6 +65,12 @@ public interface ApiService {
     );
 
 
+    // ------------------------------------barcode--------------------------------------------
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @GET("barcode")
+    Call<TernakGetResponse> getBarcodeTernak(@Header("Authorization") String authToken);
+
+
     // -------------------------------------grafik---------------------------------------------
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @GET("grafik")
