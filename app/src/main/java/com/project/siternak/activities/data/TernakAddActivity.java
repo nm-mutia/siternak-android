@@ -101,12 +101,10 @@ public class TernakAddActivity extends AppCompatActivity implements DatePickerDi
         ArrayAdapter<CharSequence> jkAdapter = ArrayAdapter.createFromResource(this, R.array.jenis_kelamin, android.R.layout.simple_spinner_item);
         jkAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sJk.setAdapter(jkAdapter);
-//        sJk.setOnItemSelectedListener();
 
         ArrayAdapter<CharSequence> statusAdapter = ArrayAdapter.createFromResource(this, R.array.status_ada, android.R.layout.simple_spinner_item);
         statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sStatusAda.setAdapter(statusAdapter);
-//        sStatusAda.setOnItemSelectedListener(new );
     }
 
     @OnClick(R.id.tiet_ternak_pemilik)

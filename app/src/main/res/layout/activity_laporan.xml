@@ -54,15 +54,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
 
             <Button
-                android:id="@+id/tv_barcode_laporan"
+                android:id="@+id/btn_barcode_laporan"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginLeft="16dp"
                 android:paddingHorizontal="20dp"
                 android:paddingVertical="10dp"
                 android:drawableLeft="@drawable/ic_file_download"
@@ -72,9 +72,107 @@
                 android:text="Unduh file laporan"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:elevation="4dp"/>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="Rentang Waktu"
+                android:fontFamily="@font/sourcesanspro_regular"
+                android:textSize="18sp"
+                android:textColor="@color/colorPrimaryDark"/>
+
+            <Button
+                android:id="@+id/btn_atur_waktu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="10dp"
+                android:drawableLeft="@drawable/ic_access_time"
+                android:background="@drawable/rc_primary"
+                android:fontFamily="@font/sourcesanspro_bold"
+                android:gravity="center"
+                android:text="Atur Rentang Waktu"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:elevation="4dp"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+                <TextView
+                    android:id="@+id/tv_start_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:text="tanggal"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="14sp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_toLeftOf="@id/tv_end_date"
+                    android:layout_toRightOf="@id/tv_start_date"
+                    android:text="sampai"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="14sp"/>
+                <TextView
+                    android:id="@+id/tv_end_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="tanggal"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="14sp"/>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/black"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="LAPORAN - DATA TERNAK"
+                android:fontFamily="@font/sourcesanspro_regular"
+                android:textSize="18sp"
+                android:textColor="@color/colorPrimaryDark"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="10dp"
+                android:background="@color/tealAccent">
+                <Spinner
+                    android:id="@+id/spinner_laporan"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:spinnerMode="dropdown"
+                    android:padding="8dp"/>
+            </LinearLayout>
+
+            <HorizontalScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scrollbars="horizontal|vertical"
+                android:layout_marginTop="6dp">
+                <TableLayout
+                    android:id="@+id/tl_laporan"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorPrimary">
+                </TableLayout>
+            </HorizontalScrollView>
 
         </LinearLayout>
 

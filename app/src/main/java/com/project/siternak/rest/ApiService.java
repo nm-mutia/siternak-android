@@ -5,6 +5,7 @@ import com.project.siternak.responses.GrafikResponse;
 import com.project.siternak.responses.GrafikYearResponse;
 import com.project.siternak.responses.KematianResponse;
 import com.project.siternak.responses.KematianGetResponse;
+import com.project.siternak.responses.LaporanResponse;
 import com.project.siternak.responses.LoginResponse;
 import com.project.siternak.responses.MatchResponse;
 import com.project.siternak.responses.PemilikGetResponse;
@@ -69,6 +70,16 @@ public interface ApiService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @GET("barcode")
     Call<TernakGetResponse> getBarcodeTernak(@Header("Authorization") String authToken);
+
+
+    // ------------------------------------laporan--------------------------------------------
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @GET("laporan")
+    Call<LaporanResponse> getLaporan(
+            @Header("Authorization") String authToken,
+            @Query("datefrom") String datefrom,
+            @Query("dateto") String dateto
+    );
 
 
     // -------------------------------------grafik---------------------------------------------

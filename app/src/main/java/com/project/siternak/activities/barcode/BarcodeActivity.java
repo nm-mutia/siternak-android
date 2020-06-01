@@ -2,7 +2,6 @@ package com.project.siternak.activities.barcode;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,7 +29,6 @@ import retrofit2.Response;
 public class BarcodeActivity extends AppCompatActivity {
     @BindView(R.id.rv) RecyclerView rvBarcode;
     @BindView(R.id.tv_nodata) TextView tvNodata;
-    @BindView(R.id.btn_barcode_download) Button btnDwd;
 
     private BarcodeAdapter barcodeAdapter;
     private ArrayList<TernakModel> arrayList;
@@ -47,6 +45,7 @@ public class BarcodeActivity extends AppCompatActivity {
 
         userToken = SharedPrefManager.getInstance(this).getAccessToken();
         setBarcode();
+        setPdf();
     }
 
     @Override
@@ -56,7 +55,7 @@ public class BarcodeActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_barcode_download)
     public void download(){
-        
+
     }
 
     public void setBarcode(){
@@ -101,5 +100,9 @@ public class BarcodeActivity extends AppCompatActivity {
                 tvNodata.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    private void setPdf(){
+
     }
 }
