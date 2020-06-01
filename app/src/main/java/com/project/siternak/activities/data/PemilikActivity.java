@@ -131,6 +131,7 @@ public class PemilikActivity extends AppCompatActivity {
                     } else {
                         tv_nodata.setVisibility(View.GONE);
                         rv_pemilik.setAdapter(pemilikAdapter);
+                        rv_pemilik.setNestedScrollingEnabled(false);
                         pemilikAdapter.notifyDataSetChanged();
                     }
                 }

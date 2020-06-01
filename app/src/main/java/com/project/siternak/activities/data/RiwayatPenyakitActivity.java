@@ -132,6 +132,7 @@ public class RiwayatPenyakitActivity extends AppCompatActivity {
                     } else {
                         tv_nodata.setVisibility(View.GONE);
                         rv_riwayat.setAdapter(riwayatAdapter);
+                        rv_riwayat.setNestedScrollingEnabled(false);
                         riwayatAdapter.notifyDataSetChanged();
                     }
                 }

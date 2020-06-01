@@ -137,6 +137,7 @@ public class TernakActivity extends AppCompatActivity {
                     } else {
                         tv_nodata.setVisibility(View.GONE);
                         rv_ternak.setAdapter(ternakAdapter);
+                        rv_ternak.setNestedScrollingEnabled(false);
                         ternakAdapter.notifyDataSetChanged();
                     }
                 }

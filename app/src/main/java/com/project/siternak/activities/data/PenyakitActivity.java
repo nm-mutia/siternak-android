@@ -130,6 +130,7 @@ public class PenyakitActivity extends AppCompatActivity {
                     } else {
                         tv_nodata.setVisibility(View.GONE);
                         rv_penyakit.setAdapter(penyakitAdapter);
+                        rv_penyakit.setNestedScrollingEnabled(false);
                         penyakitAdapter.notifyDataSetChanged();
                     }
                 }

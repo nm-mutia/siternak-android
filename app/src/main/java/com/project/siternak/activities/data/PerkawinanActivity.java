@@ -132,6 +132,7 @@ public class PerkawinanActivity extends AppCompatActivity {
                     } else {
                         tv_nodata.setVisibility(View.GONE);
                         rv_perkawinan.setAdapter(perkawinanAdapter);
+                        rv_perkawinan.setNestedScrollingEnabled(false);
                         perkawinanAdapter.notifyDataSetChanged();
                     }
                 }

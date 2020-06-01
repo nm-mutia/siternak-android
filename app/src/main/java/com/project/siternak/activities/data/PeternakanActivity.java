@@ -129,6 +129,7 @@ public class PeternakanActivity extends AppCompatActivity {
                     } else {
                         tv_nodata.setVisibility(View.GONE);
                         rv_peternakan.setAdapter(peternakanAdapter);
+                        rv_peternakan.setNestedScrollingEnabled(false);
                         peternakanAdapter.notifyDataSetChanged();
                     }
                 }

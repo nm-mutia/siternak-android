@@ -101,6 +101,7 @@ public class PeternakActivity extends AppCompatActivity {
                     } else {
                         tv_nodata.setVisibility(View.GONE);
                         rvPeternak.setAdapter(peternakAdapter);
+                        rvPeternak.setNestedScrollingEnabled(false);
                         peternakAdapter.notifyDataSetChanged();
                     }
                 }

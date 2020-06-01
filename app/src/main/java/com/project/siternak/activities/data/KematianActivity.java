@@ -131,6 +131,7 @@ public class KematianActivity extends AppCompatActivity {
                     } else {
                         tv_nodata.setVisibility(View.GONE);
                         rv_kematian.setAdapter(kematianAdapter);
+                        rv_kematian.setNestedScrollingEnabled(false);
                         kematianAdapter.notifyDataSetChanged();
                     }
                 }

@@ -130,6 +130,7 @@ public class RasActivity extends AppCompatActivity {
                     } else {
                         tv_nodata.setVisibility(View.GONE);
                         rv_ras.setAdapter(rasAdapter);
+                        rv_ras.setNestedScrollingEnabled(false);
                         rasAdapter.notifyDataSetChanged();
                     }
                 }
