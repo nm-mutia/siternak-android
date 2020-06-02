@@ -1,2 +1,2 @@
-include ':app'
+include ':app', ':poi-ooxml-schemas-3.9', ':poi-ooxml-3.9', ':poi-3.9'
 rootProject.name='SITERNAK'

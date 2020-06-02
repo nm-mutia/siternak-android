@@ -6,7 +6,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
-    public static final String BASE_URL_API = "http://192.168.1.6/siternak-web/public/api/v1/";
+    public static final String BASE_URL_API = "http://192.168.1.8/siternak-web/public/api/v1/";
 
     private static RetrofitClient mInstance;
     private Retrofit retrofit;
