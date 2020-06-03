@@ -39,6 +39,7 @@ import com.project.siternak.models.data.TernakModel;
 import com.project.siternak.responses.LaporanResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.DialogUtils;
+import com.project.siternak.utils.FolderExternalStorage;
 import com.project.siternak.utils.SharedPrefManager;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -69,6 +70,7 @@ import retrofit2.Response;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static com.project.siternak.utils.FolderExternalStorage.FOLDER_NAME;
 
 public class LaporanActivity extends AppCompatActivity {
     @BindView(R.id.tv_start_date) TextView tvStartDate;
@@ -220,25 +222,29 @@ public class LaporanActivity extends AppCompatActivity {
 
     private void download(){
         String filename = "SITERNAK_Laporan_"+tvStartDate.getText().toString()+"_"+tvEndDate.getText().toString()+".xls";
-        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        File file = new File(dir, filename);
-        FileOutputStream fileOutputStream = null;
 
-        try {
-            fileOutputStream = new FileOutputStream(file);
-            wb.write(fileOutputStream);
-            Toast.makeText(getApplicationContext(), "File disimpan di " + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(getApplicationContext(), "Gagal menyimpan file", Toast.LENGTH_LONG).show();
-            if(fileOutputStream != null){
-                try {
-                    fileOutputStream.close();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+        if(FolderExternalStorage.checkFolder()){
+            File dir = Environment.getExternalStoragePublicDirectory(FOLDER_NAME);
+            File file = new File(dir, filename);
+            FileOutputStream fileOutputStream = null;
+
+            try {
+                fileOutputStream = new FileOutputStream(file);
+                wb.write(fileOutputStream);
+                Toast.makeText(getApplicationContext(), "File disimpan di " + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), "Gagal menyimpan file", Toast.LENGTH_LONG).show();
+                if(fileOutputStream != null){
+                    try {
+                        fileOutputStream.close();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
         }
+
     }
 
     private void setInitialDate(){
@@ -354,15 +360,15 @@ public class LaporanActivity extends AppCompatActivity {
         cellStyle.setFillBackgroundColor(HSSFColor.LIGHT_BLUE.index);
 
         Sheet sheetLahir = null;
-        sheetLahir = wb.createSheet("ternakLahir");
+        sheetLahir = wb.createSheet("TernakLahir");
         Sheet sheetMati = null;
-        sheetMati = wb.createSheet("ternakMati");
+        sheetMati = wb.createSheet("TernakMati");
         Sheet sheetKawin = null;
-        sheetKawin = wb.createSheet("ternakKawin");
+        sheetKawin = wb.createSheet("TernakKawin");
         Sheet sheetSakit = null;
-        sheetSakit = wb.createSheet("ternakSakit");
+        sheetSakit = wb.createSheet("TernakSakit");
         Sheet sheetAda = null;
-        sheetAda = wb.createSheet("ternakAda");
+        sheetAda = wb.createSheet("TernakAda");
 
         //lahir
         Row row = sheetLahir.createRow(0);
