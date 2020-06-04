@@ -49,7 +49,6 @@ public class BarcodeAdapter extends RecyclerView.Adapter<BarcodeAdapter.DataBarc
 
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
-//            BitMatrix bitMatrix = multiFormatWriter.encode(data.getNecktag(), BarcodeFormat.CODE_128, holder.ivBarcode.getWidth(), holder.ivBarcode.getHeight());
             BitMatrix bitMatrix = multiFormatWriter.encode(data.getNecktag(), BarcodeFormat.CODE_128, 240, 50);
             int width = bitMatrix.getWidth();
             int height = bitMatrix.getHeight();
@@ -64,7 +63,6 @@ public class BarcodeAdapter extends RecyclerView.Adapter<BarcodeAdapter.DataBarc
         catch (WriterException e){
             e.printStackTrace();
         }
-
     }
 
     @Override

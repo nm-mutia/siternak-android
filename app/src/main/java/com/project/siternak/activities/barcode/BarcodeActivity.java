@@ -4,9 +4,12 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,8 +20,22 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.project.siternak.R;
-import com.project.siternak.activities.laporan.LaporanActivity;
 import com.project.siternak.adapter.BarcodeAdapter;
 import com.project.siternak.models.data.TernakModel;
 import com.project.siternak.responses.TernakGetResponse;
@@ -27,6 +44,7 @@ import com.project.siternak.utils.DialogUtils;
 import com.project.siternak.utils.FolderExternalStorage;
 import com.project.siternak.utils.SharedPrefManager;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -65,7 +83,6 @@ public class BarcodeActivity extends AppCompatActivity {
 
         userToken = SharedPrefManager.getInstance(this).getAccessToken();
         setBarcode();
-        setPdf();
     }
 
     @Override
@@ -95,8 +112,9 @@ public class BarcodeActivity extends AppCompatActivity {
             } else {
                 ActivityCompat.requestPermissions(BarcodeActivity.this, new String[]{WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
             }
-        } else {
-            download();
+        }
+        else {
+            setPdf();
         }
     }
 
@@ -111,7 +129,7 @@ public class BarcodeActivity extends AppCompatActivity {
                     }
                 }
                 if (flag) {
-                    download();
+                    setPdf();
                 } else {
                     finish();
                 }
@@ -125,44 +143,15 @@ public class BarcodeActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_barcode_download)
     public void setDownloadFile(){
-        setPdf();
-
         if (!checkPermission()) {
-            download();
+            setPdf();
         } else {
             if (checkPermission()) {
                 requestPermissionAndContinue();
             } else {
-                download();
+                setPdf();
             }
         }
-    }
-
-    private void download(){
-        String filename = "SITERNAK_Barcode.pdf";
-
-        if(FolderExternalStorage.checkFolder()){
-            File dir = Environment.getExternalStoragePublicDirectory(FOLDER_NAME);
-            File file = new File(dir, filename);
-            FileOutputStream fileOutputStream = null;
-
-            try {
-                fileOutputStream = new FileOutputStream(file);
-//                wb.write(fileOutputStream);
-                Toast.makeText(getApplicationContext(), "File disimpan di " + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(getApplicationContext(), "Gagal menyimpan file", Toast.LENGTH_LONG).show();
-                if(fileOutputStream != null){
-                    try {
-                        fileOutputStream.close();
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            }
-        }
-
     }
 
     public void setBarcode(){
@@ -181,7 +170,7 @@ public class BarcodeActivity extends AppCompatActivity {
 
                 if(response.isSuccessful()) {
                     List<TernakModel> ternaks = resp.getTernaks();
-                    arrayList = (ArrayList<TernakModel>)ternaks;
+                    arrayList = (ArrayList<TernakModel>) ternaks;
                     barcodeAdapter = new BarcodeAdapter(BarcodeActivity.this, arrayList);
 
                     if (barcodeAdapter.getItemCount() == 0) {
@@ -210,6 +199,72 @@ public class BarcodeActivity extends AppCompatActivity {
     }
 
     private void setPdf(){
+        Document document = new Document();
+        document.setPageSize(PageSize.A4);
+        document.setMargins(50,50,50,50);
+        String filename = "SITERNAK_Barcode.pdf";
 
+        if(!FolderExternalStorage.checkFolder()) {
+            return;
+        }
+
+        File dir = Environment.getExternalStoragePublicDirectory(FOLDER_NAME);
+        File file = new File(dir, filename);
+        FileOutputStream fileOutputStream = null;
+
+        try {
+            fileOutputStream = new FileOutputStream(file);
+            PdfWriter writer = PdfWriter.getInstance(document, fileOutputStream);
+            document.open();
+            PdfContentByte content = writer.getDirectContent();
+            PdfPTable table = new PdfPTable(3);
+
+            for (int k = 0; k < arrayList.size(); k++) {
+                if(k % 24 == 0){
+                    document.newPage();
+                }
+                content.createTemplate(10f,16f);
+
+                MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+                try {
+                    BitMatrix bitMatrix = multiFormatWriter.encode(arrayList.get(k).getNecktag(), BarcodeFormat.CODE_128, 250, 80);
+                    int width = bitMatrix.getWidth();
+                    int height = bitMatrix.getHeight();
+                    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+                    for (int i = 0; i < width; i++) {
+                        for (int j = 0; j < height; j++) {
+                            bitmap.setPixel(i, j, bitMatrix.get(i, j) ? Color.BLACK : Color.WHITE);
+                        }
+                    }
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+
+                    Image image = Image.getInstance(stream.toByteArray());
+                    image.setAlignment(Image.MIDDLE);
+
+                    PdfPCell cell = new PdfPCell();
+                    cell.addElement(image);
+                    cell.addElement(new Paragraph(arrayList.get(k).getNecktag()));
+
+                    cell.setPadding(6);
+                    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+
+                    table.setWidthPercentage(100);
+                    table.addCell(cell);
+                }
+                catch(WriterException e){
+                    e.printStackTrace();
+                }
+            }
+
+            document.add(table);
+            document.close();
+            fileOutputStream.close();
+            Toast.makeText(getApplicationContext(), "File disimpan di " + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
     }
 }
