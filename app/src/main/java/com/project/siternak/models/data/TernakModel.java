@@ -79,6 +79,9 @@ public class TernakModel implements Serializable {
     @Expose
     String deleted_at;
 
+    public TernakModel() {
+    }
+
     public TernakModel(String necktag, Integer rasId, String jenisKelamin, String tglLahir, String blood, String necktag_ayah, String necktag_ibu, Boolean statusAda) {
         this.necktag = necktag;
         this.rasId = rasId;

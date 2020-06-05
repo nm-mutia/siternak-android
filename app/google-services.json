@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "309422220960",
+    "firebase_url": "https://siternak-bc165.firebaseio.com",
+    "project_id": "siternak-bc165",
+    "storage_bucket": "siternak-bc165.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:309422220960:android:9bc6bdc11687193d208bc5",
+        "android_client_info": {
+          "package_name": "com.project.siternak"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "309422220960-bl11064p8b244q69hu9oijv7vm6stvnu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.project.siternak",
+            "certificate_hash": "ae6de797354491f85c6f051b93165e9fed50d8db"
+          }
+        },
+        {
+          "client_id": "309422220960-j343qiucgr9os2nol5t94ovjvhmvgbaa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmzs-5pGS027PIX7JU8OaTfo0YyLHzPfU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "309422220960-j343qiucgr9os2nol5t94ovjvhmvgbaa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

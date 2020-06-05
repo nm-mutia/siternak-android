@@ -8,6 +8,7 @@ import com.project.siternak.responses.KematianGetResponse;
 import com.project.siternak.responses.LaporanResponse;
 import com.project.siternak.responses.LoginResponse;
 import com.project.siternak.responses.MatchResponse;
+import com.project.siternak.responses.OptionsResponse;
 import com.project.siternak.responses.PemilikGetResponse;
 import com.project.siternak.responses.PemilikResponse;
 import com.project.siternak.responses.PenyakitGetResponse;
@@ -459,6 +460,9 @@ public interface ApiService {
     Call<DataResponse> delRiwayat(@Header("Authorization") String authToken, @Path("id") Integer id);
 
 
-
+    // ------------------------------------options--------------------------------------------
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @GET("options")
+    Call<OptionsResponse> getOptions(@Header("Authorization") String authToken);
 
 }

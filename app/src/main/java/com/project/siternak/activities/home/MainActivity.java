@@ -3,6 +3,7 @@ package com.project.siternak.activities.home;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,16 +11,46 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.project.siternak.R;
 import com.project.siternak.activities.auth.LoginActivity;
 import com.project.siternak.fragments.DashboardFragment;
 import com.project.siternak.fragments.ProfileFragment;
 import com.project.siternak.fragments.ScanFragment;
+import com.project.siternak.models.data.KematianModel;
+import com.project.siternak.models.data.PemilikModel;
+import com.project.siternak.models.data.PenyakitModel;
+import com.project.siternak.models.data.PeternakanModel;
+import com.project.siternak.models.data.RasModel;
+import com.project.siternak.models.data.TernakModel;
+import com.project.siternak.responses.KematianResponse;
+import com.project.siternak.responses.OptionsResponse;
+import com.project.siternak.responses.PemilikResponse;
+import com.project.siternak.responses.PenyakitResponse;
+import com.project.siternak.responses.PeternakanResponse;
+import com.project.siternak.responses.RasResponse;
+import com.project.siternak.responses.TernakResponse;
+import com.project.siternak.rest.RetrofitClient;
+import com.project.siternak.utils.NetworkManager;
 import com.project.siternak.utils.SharedPrefManager;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
     Fragment selectedFragment;
+    private String userToken;
+    private boolean isInitialState = true;
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference mReference, mReference2;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -27,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
+
+        userToken = SharedPrefManager.getInstance(this).getAccessToken();
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(this);
@@ -51,6 +84,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             Intent intent = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+        }
+
+        Toast.makeText(this, "Initial state: " + isInitialState, Toast.LENGTH_SHORT).show();
+
+        if(NetworkManager.isNetworkAvailable(MainActivity.this)){
+            if(isInitialState){
+                syncData();
+                isInitialState = false;
+            }
         }
     }
 
@@ -80,10 +122,488 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     @Override
     protected void onRestart() {
         super.onRestart();
-//        getSupportFragmentManager()
-//        .beginTransaction()
-//        .detach(selectedFragment)
-//        .attach(selectedFragment)
-//        .commitAllowingStateLoss();
+    }
+
+    private void syncData(){
+        pushToDb(); // retrieve from firebase
+        pullFromDb(); //store to firebase
+    }
+
+    private void pullFromDb(){
+        Call<OptionsResponse> call = RetrofitClient
+                .getInstance()
+                .getApi()
+                .getOptions("Bearer " + this.userToken);
+
+        call.enqueue(new Callback<OptionsResponse>() {
+            @Override
+            public void onResponse(Call<OptionsResponse> call, Response<OptionsResponse> response) {
+                OptionsResponse resp = response.body();
+
+                mDatabase = FirebaseDatabase.getInstance();
+                mReference = mDatabase.getReference("options");
+
+                List<KematianModel> kematians = resp.getKematians();
+                List<PemilikModel> pemiliks = resp.getPemiliks();
+                List<PenyakitModel> penyakits = resp.getPenyakits();
+                List<PeternakanModel> peternakans = resp.getPeternakan();
+                List<RasModel> ras = resp.getRas();
+                List<TernakModel> ternaks = resp.getTernaks();
+
+                for(KematianModel data : kematians){
+                    mReference.child("kematian").child(data.getId().toString()).setValue(data);
+                }
+
+                for(PemilikModel data : pemiliks){
+                    mReference.child("pemilik").child(data.getId().toString()).setValue(data);
+                }
+
+                for(PenyakitModel data : penyakits){
+                    mReference.child("penyakit").child(data.getId().toString()).setValue(data);
+                }
+
+                for(PeternakanModel data : peternakans){
+                    mReference.child("peternakan").child(data.getId().toString()).setValue(data);
+                }
+
+                for(RasModel data : ras){
+                    mReference.child("ras").child(data.getId().toString()).setValue(data);
+                }
+
+                for(TernakModel data : ternaks){
+                    mReference.child("ternak").child(data.getNecktag()).setValue(data);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<OptionsResponse> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "Gagal sync: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void pushToDb(){
+        mDatabase = FirebaseDatabase.getInstance();
+        mReference = mDatabase.getReference("datas").child("addData");
+
+        mReference.child("kematian").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for (DataSnapshot data : dataSnapshot.getChildren()){
+                        String id = data.getKey();
+                        KematianModel kematian = data.child(id).getValue(KematianModel.class);
+
+                        Call<KematianResponse> call = RetrofitClient
+                                .getInstance()
+                                .getApi()
+                                .addKematian(kematian.getTgl_kematian(), kematian.getWaktu_kematian(), kematian.getPenyebab(), kematian.getKondisi(), "Bearer " + userToken);
+
+                        call.enqueue(new Callback<KematianResponse>() {
+                            @Override
+                            public void onResponse(Call<KematianResponse> call, Response<KematianResponse> response) {
+                                Toast.makeText(MainActivity.this, "Push kematian", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure(Call<KematianResponse> call, Throwable t) {
+                                Toast.makeText(MainActivity.this, "Gagal push kematian: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        mReference.child("pemilik").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for (DataSnapshot data : dataSnapshot.getChildren()){
+                        String id = data.getKey();
+                        PemilikModel pemilik = data.child(id).getValue(PemilikModel.class);
+
+                        Call<PemilikResponse> call = RetrofitClient
+                                .getInstance()
+                                .getApi()
+                                .addPemilik(pemilik.getKtp(), pemilik.getNama_pemilik(), "Bearer " + userToken);
+
+                        call.enqueue(new Callback<PemilikResponse>() {
+                            @Override
+                            public void onResponse(Call<PemilikResponse> call, Response<PemilikResponse> response) {
+                                Toast.makeText(MainActivity.this, "Push pemilik", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure(Call<PemilikResponse> call, Throwable t) {
+                                Toast.makeText(MainActivity.this, "Gagal push pemilik: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        mReference.child("penyakit").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for (DataSnapshot data : dataSnapshot.getChildren()){
+                        String id = data.getKey();
+                        PenyakitModel penyakit = data.child(id).getValue(PenyakitModel.class);
+
+                        Call<PenyakitResponse> call = RetrofitClient
+                                .getInstance()
+                                .getApi()
+                                .addPenyakit(penyakit.getNamaPenyakit(), penyakit.getKetPenyakit(), "Bearer " + userToken);
+
+                        call.enqueue(new Callback<PenyakitResponse>() {
+                            @Override
+                            public void onResponse(Call<PenyakitResponse> call, Response<PenyakitResponse> response) {
+                                Toast.makeText(MainActivity.this, "Push penyakit", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure(Call<PenyakitResponse> call, Throwable t) {
+                                Toast.makeText(MainActivity.this, "Gagal push penyakit: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        mReference.child("peternakan").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for (DataSnapshot data : dataSnapshot.getChildren()){
+                        String id = data.getKey();
+                        PeternakanModel peternakan = data.child(id).getValue(PeternakanModel.class);
+
+                        Call<PeternakanResponse> call = RetrofitClient
+                                .getInstance()
+                                .getApi()
+                                .addPeternakan(peternakan.getNamaPeternakan(), peternakan.getKeterangan(), "Bearer " + userToken);
+
+                        call.enqueue(new Callback<PeternakanResponse>() {
+                            @Override
+                            public void onResponse(Call<PeternakanResponse> call, Response<PeternakanResponse> response) {
+                                Toast.makeText(MainActivity.this, "Push peternakan", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure(Call<PeternakanResponse> call, Throwable t) {
+                                Toast.makeText(MainActivity.this, "Gagal push peternakan: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        mReference.child("ras").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for (DataSnapshot data : dataSnapshot.getChildren()){
+                        String id = data.getKey();
+                        RasModel ras = data.child(id).getValue(RasModel.class);
+
+                        Call<RasResponse> call = RetrofitClient
+                                .getInstance()
+                                .getApi()
+                                .addRas(ras.getJenisRas(), ras.getKetRas(), "Bearer " + userToken);
+
+                        call.enqueue(new Callback<RasResponse>() {
+                            @Override
+                            public void onResponse(Call<RasResponse> call, Response<RasResponse> response) {
+                                Toast.makeText(MainActivity.this, "Push ras", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure(Call<RasResponse> call, Throwable t) {
+                                Toast.makeText(MainActivity.this, "Gagal push ras: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        mReference.child("ternak").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for (DataSnapshot data : dataSnapshot.getChildren()){
+                        String id = data.getKey();
+                        TernakModel ternak = data.child(id).getValue(TernakModel.class);
+
+                        Call<TernakResponse> call = RetrofitClient
+                                .getInstance()
+                                .getApi()
+                                .addTernak(ternak.getPemilikId(), ternak.getPeternakanId(), ternak.getRasId(), ternak.getKematianId(),
+                                        ternak.getJenisKelamin(), ternak.getTglLahir(), ternak.getBobotLahir(), ternak.getPukulLahir(),
+                                        ternak.getLamaDiKandungan(), ternak.getLamaLaktasi(), ternak.getTglLepasSapih(), ternak.getBlood(),
+                                        ternak.getNecktag_ayah(), ternak.getNecktag_ibu(), ternak.getBobotTubuh(), ternak.getPanjangTubuh(),
+                                        ternak.getTinggiTubuh(), ternak.getCacatFisik(), ternak.getCiriLain(), ternak.getStatusAda(), "Bearer " + userToken);
+
+                        call.enqueue(new Callback<TernakResponse>() {
+                            @Override
+                            public void onResponse(Call<TernakResponse> call, Response<TernakResponse> response) {
+                                Toast.makeText(MainActivity.this, "Push ternak", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure(Call<TernakResponse> call, Throwable t) {
+                                Toast.makeText(MainActivity.this, "Gagal push ternak: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        // ------------------ edit data -----------------------------------------------------
+        mReference2 = mDatabase.getReference("datas").child("editData");
+
+        mReference2.child("kematian").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for (DataSnapshot data : dataSnapshot.getChildren()){
+                        String id = data.getKey();
+                        KematianModel kematian = data.child(id).getValue(KematianModel.class);
+
+                        Call<KematianResponse> call = RetrofitClient
+                                .getInstance()
+                                .getApi()
+                                .editKematian(Integer.valueOf(id), kematian.getTgl_kematian(), kematian.getWaktu_kematian(), kematian.getPenyebab(), kematian.getKondisi(), "Bearer " + userToken);
+
+                        call.enqueue(new Callback<KematianResponse>() {
+                            @Override
+                            public void onResponse(Call<KematianResponse> call, Response<KematianResponse> response) {
+                                Toast.makeText(MainActivity.this, "Push kematian", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure(Call<KematianResponse> call, Throwable t) {
+                                Toast.makeText(MainActivity.this, "Gagal push kematian: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        mReference2.child("pemilik").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for (DataSnapshot data : dataSnapshot.getChildren()){
+                        String id = data.getKey();
+                        PemilikModel pemilik = data.child(id).getValue(PemilikModel.class);
+
+                        Call<PemilikResponse> call = RetrofitClient
+                                .getInstance()
+                                .getApi()
+                                .editPemilik(Integer.valueOf(id), pemilik.getKtp(), pemilik.getNama_pemilik(), "Bearer " + userToken);
+
+                        call.enqueue(new Callback<PemilikResponse>() {
+                            @Override
+                            public void onResponse(Call<PemilikResponse> call, Response<PemilikResponse> response) {
+                                Toast.makeText(MainActivity.this, "Push pemilik", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure(Call<PemilikResponse> call, Throwable t) {
+                                Toast.makeText(MainActivity.this, "Gagal push pemilik: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        mReference2.child("penyakit").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for (DataSnapshot data : dataSnapshot.getChildren()){
+                        String id = data.getKey();
+                        PenyakitModel penyakit = data.child(id).getValue(PenyakitModel.class);
+
+                        Call<PenyakitResponse> call = RetrofitClient
+                                .getInstance()
+                                .getApi()
+                                .editPenyakit(Integer.valueOf(id), penyakit.getNamaPenyakit(), penyakit.getKetPenyakit(), "Bearer " + userToken);
+
+                        call.enqueue(new Callback<PenyakitResponse>() {
+                            @Override
+                            public void onResponse(Call<PenyakitResponse> call, Response<PenyakitResponse> response) {
+                                Toast.makeText(MainActivity.this, "Push penyakit", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure(Call<PenyakitResponse> call, Throwable t) {
+                                Toast.makeText(MainActivity.this, "Gagal push penyakit: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        mReference2.child("peternakan").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for (DataSnapshot data : dataSnapshot.getChildren()){
+                        String id = data.getKey();
+                        PeternakanModel peternakan = data.child(id).getValue(PeternakanModel.class);
+
+                        Call<PeternakanResponse> call = RetrofitClient
+                                .getInstance()
+                                .getApi()
+                                .editPeternakan(Integer.valueOf(id), peternakan.getNamaPeternakan(), peternakan.getKeterangan(), "Bearer " + userToken);
+
+                        call.enqueue(new Callback<PeternakanResponse>() {
+                            @Override
+                            public void onResponse(Call<PeternakanResponse> call, Response<PeternakanResponse> response) {
+                                Toast.makeText(MainActivity.this, "Push peternakan", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure(Call<PeternakanResponse> call, Throwable t) {
+                                Toast.makeText(MainActivity.this, "Gagal push peternakan: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        mReference2.child("ras").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for (DataSnapshot data : dataSnapshot.getChildren()){
+                        String id = data.getKey();
+                        RasModel ras = data.child(id).getValue(RasModel.class);
+
+                        Call<RasResponse> call = RetrofitClient
+                                .getInstance()
+                                .getApi()
+                                .editRas(Integer.valueOf(id), ras.getJenisRas(), ras.getKetRas(), "Bearer " + userToken);
+
+                        call.enqueue(new Callback<RasResponse>() {
+                            @Override
+                            public void onResponse(Call<RasResponse> call, Response<RasResponse> response) {
+                                Toast.makeText(MainActivity.this, "Push ras", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure(Call<RasResponse> call, Throwable t) {
+                                Toast.makeText(MainActivity.this, "Gagal push ras: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        mReference2.child("ternak").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for (DataSnapshot data : dataSnapshot.getChildren()){
+                        String id = data.getKey();
+                        TernakModel ternak = data.child(id).getValue(TernakModel.class);
+
+                        Call<TernakResponse> call = RetrofitClient
+                                .getInstance()
+                                .getApi()
+                                .editTernak(id, ternak.getPemilikId(), ternak.getPeternakanId(), ternak.getRasId(), ternak.getKematianId(),
+                                        ternak.getJenisKelamin(), ternak.getTglLahir(), ternak.getBobotLahir(), ternak.getPukulLahir(),
+                                        ternak.getLamaDiKandungan(), ternak.getLamaLaktasi(), ternak.getTglLepasSapih(), ternak.getBlood(),
+                                        ternak.getNecktag_ayah(), ternak.getNecktag_ibu(), ternak.getBobotTubuh(), ternak.getPanjangTubuh(),
+                                        ternak.getTinggiTubuh(), ternak.getCacatFisik(), ternak.getCiriLain(), ternak.getStatusAda(), "Bearer " + userToken);
+
+                        call.enqueue(new Callback<TernakResponse>() {
+                            @Override
+                            public void onResponse(Call<TernakResponse> call, Response<TernakResponse> response) {
+                                Toast.makeText(MainActivity.this, "Push ternak", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure(Call<TernakResponse> call, Throwable t) {
+                                Toast.makeText(MainActivity.this, "Gagal push ternak: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }

@@ -34,6 +34,9 @@ public class RiwayatPenyakitModel implements Serializable {
     @Expose
     String updated_at;
 
+    public RiwayatPenyakitModel() {
+    }
+
     public RiwayatPenyakitModel(Integer id, Integer penyakitId, String necktag, String tglSakit, String obat, Integer lamaSakit, String keterangan, String created_at, String updated_at) {
         this.id = id;
         this.penyakitId = penyakitId;

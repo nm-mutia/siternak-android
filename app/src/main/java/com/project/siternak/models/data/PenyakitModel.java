@@ -22,6 +22,9 @@ public class PenyakitModel implements Serializable {
     @Expose
     String updated_at;
 
+    public PenyakitModel() {
+    }
+
     public PenyakitModel(Integer id, String namaPenyakit, String ketPenyakit, String created_at, String updated_at) {
         this.id = id;
         this.namaPenyakit = namaPenyakit;

@@ -22,6 +22,9 @@ public class PeternakanModel implements Serializable {
     @Expose
     String updated_at;
 
+    public PeternakanModel() {
+    }
+
     public PeternakanModel(Integer id, String namaPeternakan, String keterangan, String created_at, String updated_at) {
         this.id = id;
         this.namaPeternakan = namaPeternakan;

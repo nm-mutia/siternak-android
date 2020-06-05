@@ -22,6 +22,9 @@ public class PemilikModel implements Serializable {
     @Expose
     String updated_at;
 
+    public PemilikModel() {
+    }
+
     public PemilikModel(Integer id, String ktp, String nama_pemilik, String created_at, String updated_at) {
         this.id = id;
         this.ktp = ktp;

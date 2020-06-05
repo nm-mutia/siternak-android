@@ -28,6 +28,9 @@ public class KematianModel implements Serializable {
     @Expose
     String updated_at;
 
+    public KematianModel() {
+    }
+
     public KematianModel(Integer id, String tgl_kematian, String waktu_kematian, String penyebab, String kondisi, String created_at, String updated_at) {
         this.id = id;
         this.tgl_kematian = tgl_kematian;

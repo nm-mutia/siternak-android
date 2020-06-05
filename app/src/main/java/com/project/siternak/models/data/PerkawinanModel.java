@@ -25,6 +25,9 @@ public class PerkawinanModel implements Serializable {
     @Expose
     String updated_at;
 
+    public PerkawinanModel() {
+    }
+
     public PerkawinanModel(Integer id, String necktag, String necktag_psg, String tgl, String created_at, String updated_at) {
         this.id = id;
         this.necktag = necktag;

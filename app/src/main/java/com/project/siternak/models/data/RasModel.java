@@ -22,6 +22,9 @@ public class RasModel implements Serializable {
     @Expose
     String updated_at;
 
+    public RasModel() {
+    }
+
     public RasModel(Integer id, String jenisRas, String ketRas, String created_at, String updated_at) {
         this.id = id;
         this.jenisRas = jenisRas;
