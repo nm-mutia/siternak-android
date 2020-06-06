@@ -132,38 +132,10 @@ public class RasDetailActivity extends AppCompatActivity {
     }
 
     private void setDataRas() {
-        SweetAlertDialog pDialog = DialogUtils.getLoadingPopup(this);
-
-        Call<RasResponse> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .getRasDetail("Bearer " + this.userToken, rasData.getId());
-
-        call.enqueue(new Callback<RasResponse>() {
-            @Override
-            public void onResponse(Call<RasResponse> call, Response<RasResponse> response) {
-                RasResponse resp = response.body();
-                pDialog.cancel();
-
-                if(response.isSuccessful()){
-                    RasModel data = resp.getRas();
-
-                    tvId.setText(String.valueOf(data.getId()));
-                    tvJenisRas.setText(data.getJenisRas());
-                    tvKetRas.setText(data.getKetRas());
-                    tvCreatedAt.setText(data.getCreated_at());
-                    tvUpdatedAt.setText(data.getUpdated_at());
-                }
-                else {
-                    Toast.makeText(RasDetailActivity.this, response.message(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RasResponse> call, Throwable t) {
-                pDialog.cancel();
-                Toast.makeText(RasDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
-            }
-        });
+        tvId.setText(String.valueOf(rasData.getId()));
+        tvJenisRas.setText(rasData.getJenisRas());
+        tvKetRas.setText(rasData.getKetRas());
+        tvCreatedAt.setText(rasData.getCreated_at());
+        tvUpdatedAt.setText(rasData.getUpdated_at());
     }
 }

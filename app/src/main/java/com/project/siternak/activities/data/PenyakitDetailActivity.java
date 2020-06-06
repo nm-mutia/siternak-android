@@ -132,42 +132,10 @@ public class PenyakitDetailActivity extends AppCompatActivity {
     }
 
     private void setDataPenyakit() {
-        SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("Mohon Tunggu");
-        pDialog.setCancelable(false);
-        pDialog.show();
-
-        Call<PenyakitResponse> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .getPenyakitDetail("Bearer " + this.userToken, penyakitData.getId());
-
-        call.enqueue(new Callback<PenyakitResponse>() {
-            @Override
-            public void onResponse(Call<PenyakitResponse> call, Response<PenyakitResponse> response) {
-                PenyakitResponse resp = response.body();
-                pDialog.cancel();
-
-                if(response.isSuccessful()){
-                    PenyakitModel data = resp.getPenyakits();
-
-                    tvId.setText(String.valueOf(data.getId()));
-                    tvNamaPenyakit.setText(data.getNamaPenyakit());
-                    tvKetPenyakit.setText(data.getKetPenyakit());
-                    tvCreatedAt.setText(data.getCreated_at());
-                    tvUpdatedAt.setText(data.getUpdated_at());
-                }
-                else {
-                    Toast.makeText(PenyakitDetailActivity.this, response.message(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<PenyakitResponse> call, Throwable t) {
-                pDialog.cancel();
-                Toast.makeText(PenyakitDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
-            }
-        });
+        tvId.setText(String.valueOf(penyakitData.getId()));
+        tvNamaPenyakit.setText(penyakitData.getNamaPenyakit());
+        tvKetPenyakit.setText(penyakitData.getKetPenyakit());
+        tvCreatedAt.setText(penyakitData.getCreated_at());
+        tvUpdatedAt.setText(penyakitData.getUpdated_at());
     }
 }

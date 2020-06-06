@@ -130,39 +130,11 @@ public class PerkawinanDetailActivity extends AppCompatActivity {
     }
 
     private void setDataPerkawinan() {
-        SweetAlertDialog pDialog = DialogUtils.getLoadingPopup(this);
-
-        Call<PerkawinanResponse> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .getPerkawinanDetail("Bearer " + this.userToken, perkawinanData.getId());
-
-        call.enqueue(new Callback<PerkawinanResponse>() {
-            @Override
-            public void onResponse(Call<PerkawinanResponse> call, Response<PerkawinanResponse> response) {
-                PerkawinanResponse resp = response.body();
-                pDialog.cancel();
-
-                if(response.isSuccessful()){
-                    PerkawinanModel data = resp.getPerkawinans();
-
-                    tvId.setText(String.valueOf(data.getId()));
-                    tvNecktag.setText(data.getNecktag());
-                    tvNecktagPsg.setText(data.getNecktag_psg());
-                    tvTgl.setText(data.getTgl());
-                    tvCreatedAt.setText(data.getCreated_at());
-                    tvUpdatedAt.setText(data.getUpdated_at());
-                }
-                else {
-                    Toast.makeText(PerkawinanDetailActivity.this, response.message(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<PerkawinanResponse> call, Throwable t) {
-                pDialog.cancel();
-                Toast.makeText(PerkawinanDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
-            }
-        });
+        tvId.setText(String.valueOf(perkawinanData.getId()));
+        tvNecktag.setText(perkawinanData.getNecktag());
+        tvNecktagPsg.setText(perkawinanData.getNecktag_psg());
+        tvTgl.setText(perkawinanData.getTgl());
+        tvCreatedAt.setText(perkawinanData.getCreated_at());
+        tvUpdatedAt.setText(perkawinanData.getUpdated_at());
     }
 }

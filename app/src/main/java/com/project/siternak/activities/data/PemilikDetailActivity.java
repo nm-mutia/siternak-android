@@ -130,42 +130,10 @@ public class PemilikDetailActivity extends AppCompatActivity {
     }
 
     private void setDataPemilik() {
-        SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("Mohon Tunggu");
-        pDialog.setCancelable(false);
-        pDialog.show();
-
-        Call<PemilikResponse> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .getPemilikDetail("Bearer " + this.userToken, pemilikData.getId());
-
-        call.enqueue(new Callback<PemilikResponse>() {
-            @Override
-            public void onResponse(Call<PemilikResponse> call, Response<PemilikResponse> response) {
-                PemilikResponse resp = response.body();
-                pDialog.cancel();
-
-                if(response.isSuccessful()){
-                    PemilikModel data = resp.getPemiliks();
-
-                    tvId.setText(String.valueOf(data.getId()));
-                    tvKtp.setText(data.getKtp());
-                    tvNamaPemilik.setText(data.getNama_pemilik());
-                    tvCreatedAt.setText(data.getCreated_at());
-                    tvUpdatedAt.setText(data.getUpdated_at());
-                }
-                else {
-                    Toast.makeText(PemilikDetailActivity.this, response.message(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<PemilikResponse> call, Throwable t) {
-                pDialog.cancel();
-                Toast.makeText(PemilikDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
-            }
-        });
+        tvId.setText(String.valueOf(pemilikData.getId()));
+        tvKtp.setText(pemilikData.getKtp());
+        tvNamaPemilik.setText(pemilikData.getNama_pemilik());
+        tvCreatedAt.setText(pemilikData.getCreated_at());
+        tvUpdatedAt.setText(pemilikData.getUpdated_at());
     }
 }

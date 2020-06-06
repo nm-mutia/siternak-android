@@ -132,39 +132,12 @@ public class KematianDetailActivity extends AppCompatActivity {
     }
 
     private void setDataKematian() {
-        SweetAlertDialog pDialog = DialogUtils.getLoadingPopup(this);
-
-        Call<KematianResponse> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .getKematianDetail("Bearer " + this.userToken, kematianData.getId());
-
-        call.enqueue(new Callback<KematianResponse>() {
-            @Override
-            public void onResponse(Call<KematianResponse> call, Response<KematianResponse> response) {
-                KematianResponse resp = response.body();
-                pDialog.cancel();
-
-                if(response.isSuccessful()){
-                    KematianModel data = resp.getKematians();
-
-                    tvId.setText(String.valueOf(data.getId()));
-                    tvTgl.setText(data.getTgl_kematian());
-                    tvWaktu.setText(data.getWaktu_kematian());
-                    tvPenyebab.setText(data.getPenyebab());
-                    tvKondisi.setText(data.getKondisi());
-                    tvCreatedAt.setText(data.getCreated_at());
-                    tvUpdatedAt.setText(data.getUpdated_at());
-                }
-                else {
-                    Toast.makeText(KematianDetailActivity.this, response.message(), Toast.LENGTH_SHORT).show();
-                }
-            }
-            @Override
-            public void onFailure(Call<KematianResponse> call, Throwable t) {
-                pDialog.cancel();
-                Toast.makeText(KematianDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
-            }
-        });
+        tvId.setText(String.valueOf(kematianData.getId()));
+        tvTgl.setText(kematianData.getTgl_kematian());
+        tvWaktu.setText(kematianData.getWaktu_kematian());
+        tvPenyebab.setText(kematianData.getPenyebab());
+        tvKondisi.setText(kematianData.getKondisi());
+        tvCreatedAt.setText(kematianData.getCreated_at());
+        tvUpdatedAt.setText(kematianData.getUpdated_at());
     }
 }

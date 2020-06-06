@@ -15,6 +15,8 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.project.siternak.R;
 import com.project.siternak.fragments.DatePickerFragment;
 import com.project.siternak.fragments.TimePickerFrament;
@@ -22,6 +24,7 @@ import com.project.siternak.models.data.KematianModel;
 import com.project.siternak.responses.KematianResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.DialogUtils;
+import com.project.siternak.utils.NetworkManager;
 import com.project.siternak.utils.SharedPrefManager;
 
 import java.io.Serializable;
@@ -49,6 +52,8 @@ public class KematianEditActivity extends AppCompatActivity implements DatePicke
     private KematianModel kematianData;
     private String userToken;
     public final static int backFinish = 1;
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference mReference;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -138,51 +143,66 @@ public class KematianEditActivity extends AppCompatActivity implements DatePicke
         String penyebab = tietKematianPenyebab.getText().toString();
         String kondisi = tietKematianKondisi.getText().toString();
 
-        Call<KematianResponse> calle = RetrofitClient
-                .getInstance()
-                .getApi()
-                .editKematian(id, tgl, waktu, penyebab, kondisi, "Bearer " + userToken);
+        if(NetworkManager.isNetworkAvailable(KematianEditActivity.this)){
+            Call<KematianResponse> calle = RetrofitClient
+                    .getInstance()
+                    .getApi()
+                    .editKematian(id, tgl, waktu, penyebab, kondisi, "Bearer " + userToken);
 
-        calle.enqueue(new Callback<KematianResponse>() {
-            @Override
-            public void onResponse(Call<KematianResponse> call, Response<KematianResponse> response) {
-                KematianResponse resp = response.body();
-                pDialog.dismiss();
+            calle.enqueue(new Callback<KematianResponse>() {
+                @Override
+                public void onResponse(Call<KematianResponse> call, Response<KematianResponse> response) {
+                    KematianResponse resp = response.body();
+                    pDialog.dismiss();
 
-                if(response.isSuccessful()){
-                    if(resp.getStatus().equals("error")){
-                        Toast.makeText(KematianEditActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
+                    if(response.isSuccessful()){
+                        if(resp.getStatus().equals("error")){
+                            Toast.makeText(KematianEditActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            KematianModel datas = new KematianModel(id, tgl, waktu, penyebab, kondisi, resp.getKematians().getCreated_at(), resp.getKematians().getUpdated_at());
+                            Toast.makeText(KematianEditActivity.this, "Data berhasil diubah: id " + resp.getKematians().getId(), Toast.LENGTH_LONG).show();
+
+                            Intent intent = new Intent(KematianEditActivity.this, KematianDetailActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.putExtra("kematian", (Serializable) datas);
+                            intent.putExtra("finish", backFinish);
+                            startActivity(intent);
+
+                            KematianEditActivity.this.finish();
+                        }
                     }
-                    else {
-                        KematianModel datas = new KematianModel(id, tgl, waktu, penyebab, kondisi, resp.getKematians().getCreated_at(), resp.getKematians().getUpdated_at());
-                        Toast.makeText(KematianEditActivity.this, "Data berhasil diubah: id " + resp.getKematians().getId(), Toast.LENGTH_LONG).show();
-
-                        Intent intent = new Intent(KematianEditActivity.this, KematianDetailActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("kematian", (Serializable) datas);
-                        intent.putExtra("finish", backFinish);
-                        startActivity(intent);
-
-                        KematianEditActivity.this.finish();
+                    else{
+                        SweetAlertDialog swal = new SweetAlertDialog(KematianEditActivity.this, SweetAlertDialog.ERROR_TYPE);
+                        swal.setTitleText("Error");
+                        swal.setContentText(response.message());
+                        swal.show();
                     }
                 }
-                else{
+
+                @Override
+                public void onFailure(Call<KematianResponse> call, Throwable t) {
+                    pDialog.dismiss();
                     SweetAlertDialog swal = new SweetAlertDialog(KematianEditActivity.this, SweetAlertDialog.ERROR_TYPE);
                     swal.setTitleText("Error");
-                    swal.setContentText(response.message());
+                    swal.setContentText(t.getMessage());
                     swal.show();
                 }
-            }
+            });
+        }
+        else{
+            pDialog.dismiss();
 
-            @Override
-            public void onFailure(Call<KematianResponse> call, Throwable t) {
-                pDialog.dismiss();
-                SweetAlertDialog swal = new SweetAlertDialog(KematianEditActivity.this, SweetAlertDialog.ERROR_TYPE);
-                swal.setTitleText("Error");
-                swal.setContentText(t.getMessage());
-                swal.show();
-            }
-        });
+            mDatabase = FirebaseDatabase.getInstance();
+            mReference = mDatabase.getReference("datas");
+
+            KematianModel datas = new KematianModel(id, tgl, waktu, penyebab, kondisi);
+            mReference.child("editData").child("kematian").child(id.toString()).setValue(datas);
+
+            Toast.makeText(this, "Recorded to firebase", Toast.LENGTH_SHORT).show();
+
+            KematianEditActivity.this.finish();
+        }
     }
 
     @OnClick(R.id.tiet_kematian_tgl)

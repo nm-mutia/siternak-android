@@ -134,40 +134,12 @@ public class PeternakDetailActivity extends AppCompatActivity {
     }
 
     private void setDataPeternak() {
-        SweetAlertDialog pDialog = DialogUtils.getLoadingPopup(this);
-
-        Call<PeternakResponse> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .getPeternakDetail("Bearer " + this.userToken, peternak.getId());
-
-        call.enqueue(new Callback<PeternakResponse>() {
-            @Override
-            public void onResponse(Call<PeternakResponse> call, Response<PeternakResponse> response) {
-                PeternakResponse resp = response.body();
-                pDialog.cancel();
-
-                if(response.isSuccessful()){
-                    PeternakModel data = resp.getPeternaks();
-
-                    tvId.setText(String.valueOf(data.getId()));
-                    tvIdPeternakan.setText(String.valueOf(data.getPeternakanId()));
-                    tvNama.setText(data.getNamaPeternak());
-                    tvUsername.setText(data.getUsername());
-                    tvPass.setText(data.getPassword());
-                    tvCreatedAt.setText(data.getCreated_at());
-                    tvUpdatedAt.setText(data.getUpdated_at());
-                }
-                else {
-                    Toast.makeText(PeternakDetailActivity.this, response.message(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<PeternakResponse> call, Throwable t) {
-                pDialog.cancel();
-                Toast.makeText(PeternakDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
-            }
-        });
+        tvId.setText(String.valueOf(peternak.getId()));
+        tvIdPeternakan.setText(String.valueOf(peternak.getPeternakanId()));
+        tvNama.setText(peternak.getNamaPeternak());
+        tvUsername.setText(peternak.getUsername());
+        tvPass.setText(peternak.getPassword());
+        tvCreatedAt.setText(peternak.getCreated_at());
+        tvUpdatedAt.setText(peternak.getUpdated_at());
     }
 }

@@ -157,63 +157,33 @@ public class TernakDetailActivity extends AppCompatActivity {
     }
 
     private void setDataTernak() {
-        SweetAlertDialog pDialog = DialogUtils.getLoadingPopup(this);
-
-        Call<TernakResponse> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .getTernakDetail("Bearer " + this.userToken, ternakData.getNecktag());
-
-        call.enqueue(new Callback<TernakResponse>() {
-            @Override
-            public void onResponse(Call<TernakResponse> call, Response<TernakResponse> response) {
-                TernakResponse resp = response.body();
-                pDialog.cancel();
-
-                if(response.isSuccessful()){
-                    TernakModel data = resp.getTernaks();
-
-                    tvNecktag.setText(String.valueOf(data.getNecktag()));
-                    tvPemilik.setText(String.valueOf(data.getPemilikId()));
-                    tvPeternakan.setText(String.valueOf(data.getPeternakanId()));
-                    tvRas.setText(String.valueOf(data.getRasId()));
-                    tvKematian.setText(String.valueOf(data.getKematianId()));
-                    tvJk.setText(data.getJenisKelamin());
-                    tvTglLahir.setText(data.getTglLahir());
-                    tvBobotLahir.setText(data.getBobotLahir());
-                    tvPukulLahir.setText(data.getPukulLahir());
-                    tvLamaDiKandungan.setText(data.getLamaDiKandungan());
-                    tvLamaLaktasi.setText(data.getLamaLaktasi());
-                    tvTglLepasSapih.setText(data.getTglLepasSapih());
-                    tvBlood.setText(data.getBlood());
-                    tvAyah.setText(data.getNecktag_ayah());
-                    tvIbu.setText(data.getNecktag_ibu());
-                    tvBobotTubuh.setText(data.getBobotTubuh());
-                    tvPanjangTubuh.setText(data.getPanjangTubuh());
-                    tvTinggiTubuh.setText(data.getTinggiTubuh());
-                    tvCacatFisik.setText(data.getCacatFisik());
-                    tvCiriLain.setText(data.getCiriLain());
-
-                    if(data.getStatusAda()){
-                        tvStatusAda.setText("Ada");
-                    }else{
-                        tvStatusAda.setText("Tidak Ada");
-                    }
-
-                    tvCreatedAt.setText(data.getCreated_at());
-                    tvUpdatedAt.setText(data.getUpdated_at());
-                    tvDeletedAt.setText(data.getDeleted_at());
-                }
-                else {
-                    Toast.makeText(TernakDetailActivity.this, response.message(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<TernakResponse> call, Throwable t) {
-                pDialog.cancel();
-                Toast.makeText(TernakDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
-            }
-        });
+        tvNecktag.setText(String.valueOf(ternakData.getNecktag()));
+        tvPemilik.setText(String.valueOf(ternakData.getPemilikId()));
+        tvPeternakan.setText(String.valueOf(ternakData.getPeternakanId()));
+        tvRas.setText(String.valueOf(ternakData.getRasId()));
+        tvKematian.setText(String.valueOf(ternakData.getKematianId()));
+        tvJk.setText(ternakData.getJenisKelamin());
+        tvTglLahir.setText(ternakData.getTglLahir());
+        tvBobotLahir.setText(ternakData.getBobotLahir());
+        tvPukulLahir.setText(ternakData.getPukulLahir());
+        tvLamaDiKandungan.setText(ternakData.getLamaDiKandungan());
+        tvLamaLaktasi.setText(ternakData.getLamaLaktasi());
+        tvTglLepasSapih.setText(ternakData.getTglLepasSapih());
+        tvBlood.setText(ternakData.getBlood());
+        tvAyah.setText(ternakData.getNecktag_ayah());
+        tvIbu.setText(ternakData.getNecktag_ibu());
+        tvBobotTubuh.setText(ternakData.getBobotTubuh());
+        tvPanjangTubuh.setText(ternakData.getPanjangTubuh());
+        tvTinggiTubuh.setText(ternakData.getTinggiTubuh());
+        tvCacatFisik.setText(ternakData.getCacatFisik());
+        tvCiriLain.setText(ternakData.getCiriLain());
+        if(ternakData.getStatusAda()){
+            tvStatusAda.setText("Ada");
+        }else{
+            tvStatusAda.setText("Tidak Ada");
+        }
+        tvCreatedAt.setText(ternakData.getCreated_at());
+        tvUpdatedAt.setText(ternakData.getUpdated_at());
+        tvDeletedAt.setText(ternakData.getDeleted_at());
     }
 }

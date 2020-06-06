@@ -479,6 +479,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                             @Override
                             public void onResponse(Call<KematianResponse> call, Response<KematianResponse> response) {
                                 Toast.makeText(MainActivity.this, "Push kematian", Toast.LENGTH_SHORT).show();
+                                mReference2.child("kematian").child(String.valueOf(kematian.getId())).setValue(null);
                             }
 
                             @Override

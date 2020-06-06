@@ -133,42 +133,14 @@ public class RiwayatPenyakitDetailActivity extends AppCompatActivity {
     }
 
     private void setDataRiwayat() {
-        SweetAlertDialog pDialog = DialogUtils.getLoadingPopup(this);
-
-        Call<RiwayatPenyakitResponse> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .getRiwayatDetail("Bearer " + this.userToken, riwayatData.getId());
-
-        call.enqueue(new Callback<RiwayatPenyakitResponse>() {
-            @Override
-            public void onResponse(Call<RiwayatPenyakitResponse> call, Response<RiwayatPenyakitResponse> response) {
-                RiwayatPenyakitResponse resp = response.body();
-                pDialog.cancel();
-
-                if(response.isSuccessful()){
-                    RiwayatPenyakitModel data = resp.getRiwayats();
-
-                    tvId.setText(String.valueOf(data.getId()));
-                    tvPenyakit.setText(String.valueOf(data.getPenyakitId()));
-                    tvNecktag.setText(data.getNecktag());
-                    tvTgl.setText(data.getTglSakit());
-                    tvObat.setText(data.getObat());
-                    tvLamaSakit.setText(String.valueOf(data.getLamaSakit()));
-                    tvKeterangan.setText(data.getKeterangan());
-                    tvCreatedAt.setText(data.getCreated_at());
-                    tvUpdatedAt.setText(data.getUpdated_at());
-                }
-                else {
-                    Toast.makeText(RiwayatPenyakitDetailActivity.this, response.message(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RiwayatPenyakitResponse> call, Throwable t) {
-                pDialog.cancel();
-                Toast.makeText(RiwayatPenyakitDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
-            }
-        });
+        tvId.setText(String.valueOf(riwayatData.getId()));
+        tvPenyakit.setText(String.valueOf(riwayatData.getPenyakitId()));
+        tvNecktag.setText(riwayatData.getNecktag());
+        tvTgl.setText(riwayatData.getTglSakit());
+        tvObat.setText(riwayatData.getObat());
+        tvLamaSakit.setText(String.valueOf(riwayatData.getLamaSakit()));
+        tvKeterangan.setText(riwayatData.getKeterangan());
+        tvCreatedAt.setText(riwayatData.getCreated_at());
+        tvUpdatedAt.setText(riwayatData.getUpdated_at());
     }
 }

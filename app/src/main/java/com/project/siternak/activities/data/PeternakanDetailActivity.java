@@ -132,38 +132,10 @@ public class PeternakanDetailActivity extends AppCompatActivity {
     }
 
     private void setDataPeternakan() {
-        SweetAlertDialog pDialog = DialogUtils.getLoadingPopup(this);
-
-        Call<PeternakanResponse> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .getPeternakanDetail("Bearer " + this.userToken, peternakanData.getId());
-
-        call.enqueue(new Callback<PeternakanResponse>() {
-            @Override
-            public void onResponse(Call<PeternakanResponse> call, Response<PeternakanResponse> response) {
-                PeternakanResponse resp = response.body();
-                pDialog.cancel();
-
-                if(response.isSuccessful()){
-                    PeternakanModel data = resp.getPeternakans();
-
-                    tvId.setText(String.valueOf(data.getId()));
-                    tvNama.setText(data.getNamaPeternakan());
-                    tvKet.setText(data.getKeterangan());
-                    tvCreatedAt.setText(data.getCreated_at());
-                    tvUpdatedAt.setText(data.getUpdated_at());
-                }
-                else {
-                    Toast.makeText(PeternakanDetailActivity.this, response.message(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<PeternakanResponse> call, Throwable t) {
-                pDialog.cancel();
-                Toast.makeText(PeternakanDetailActivity.this, "Gagal", Toast.LENGTH_SHORT).show();
-            }
-        });
+        tvId.setText(String.valueOf(peternakanData.getId()));
+        tvNama.setText(peternakanData.getNamaPeternakan());
+        tvKet.setText(peternakanData.getKeterangan());
+        tvCreatedAt.setText(peternakanData.getCreated_at());
+        tvUpdatedAt.setText(peternakanData.getUpdated_at());
     }
 }
