@@ -45,7 +45,7 @@ public class PenyakitOptionAdapter extends RecyclerView.Adapter<PenyakitOptionAd
     @Override
     public void onBindViewHolder(@NonNull OptionHolder holder, int position) {
         PenyakitModel option = arrayList.get(position);
-        holder.tv_option.setText(option.getId()+"-"+option.getNamaPenyakit());
+        holder.tv_option.setText(option.getId()+". "+option.getNamaPenyakit());
         holder.ll_option.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -45,7 +45,7 @@ public class KematianOptionAdapter extends RecyclerView.Adapter<KematianOptionAd
     @Override
     public void onBindViewHolder(@NonNull KematianOptionAdapter.OptionHolder holder, int position) {
         KematianModel option = arrayList.get(position);
-        holder.tv_option.setText(option.getId()+". "+option.getTgl_kematian()+"-"+option.getWaktu_kematian()+"-"+option.getPenyebab()+"-"+option.getKondisi());
+        holder.tv_option.setText(option.getId()+". "+option.getTgl_kematian()+" - "+option.getWaktu_kematian()+" - "+option.getPenyebab()+" - "+option.getKondisi());
         holder.ll_option.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -5,12 +5,18 @@ import android.os.Bundle;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.project.siternak.R;
 import com.project.siternak.adapter.PenyakitOptionAdapter;
 import com.project.siternak.models.data.PenyakitModel;
@@ -19,6 +25,7 @@ import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.DialogUtils;
 import com.project.siternak.utils.SharedPrefManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -37,6 +44,9 @@ public class PenyakitOptionActivity extends AppCompatActivity {
 
     private PenyakitOptionAdapter penyakitAdapter;
     private String userToken;
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference mReference;
+    private List<PenyakitModel> datas;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,25 +94,30 @@ public class PenyakitOptionActivity extends AppCompatActivity {
 
         SweetAlertDialog loadingDialog = DialogUtils.getLoadingPopup(this);
 
-        Call<PenyakitGetResponse> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .getPenyakit("Bearer " + this.userToken);
+        mDatabase = FirebaseDatabase.getInstance();
+        mReference = mDatabase.getReference("options").child("penyakit");
 
-        call.enqueue(new Callback<PenyakitGetResponse>() {
+        mReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onResponse(Call<PenyakitGetResponse> call, Response<PenyakitGetResponse> response) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 loadingDialog.cancel();
-                PenyakitGetResponse resp = response.body();
 
-                List<PenyakitModel> datas = resp.getPenyakits();
-                penyakitAdapter = new PenyakitOptionAdapter(PenyakitOptionActivity.this, datas);
-                rv.setAdapter(penyakitAdapter);
+                if(dataSnapshot.exists()){
+                    datas = new ArrayList<>();
+
+                    for (DataSnapshot data : dataSnapshot.getChildren()){
+                        PenyakitModel penyakit = data.getValue(PenyakitModel.class);
+                        datas.add(penyakit);
+                    }
+
+                    penyakitAdapter = new PenyakitOptionAdapter(PenyakitOptionActivity.this, datas);
+                    rv.setAdapter(penyakitAdapter);
+                }
             }
 
             @Override
-            public void onFailure(Call<PenyakitGetResponse> call, Throwable t) {
-                loadingDialog.cancel();
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
     }

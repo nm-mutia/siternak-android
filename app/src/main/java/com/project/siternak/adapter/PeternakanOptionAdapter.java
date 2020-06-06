@@ -45,7 +45,7 @@ public class PeternakanOptionAdapter extends RecyclerView.Adapter<PeternakanOpti
     @Override
     public void onBindViewHolder(@NonNull PeternakanOptionAdapter.OptionHolder holder, int position) {
         PeternakanModel option = arrayList.get(position);
-        holder.tv_option.setText(option.getId()+"-"+option.getNamaPeternakan());
+        holder.tv_option.setText(option.getId()+". "+option.getNamaPeternakan());
         holder.ll_option.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

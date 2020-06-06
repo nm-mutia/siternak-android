@@ -6,12 +6,18 @@ import android.os.Bundle;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.project.siternak.R;
 import com.project.siternak.adapter.TernakOptionAdapter;
 import com.project.siternak.models.data.TernakModel;
@@ -20,6 +26,7 @@ import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.DialogUtils;
 import com.project.siternak.utils.SharedPrefManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -40,6 +47,9 @@ public class TernakPerkawinanOptionActivity extends AppCompatActivity {
     private String userToken;
     private int kawin;
     private TernakModel nPsg;
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference mReference;
+    private List<TernakModel> datas;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,38 +105,37 @@ public class TernakPerkawinanOptionActivity extends AppCompatActivity {
 
         SweetAlertDialog loadingDialog = DialogUtils.getLoadingPopup(this);
 
-        Call<TernakGetResponse> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .getTernak("Bearer " + this.userToken);
+        mDatabase = FirebaseDatabase.getInstance();
+        mReference = mDatabase.getReference("options").child("ternak");
 
-        call.enqueue(new Callback<TernakGetResponse>() {
+        mReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onResponse(Call<TernakGetResponse> call, Response<TernakGetResponse> response) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 loadingDialog.cancel();
-                TernakGetResponse resp = response.body();
 
-                List<TernakModel> datas = resp.getTernaks();
+                if(dataSnapshot.exists()){
+                    datas = new ArrayList<>();
 
-                if(kawin == 2 && nPsg != null){
-//                    for(int i=0; i<datas.size(); i++){
-//                        if(datas.get(i).getJenisKelamin().equals(nPsg.getJenisKelamin())){ //hapus data jika jk sama
-//                            datas.remove(i);
-//                        }
-//                    }
-                    String jk= nPsg.getJenisKelamin();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        datas.removeIf(n -> (n.getJenisKelamin().equals(jk)));
+                    for (DataSnapshot data : dataSnapshot.getChildren()){
+                        TernakModel ternak = data.getValue(TernakModel.class);
+                        datas.add(ternak);
                     }
-                }
 
-                adapter = new TernakOptionAdapter(TernakPerkawinanOptionActivity.this, datas);
-                rv.setAdapter(adapter);
+                    if(kawin == 2 && nPsg != null){
+                        String jk = nPsg.getJenisKelamin();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            datas.removeIf(n -> (n.getJenisKelamin().equals(jk))); //hapus data jika jk sama
+                        }
+                    }
+
+                    adapter = new TernakOptionAdapter(TernakPerkawinanOptionActivity.this, datas);
+                    rv.setAdapter(adapter);
+                }
             }
 
             @Override
-            public void onFailure(Call<TernakGetResponse> call, Throwable t) {
-                loadingDialog.cancel();
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
     }

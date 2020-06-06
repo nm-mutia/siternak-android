@@ -2,15 +2,22 @@ package com.project.siternak.activities.option;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.project.siternak.R;
 import com.project.siternak.adapter.KematianOptionAdapter;
 import com.project.siternak.models.data.KematianModel;
@@ -19,6 +26,7 @@ import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.DialogUtils;
 import com.project.siternak.utils.SharedPrefManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -37,6 +45,9 @@ public class KematianOptionActivity extends AppCompatActivity {
 
     private KematianOptionAdapter kematianAdapter;
     private String userToken;
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference mReference;
+    private List<KematianModel> datas;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,25 +95,30 @@ public class KematianOptionActivity extends AppCompatActivity {
 
         SweetAlertDialog loadingDialog = DialogUtils.getLoadingPopup(this);
 
-        Call<KematianGetResponse> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .getKematian("Bearer " + this.userToken);
+        mDatabase = FirebaseDatabase.getInstance();
+        mReference = mDatabase.getReference("options").child("kematian");
 
-        call.enqueue(new Callback<KematianGetResponse>() {
+        mReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onResponse(Call<KematianGetResponse> call, Response<KematianGetResponse> response) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 loadingDialog.cancel();
-                KematianGetResponse resp = response.body();
 
-                List<KematianModel> datas = resp.getKematians();
-                kematianAdapter = new KematianOptionAdapter(KematianOptionActivity.this, datas);
-                rv.setAdapter(kematianAdapter);
+                if(dataSnapshot.exists()){
+                    datas = new ArrayList<>();
+
+                    for (DataSnapshot data : dataSnapshot.getChildren()){
+                        KematianModel kematian = data.getValue(KematianModel.class);
+                        datas.add(kematian);
+                    }
+
+                    kematianAdapter = new KematianOptionAdapter(KematianOptionActivity.this, datas);
+                    rv.setAdapter(kematianAdapter);
+                }
             }
 
             @Override
-            public void onFailure(Call<KematianGetResponse> call, Throwable t) {
-                loadingDialog.cancel();
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
     }

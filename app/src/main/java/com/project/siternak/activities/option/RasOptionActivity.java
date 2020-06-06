@@ -5,12 +5,18 @@ import android.os.Bundle;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.project.siternak.R;
 import com.project.siternak.adapter.RasOptionAdapter;
 import com.project.siternak.models.data.RasModel;
@@ -19,6 +25,7 @@ import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.DialogUtils;
 import com.project.siternak.utils.SharedPrefManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -35,6 +42,9 @@ public class RasOptionActivity extends AppCompatActivity {
 
     private RasOptionAdapter rasAdapter;
     private String userToken;
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference mReference;
+    private List<RasModel> datas;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,25 +92,30 @@ public class RasOptionActivity extends AppCompatActivity {
 
         SweetAlertDialog loadingDialog = DialogUtils.getLoadingPopup(this);
 
-        Call<RasGetResponse> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .getRas("Bearer " + this.userToken);
+        mDatabase = FirebaseDatabase.getInstance();
+        mReference = mDatabase.getReference("options").child("ras");
 
-        call.enqueue(new Callback<RasGetResponse>() {
+        mReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onResponse(Call<RasGetResponse> call, Response<RasGetResponse> response) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 loadingDialog.cancel();
-                RasGetResponse resp = response.body();
 
-                List<RasModel> datas = resp.getRas();
-                rasAdapter = new RasOptionAdapter(RasOptionActivity.this, datas);
-                rv.setAdapter(rasAdapter);
+                if(dataSnapshot.exists()){
+                    datas = new ArrayList<>();
+
+                    for (DataSnapshot data : dataSnapshot.getChildren()){
+                        RasModel ras = data.getValue(RasModel.class);
+                        datas.add(ras);
+                    }
+
+                    rasAdapter = new RasOptionAdapter(RasOptionActivity.this, datas);
+                    rv.setAdapter(rasAdapter);
+                }
             }
 
             @Override
-            public void onFailure(Call<RasGetResponse> call, Throwable t) {
-                loadingDialog.cancel();
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
     }

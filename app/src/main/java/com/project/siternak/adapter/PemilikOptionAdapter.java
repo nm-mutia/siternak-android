@@ -45,7 +45,7 @@ public class PemilikOptionAdapter extends RecyclerView.Adapter<PemilikOptionAdap
     @Override
     public void onBindViewHolder(@NonNull PemilikOptionAdapter.OptionHolder holder, int position) {
         PemilikModel option = arrayList.get(position);
-        holder.tv_option.setText(option.getId()+"-"+option.getNama_pemilik());
+        holder.tv_option.setText(option.getId()+". "+option.getNama_pemilik());
         holder.ll_option.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

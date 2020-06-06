@@ -45,7 +45,7 @@ public class RasOptionAdapter extends RecyclerView.Adapter<RasOptionAdapter.Opti
     @Override
     public void onBindViewHolder(@NonNull OptionHolder holder, int position) {
         RasModel option = arrayList.get(position);
-        holder.tv_option.setText(option.getId()+"-"+option.getJenisRas());
+        holder.tv_option.setText(option.getId()+". "+option.getJenisRas());
         holder.ll_option.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

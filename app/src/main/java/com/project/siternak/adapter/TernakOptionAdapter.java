@@ -45,7 +45,7 @@ public class TernakOptionAdapter extends RecyclerView.Adapter<TernakOptionAdapte
     @Override
     public void onBindViewHolder(@NonNull TernakOptionAdapter.OptionHolder holder, int position) {
         TernakModel option = arrayList.get(position);
-        holder.tv_option.setText(option.getNecktag()+"-"+option.getJenisKelamin()+"-"+option.getBlood());
+        holder.tv_option.setText(option.getNecktag() + " - " + option.getJenisKelamin());
         holder.ll_option.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
