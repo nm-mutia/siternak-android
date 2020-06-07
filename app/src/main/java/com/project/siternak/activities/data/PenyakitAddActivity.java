@@ -9,10 +9,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.project.siternak.R;
+import com.project.siternak.models.data.PenyakitModel;
 import com.project.siternak.responses.PenyakitResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.DialogUtils;
+import com.project.siternak.utils.NetworkManager;
 import com.project.siternak.utils.SharedPrefManager;
 
 import butterknife.BindView;
@@ -77,47 +81,62 @@ public class PenyakitAddActivity extends AppCompatActivity {
         String nama = tilPenyakitNama.getEditText().getText().toString();
         String ket = tilPenyakitKet.getEditText().getText().toString();
 
-        Call<PenyakitResponse> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .addPenyakit(nama, ket, "Bearer " + userToken);
+        if(NetworkManager.isNetworkAvailable(PenyakitAddActivity.this)){
+            Call<PenyakitResponse> call = RetrofitClient
+                    .getInstance()
+                    .getApi()
+                    .addPenyakit(nama, ket, "Bearer " + userToken);
 
-        call.enqueue(new Callback<PenyakitResponse>() {
-            @Override
-            public void onResponse(Call<PenyakitResponse> call, Response<PenyakitResponse> response) {
-                PenyakitResponse resp = response.body();
-                pDialog.dismiss();
+            call.enqueue(new Callback<PenyakitResponse>() {
+                @Override
+                public void onResponse(Call<PenyakitResponse> call, Response<PenyakitResponse> response) {
+                    PenyakitResponse resp = response.body();
+                    pDialog.dismiss();
 
-                if(response.isSuccessful()){
-                    if(resp.getStatus().equals("error")){
-                        Toast.makeText(PenyakitAddActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
+                    if(response.isSuccessful()){
+                        if(resp.getStatus().equals("error")){
+                            Toast.makeText(PenyakitAddActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
+                        }
+                        else{
+                            Toast.makeText(PenyakitAddActivity.this, "Data berhasil dibuat: id " + resp.getPenyakits().getId(), Toast.LENGTH_LONG).show();
+
+                            Intent intent = new Intent(PenyakitAddActivity.this, PenyakitActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+
+                            PenyakitAddActivity.this.finish();
+                        }
                     }
                     else{
-                        Toast.makeText(PenyakitAddActivity.this, "Data berhasil dibuat: id " + resp.getPenyakits().getId(), Toast.LENGTH_LONG).show();
-
-                        Intent intent = new Intent(PenyakitAddActivity.this, PenyakitActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-
-                        PenyakitAddActivity.this.finish();
+                        SweetAlertDialog swal = new SweetAlertDialog(PenyakitAddActivity.this, SweetAlertDialog.ERROR_TYPE);
+                        swal.setTitleText("Error");
+                        swal.setContentText(response.message());
+                        swal.show();
                     }
                 }
-                else{
+
+                @Override
+                public void onFailure(Call<PenyakitResponse> call, Throwable t) {
+                    pDialog.dismiss();
                     SweetAlertDialog swal = new SweetAlertDialog(PenyakitAddActivity.this, SweetAlertDialog.ERROR_TYPE);
                     swal.setTitleText("Error");
-                    swal.setContentText(response.message());
+                    swal.setContentText(t.getMessage());
                     swal.show();
                 }
-            }
+            });
+        }
+        else {
+            pDialog.dismiss();
 
-            @Override
-            public void onFailure(Call<PenyakitResponse> call, Throwable t) {
-                pDialog.dismiss();
-                SweetAlertDialog swal = new SweetAlertDialog(PenyakitAddActivity.this, SweetAlertDialog.ERROR_TYPE);
-                swal.setTitleText("Error");
-                swal.setContentText(t.getMessage());
-                swal.show();
-            }
-        });
+            FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference mReference = mDatabase.getReference("datas");
+
+            PenyakitModel datas = new PenyakitModel(nama, ket);
+            mReference.child("addData").child("penyakit").push().setValue(datas);
+
+            Toast.makeText(this, "Disimpan", Toast.LENGTH_SHORT).show();
+
+            PenyakitAddActivity.this.finish();
+        }
     }
 }

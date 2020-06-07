@@ -13,6 +13,8 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.project.siternak.R;
 import com.project.siternak.activities.option.TernakPerkawinanOptionActivity;
 import com.project.siternak.fragments.DatePickerFragment;
@@ -21,6 +23,7 @@ import com.project.siternak.models.data.TernakModel;
 import com.project.siternak.responses.PerkawinanResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.DialogUtils;
+import com.project.siternak.utils.NetworkManager;
 import com.project.siternak.utils.SharedPrefManager;
 
 import java.io.Serializable;
@@ -36,10 +39,8 @@ import retrofit2.Response;
 public class PerkawinanEditActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
     @BindView(R.id.til_perkawinan_id) TextInputLayout tilPerkawinanId;
     @BindView(R.id.tiet_perkawinan_id) TextInputEditText tietPerkawinanId;
-    @BindView(R.id.til_perkawinan_tgl)
-    TextInputLayout tilPerkawinanTgl;
-    @BindView(R.id.tiet_perkawinan_tgl)
-    TextInputEditText tietPerkawinanTgl;
+    @BindView(R.id.til_perkawinan_tgl) TextInputLayout tilPerkawinanTgl;
+    @BindView(R.id.tiet_perkawinan_tgl) TextInputEditText tietPerkawinanTgl;
     @BindView(R.id.til_perkawinan_necktag) TextInputLayout tilPerkawinanNecktag;
     @BindView(R.id.tiet_perkawinan_necktag) TextInputEditText tietPerkawinanNecktag;
     @BindView(R.id.til_perkawinan_necktag_psg) TextInputLayout tilPerkawinanNecktagPsg;
@@ -165,51 +166,66 @@ public class PerkawinanEditActivity extends AppCompatActivity implements DatePic
         String necktag = tietPerkawinanNecktag.getText().toString();
         String necktag_psg = tietPerkawinanNecktagPsg.getText().toString();
 
-        Call<PerkawinanResponse> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .editPerkawinan(id, necktag, necktag_psg, tgl, "Bearer " + userToken);
+        if(NetworkManager.isNetworkAvailable(PerkawinanEditActivity.this)){
+            Call<PerkawinanResponse> call = RetrofitClient
+                    .getInstance()
+                    .getApi()
+                    .editPerkawinan(id, necktag, necktag_psg, tgl, "Bearer " + userToken);
 
-        call.enqueue(new Callback<PerkawinanResponse>() {
-            @Override
-            public void onResponse(Call<PerkawinanResponse> call, Response<PerkawinanResponse> response) {
-                PerkawinanResponse resp = response.body();
-                pDialog.dismiss();
+            call.enqueue(new Callback<PerkawinanResponse>() {
+                @Override
+                public void onResponse(Call<PerkawinanResponse> call, Response<PerkawinanResponse> response) {
+                    PerkawinanResponse resp = response.body();
+                    pDialog.dismiss();
 
-                if(response.isSuccessful()){
-                    if(resp.getStatus().equals("error")){
-                        Toast.makeText(PerkawinanEditActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
+                    if(response.isSuccessful()){
+                        if(resp.getStatus().equals("error")){
+                            Toast.makeText(PerkawinanEditActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            PerkawinanModel datas = new PerkawinanModel(id, necktag, necktag_psg, tgl, resp.getPerkawinans().getCreated_at(), resp.getPerkawinans().getUpdated_at());
+                            Toast.makeText(PerkawinanEditActivity.this, "Data berhasil diubah: id " + resp.getPerkawinans().getId(), Toast.LENGTH_LONG).show();
+
+                            Intent intent = new Intent(PerkawinanEditActivity.this, PerkawinanDetailActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.putExtra("perkawinan", (Serializable) datas);
+                            intent.putExtra("finish", backFinish);
+                            startActivity(intent);
+
+                            PerkawinanEditActivity.this.finish();
+                        }
                     }
-                    else {
-                        PerkawinanModel datas = new PerkawinanModel(id, necktag, necktag_psg, tgl, resp.getPerkawinans().getCreated_at(), resp.getPerkawinans().getUpdated_at());
-                        Toast.makeText(PerkawinanEditActivity.this, "Data berhasil diubah: id " + resp.getPerkawinans().getId(), Toast.LENGTH_LONG).show();
-
-                        Intent intent = new Intent(PerkawinanEditActivity.this, PerkawinanDetailActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("perkawinan", (Serializable) datas);
-                        intent.putExtra("finish", backFinish);
-                        startActivity(intent);
-
-                        PerkawinanEditActivity.this.finish();
+                    else{
+                        SweetAlertDialog swal = new SweetAlertDialog(PerkawinanEditActivity.this, SweetAlertDialog.ERROR_TYPE);
+                        swal.setTitleText("Error");
+                        swal.setContentText(response.message());
+                        swal.show();
                     }
                 }
-                else{
+
+                @Override
+                public void onFailure(Call<PerkawinanResponse> call, Throwable t) {
+                    pDialog.dismiss();
                     SweetAlertDialog swal = new SweetAlertDialog(PerkawinanEditActivity.this, SweetAlertDialog.ERROR_TYPE);
                     swal.setTitleText("Error");
-                    swal.setContentText(response.message());
+                    swal.setContentText(t.getMessage());
                     swal.show();
                 }
-            }
+            });
+        }
+        else{
+            pDialog.dismiss();
 
-            @Override
-            public void onFailure(Call<PerkawinanResponse> call, Throwable t) {
-                pDialog.dismiss();
-                SweetAlertDialog swal = new SweetAlertDialog(PerkawinanEditActivity.this, SweetAlertDialog.ERROR_TYPE);
-                swal.setTitleText("Error");
-                swal.setContentText(t.getMessage());
-                swal.show();
-            }
-        });
+            FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference mReference = mDatabase.getReference("datas");
+
+            PerkawinanModel datas = new PerkawinanModel(id, necktag, necktag_psg, tgl);
+            mReference.child("editData").child("perkawinan").child(id.toString()).setValue(datas);
+
+            Toast.makeText(this, "Disimpan", Toast.LENGTH_SHORT).show();
+
+            PerkawinanEditActivity.this.finish();
+        }
     }
 
     @OnClick(R.id.tiet_perkawinan_tgl)

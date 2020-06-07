@@ -15,12 +15,16 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.project.siternak.R;
 import com.project.siternak.fragments.DatePickerFragment;
 import com.project.siternak.fragments.TimePickerFrament;
+import com.project.siternak.models.data.KematianModel;
 import com.project.siternak.responses.KematianResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.DialogUtils;
+import com.project.siternak.utils.NetworkManager;
 import com.project.siternak.utils.SharedPrefManager;
 
 import java.util.Calendar;
@@ -119,48 +123,63 @@ public class KematianAddActivity extends AppCompatActivity implements DatePicker
         String penyebab = tilKematianPenyebab.getEditText().getText().toString();
         String kondisi = tilKematianKondisi.getEditText().getText().toString();
 
-        Call<KematianResponse> calld = RetrofitClient
-                .getInstance()
-                .getApi()
-                .addKematian(tgl, waktu, penyebab, kondisi, "Bearer " + userToken);
+        if(NetworkManager.isNetworkAvailable(KematianAddActivity.this)){
+            Call<KematianResponse> calld = RetrofitClient
+                    .getInstance()
+                    .getApi()
+                    .addKematian(tgl, waktu, penyebab, kondisi, "Bearer " + userToken);
 
-        calld.enqueue(new Callback<KematianResponse>() {
-            @Override
-            public void onResponse(Call<KematianResponse> call, Response<KematianResponse> response) {
-                KematianResponse resp = response.body();
-                pDialog.dismiss();
+            calld.enqueue(new Callback<KematianResponse>() {
+                @Override
+                public void onResponse(Call<KematianResponse> call, Response<KematianResponse> response) {
+                    KematianResponse resp = response.body();
+                    pDialog.dismiss();
 
-                if(response.isSuccessful()){
-                    if(resp.getStatus().equals("error")){
-                        Toast.makeText(KematianAddActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
+                    if(response.isSuccessful()){
+                        if(resp.getStatus().equals("error")){
+                            Toast.makeText(KematianAddActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            Toast.makeText(KematianAddActivity.this, "Data berhasil dibuat: id " + resp.getKematians().getId(), Toast.LENGTH_LONG).show();
+
+                            Intent intent = new Intent(KematianAddActivity.this, KematianActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+
+                            KematianAddActivity.this.finish();
+                        }
                     }
-                    else {
-                        Toast.makeText(KematianAddActivity.this, "Data berhasil dibuat: id " + resp.getKematians().getId(), Toast.LENGTH_LONG).show();
-
-                        Intent intent = new Intent(KematianAddActivity.this, KematianActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-
-                        KematianAddActivity.this.finish();
+                    else{
+                        SweetAlertDialog swal = new SweetAlertDialog(KematianAddActivity.this, SweetAlertDialog.ERROR_TYPE);
+                        swal.setTitleText("Error");
+                        swal.setContentText(response.message());
+                        swal.show();
                     }
                 }
-                else{
+
+                @Override
+                public void onFailure(Call<KematianResponse> call, Throwable t) {
+                    pDialog.dismiss();
                     SweetAlertDialog swal = new SweetAlertDialog(KematianAddActivity.this, SweetAlertDialog.ERROR_TYPE);
                     swal.setTitleText("Error");
-                    swal.setContentText(response.message());
+                    swal.setContentText(t.getMessage());
                     swal.show();
                 }
-            }
+            });
+        }
+        else {
+            pDialog.dismiss();
 
-            @Override
-            public void onFailure(Call<KematianResponse> call, Throwable t) {
-                pDialog.dismiss();
-                SweetAlertDialog swal = new SweetAlertDialog(KematianAddActivity.this, SweetAlertDialog.ERROR_TYPE);
-                swal.setTitleText("Error");
-                swal.setContentText(t.getMessage());
-                swal.show();
-            }
-        });
+            FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference mReference = mDatabase.getReference("datas");
+
+            KematianModel datas = new KematianModel(tgl, waktu, penyebab, kondisi);
+            mReference.child("addData").child("kematian").push().setValue(datas);
+
+            Toast.makeText(this, "Disimpan", Toast.LENGTH_SHORT).show();
+
+            KematianAddActivity.this.finish();
+        }
     }
 
     @OnClick(R.id.tiet_kematian_tgl)

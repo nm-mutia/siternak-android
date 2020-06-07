@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.project.siternak.R;
 import com.project.siternak.activities.option.PenyakitOptionActivity;
 import com.project.siternak.activities.option.TernakRiwayatOptionActivity;
@@ -19,6 +21,7 @@ import com.project.siternak.models.data.TernakModel;
 import com.project.siternak.responses.RiwayatPenyakitResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.DialogUtils;
+import com.project.siternak.utils.NetworkManager;
 import com.project.siternak.utils.SharedPrefManager;
 
 import java.io.Serializable;
@@ -171,50 +174,65 @@ public class RiwayatPenyakitEditActivity extends AppCompatActivity {
             lama = Integer.valueOf(tietRiwayatLamaSakit.getText().toString());
         }
 
-        Call<RiwayatPenyakitResponse> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .editRiwayat(id, penyakit, necktag, tgl, obat, lama, ket, "Bearer " + userToken);
+        if(NetworkManager.isNetworkAvailable(RiwayatPenyakitEditActivity.this)){
+            Call<RiwayatPenyakitResponse> call = RetrofitClient
+                    .getInstance()
+                    .getApi()
+                    .editRiwayat(id, penyakit, necktag, tgl, obat, lama, ket, "Bearer " + userToken);
 
-        call.enqueue(new Callback<RiwayatPenyakitResponse>() {
-            @Override
-            public void onResponse(Call<RiwayatPenyakitResponse> call, Response<RiwayatPenyakitResponse> response) {
-                RiwayatPenyakitResponse resp = response.body();
-                pDialog.dismiss();
+            call.enqueue(new Callback<RiwayatPenyakitResponse>() {
+                @Override
+                public void onResponse(Call<RiwayatPenyakitResponse> call, Response<RiwayatPenyakitResponse> response) {
+                    RiwayatPenyakitResponse resp = response.body();
+                    pDialog.dismiss();
 
-                if(response.isSuccessful()){
-                    if(resp.getStatus().equals("error")){
-                        Toast.makeText(RiwayatPenyakitEditActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
+                    if(response.isSuccessful()){
+                        if(resp.getStatus().equals("error")){
+                            Toast.makeText(RiwayatPenyakitEditActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            RiwayatPenyakitModel datas = new RiwayatPenyakitModel(id, penyakit, necktag, tgl, obat, lama, ket, resp.getRiwayats().getCreated_at(), resp.getRiwayats().getUpdated_at());
+                            Toast.makeText(RiwayatPenyakitEditActivity.this, "Data berhasil diubah: id " + resp.getRiwayats().getId(), Toast.LENGTH_LONG).show();
+
+                            Intent intent = new Intent(RiwayatPenyakitEditActivity.this, RiwayatPenyakitDetailActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.putExtra("riwayat", (Serializable) datas);
+                            intent.putExtra("finish", backFinish);
+                            startActivity(intent);
+
+                            RiwayatPenyakitEditActivity.this.finish();
+                        }
                     }
-                    else {
-                        RiwayatPenyakitModel datas = new RiwayatPenyakitModel(id, penyakit, necktag, tgl, obat, lama, ket, resp.getRiwayats().getCreated_at(), resp.getRiwayats().getUpdated_at());
-                        Toast.makeText(RiwayatPenyakitEditActivity.this, "Data berhasil diubah: id " + resp.getRiwayats().getId(), Toast.LENGTH_LONG).show();
-
-                        Intent intent = new Intent(RiwayatPenyakitEditActivity.this, RiwayatPenyakitDetailActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("riwayat", (Serializable) datas);
-                        intent.putExtra("finish", backFinish);
-                        startActivity(intent);
-
-                        RiwayatPenyakitEditActivity.this.finish();
+                    else{
+                        SweetAlertDialog swal = new SweetAlertDialog(RiwayatPenyakitEditActivity.this, SweetAlertDialog.ERROR_TYPE);
+                        swal.setTitleText("Error");
+                        swal.setContentText(response.message());
+                        swal.show();
                     }
                 }
-                else{
+
+                @Override
+                public void onFailure(Call<RiwayatPenyakitResponse> call, Throwable t) {
+                    pDialog.dismiss();
                     SweetAlertDialog swal = new SweetAlertDialog(RiwayatPenyakitEditActivity.this, SweetAlertDialog.ERROR_TYPE);
                     swal.setTitleText("Error");
-                    swal.setContentText(response.message());
+                    swal.setContentText(t.getMessage());
                     swal.show();
                 }
-            }
+            });
+        }
+        else{
+            pDialog.dismiss();
 
-            @Override
-            public void onFailure(Call<RiwayatPenyakitResponse> call, Throwable t) {
-                pDialog.dismiss();
-                SweetAlertDialog swal = new SweetAlertDialog(RiwayatPenyakitEditActivity.this, SweetAlertDialog.ERROR_TYPE);
-                swal.setTitleText("Error");
-                swal.setContentText(t.getMessage());
-                swal.show();
-            }
-        });
+            FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference mReference = mDatabase.getReference("datas");
+
+            RiwayatPenyakitModel datas = new RiwayatPenyakitModel(id, penyakit, necktag, tgl, obat, lama, ket);
+            mReference.child("editData").child("riwayatPenyakit").child(id.toString()).setValue(datas);
+
+            Toast.makeText(this, "Disimpan", Toast.LENGTH_SHORT).show();
+
+            RiwayatPenyakitEditActivity.this.finish();
+        }
     }
 }

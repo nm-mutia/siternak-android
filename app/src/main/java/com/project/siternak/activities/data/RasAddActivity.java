@@ -9,10 +9,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.project.siternak.R;
+import com.project.siternak.models.data.RasModel;
 import com.project.siternak.responses.RasResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.DialogUtils;
+import com.project.siternak.utils.NetworkManager;
 import com.project.siternak.utils.SharedPrefManager;
 
 import butterknife.BindView;
@@ -77,47 +81,62 @@ public class RasAddActivity extends AppCompatActivity {
         String jenis = tilRasJenis.getEditText().getText().toString();
         String ket = tilRasKet.getEditText().getText().toString();
 
-        Call<RasResponse> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .addRas(jenis, ket, "Bearer " + userToken);
+        if(NetworkManager.isNetworkAvailable(RasAddActivity.this)){
+            Call<RasResponse> call = RetrofitClient
+                    .getInstance()
+                    .getApi()
+                    .addRas(jenis, ket, "Bearer " + userToken);
 
-        call.enqueue(new Callback<RasResponse>() {
-            @Override
-            public void onResponse(Call<RasResponse> call, Response<RasResponse> response) {
-                RasResponse resp = response.body();
-                pDialog.dismiss();
+            call.enqueue(new Callback<RasResponse>() {
+                @Override
+                public void onResponse(Call<RasResponse> call, Response<RasResponse> response) {
+                    RasResponse resp = response.body();
+                    pDialog.dismiss();
 
-                if(response.isSuccessful()){
-                    if(resp.getStatus().equals("error")){
-                        Toast.makeText(RasAddActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
+                    if(response.isSuccessful()){
+                        if(resp.getStatus().equals("error")){
+                            Toast.makeText(RasAddActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
+                        }
+                        else{
+                            Toast.makeText(RasAddActivity.this, "Data berhasil dibuat: id " + resp.getRas().getId(), Toast.LENGTH_LONG).show();
+
+                            Intent intent = new Intent(RasAddActivity.this, RasActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+
+                            RasAddActivity.this.finish();
+                        }
                     }
                     else{
-                        Toast.makeText(RasAddActivity.this, "Data berhasil dibuat: id " + resp.getRas().getId(), Toast.LENGTH_LONG).show();
-
-                        Intent intent = new Intent(RasAddActivity.this, RasActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-
-                        RasAddActivity.this.finish();
+                        SweetAlertDialog swal = new SweetAlertDialog(RasAddActivity.this, SweetAlertDialog.ERROR_TYPE);
+                        swal.setTitleText("Error");
+                        swal.setContentText(response.message());
+                        swal.show();
                     }
                 }
-                else{
+
+                @Override
+                public void onFailure(Call<RasResponse> call, Throwable t) {
+                    pDialog.dismiss();
                     SweetAlertDialog swal = new SweetAlertDialog(RasAddActivity.this, SweetAlertDialog.ERROR_TYPE);
                     swal.setTitleText("Error");
-                    swal.setContentText(response.message());
+                    swal.setContentText(t.getMessage());
                     swal.show();
                 }
-            }
+            });
+        }
+        else {
+            pDialog.dismiss();
 
-            @Override
-            public void onFailure(Call<RasResponse> call, Throwable t) {
-                pDialog.dismiss();
-                SweetAlertDialog swal = new SweetAlertDialog(RasAddActivity.this, SweetAlertDialog.ERROR_TYPE);
-                swal.setTitleText("Error");
-                swal.setContentText(t.getMessage());
-                swal.show();
-            }
-        });
+            FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference mReference = mDatabase.getReference("datas");
+
+            RasModel datas = new RasModel(jenis, ket);
+            mReference.child("addData").child("ras").push().setValue(datas);
+
+            Toast.makeText(this, "Disimpan", Toast.LENGTH_SHORT).show();
+
+            RasAddActivity.this.finish();
+        }
     }
 }

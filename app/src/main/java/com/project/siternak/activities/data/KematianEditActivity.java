@@ -52,8 +52,6 @@ public class KematianEditActivity extends AppCompatActivity implements DatePicke
     private KematianModel kematianData;
     private String userToken;
     public final static int backFinish = 1;
-    private FirebaseDatabase mDatabase;
-    private DatabaseReference mReference;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -193,13 +191,13 @@ public class KematianEditActivity extends AppCompatActivity implements DatePicke
         else{
             pDialog.dismiss();
 
-            mDatabase = FirebaseDatabase.getInstance();
-            mReference = mDatabase.getReference("datas");
+            FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference mReference = mDatabase.getReference("datas");
 
             KematianModel datas = new KematianModel(id, tgl, waktu, penyebab, kondisi);
             mReference.child("editData").child("kematian").child(id.toString()).setValue(datas);
 
-            Toast.makeText(this, "Recorded to firebase", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Disimpan", Toast.LENGTH_SHORT).show();
 
             KematianEditActivity.this.finish();
         }

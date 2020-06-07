@@ -10,11 +10,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.project.siternak.R;
 import com.project.siternak.models.data.PemilikModel;
 import com.project.siternak.responses.PemilikResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.DialogUtils;
+import com.project.siternak.utils.NetworkManager;
 import com.project.siternak.utils.SharedPrefManager;
 
 import java.io.Serializable;
@@ -96,50 +99,65 @@ public class PemilikEditActivity extends AppCompatActivity {
         String ktp = tilPemilikKtp.getEditText().getText().toString();
         String nama = tilPemilikNama.getEditText().getText().toString();
 
-        Call<PemilikResponse> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .editPemilik(id, ktp, nama, "Bearer " + userToken);
+        if(NetworkManager.isNetworkAvailable(PemilikEditActivity.this)){
+            Call<PemilikResponse> call = RetrofitClient
+                    .getInstance()
+                    .getApi()
+                    .editPemilik(id, ktp, nama, "Bearer " + userToken);
 
-        call.enqueue(new Callback<PemilikResponse>() {
-            @Override
-            public void onResponse(Call<PemilikResponse> call, Response<PemilikResponse> response) {
-                PemilikResponse resp = response.body();
-                pDialog.dismiss();
+            call.enqueue(new Callback<PemilikResponse>() {
+                @Override
+                public void onResponse(Call<PemilikResponse> call, Response<PemilikResponse> response) {
+                    PemilikResponse resp = response.body();
+                    pDialog.dismiss();
 
-                if(response.isSuccessful()){
-                    if(resp.getStatus().equals("error")){
-                        Toast.makeText(PemilikEditActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
+                    if(response.isSuccessful()){
+                        if(resp.getStatus().equals("error")){
+                            Toast.makeText(PemilikEditActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            PemilikModel datas = new PemilikModel(id, ktp, nama, resp.getPemiliks().getCreated_at(), resp.getPemiliks().getUpdated_at());
+                            Toast.makeText(PemilikEditActivity.this, "Data berhasil diubah: id " + resp.getPemiliks().getId(), Toast.LENGTH_LONG).show();
+
+                            Intent intent = new Intent(PemilikEditActivity.this, PemilikDetailActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.putExtra("pemilik", (Serializable) datas);
+                            intent.putExtra("finish", backFinish);
+                            startActivity(intent);
+
+                            PemilikEditActivity.this.finish();
+                        }
                     }
-                    else {
-                        PemilikModel datas = new PemilikModel(id, ktp, nama, resp.getPemiliks().getCreated_at(), resp.getPemiliks().getUpdated_at());
-                        Toast.makeText(PemilikEditActivity.this, "Data berhasil diubah: id " + resp.getPemiliks().getId(), Toast.LENGTH_LONG).show();
-
-                        Intent intent = new Intent(PemilikEditActivity.this, PemilikDetailActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("pemilik", (Serializable) datas);
-                        intent.putExtra("finish", backFinish);
-                        startActivity(intent);
-
-                        PemilikEditActivity.this.finish();
+                    else{
+                        SweetAlertDialog swal = new SweetAlertDialog(PemilikEditActivity.this, SweetAlertDialog.ERROR_TYPE);
+                        swal.setTitleText("Error");
+                        swal.setContentText(response.message());
+                        swal.show();
                     }
                 }
-                else{
+
+                @Override
+                public void onFailure(Call<PemilikResponse> call, Throwable t) {
+                    pDialog.dismiss();
                     SweetAlertDialog swal = new SweetAlertDialog(PemilikEditActivity.this, SweetAlertDialog.ERROR_TYPE);
                     swal.setTitleText("Error");
-                    swal.setContentText(response.message());
+                    swal.setContentText(t.getMessage());
                     swal.show();
                 }
-            }
+            });
+        }
+        else{
+            pDialog.dismiss();
 
-            @Override
-            public void onFailure(Call<PemilikResponse> call, Throwable t) {
-                pDialog.dismiss();
-                SweetAlertDialog swal = new SweetAlertDialog(PemilikEditActivity.this, SweetAlertDialog.ERROR_TYPE);
-                swal.setTitleText("Error");
-                swal.setContentText(t.getMessage());
-                swal.show();
-            }
-        });
+            FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference mReference = mDatabase.getReference("datas");
+
+            PemilikModel datas = new PemilikModel(id, ktp, nama);
+            mReference.child("editData").child("pemilik").child(id.toString()).setValue(datas);
+
+            Toast.makeText(this, "Disimpan", Toast.LENGTH_SHORT).show();
+
+            PemilikEditActivity.this.finish();
+        }
     }
 }

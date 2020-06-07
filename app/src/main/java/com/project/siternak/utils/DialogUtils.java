@@ -101,9 +101,7 @@ public class DialogUtils {
 
     public static Intent getIntentWithSwal(
             Context context, Class<? extends Activity> activity,
-            AlertType type, String message
-
-    ){
+            AlertType type, String message){
         Intent intent = new Intent(context.getApplicationContext(), activity);
         intent.putExtra(ALERT_TYPE, type.getStatus());
         intent.putExtra(ALERT_MESSAGE, message);

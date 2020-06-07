@@ -9,10 +9,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.project.siternak.R;
+import com.project.siternak.models.data.PemilikModel;
 import com.project.siternak.responses.PemilikResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.DialogUtils;
+import com.project.siternak.utils.NetworkManager;
 import com.project.siternak.utils.SharedPrefManager;
 
 import butterknife.BindView;
@@ -77,47 +81,62 @@ public class PemilikAddActivity extends AppCompatActivity {
         String ktp = tilPemilikKtp.getEditText().getText().toString();
         String nama = tilPemilikNama.getEditText().getText().toString();
 
-        Call<PemilikResponse> callp = RetrofitClient
-                .getInstance()
-                .getApi()
-                .addPemilik(ktp, nama, "Bearer " + userToken);
+        if(NetworkManager.isNetworkAvailable(PemilikAddActivity.this)){
+            Call<PemilikResponse> callp = RetrofitClient
+                    .getInstance()
+                    .getApi()
+                    .addPemilik(ktp, nama, "Bearer " + userToken);
 
-        callp.enqueue(new Callback<PemilikResponse>() {
-            @Override
-            public void onResponse(Call<PemilikResponse> call, Response<PemilikResponse> response) {
-                PemilikResponse resp = response.body();
-                pDialog.dismiss();
+            callp.enqueue(new Callback<PemilikResponse>() {
+                @Override
+                public void onResponse(Call<PemilikResponse> call, Response<PemilikResponse> response) {
+                    PemilikResponse resp = response.body();
+                    pDialog.dismiss();
 
-                if(response.isSuccessful()){
-                    if(resp.getStatus().equals("error")){
-                        Toast.makeText(PemilikAddActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
+                    if(response.isSuccessful()){
+                        if(resp.getStatus().equals("error")){
+                            Toast.makeText(PemilikAddActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
+                        }
+                        else{
+                            Toast.makeText(PemilikAddActivity.this, "Data berhasil dibuat: id " + resp.getPemiliks().getId(), Toast.LENGTH_LONG).show();
+
+                            Intent intent = new Intent(PemilikAddActivity.this, PemilikActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+
+                            PemilikAddActivity.this.finish();
+                        }
                     }
                     else{
-                        Toast.makeText(PemilikAddActivity.this, "Data berhasil dibuat: id " + resp.getPemiliks().getId(), Toast.LENGTH_LONG).show();
-
-                        Intent intent = new Intent(PemilikAddActivity.this, PemilikActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-
-                        PemilikAddActivity.this.finish();
+                        SweetAlertDialog swal = new SweetAlertDialog(PemilikAddActivity.this, SweetAlertDialog.ERROR_TYPE);
+                        swal.setTitleText("Error");
+                        swal.setContentText(response.message());
+                        swal.show();
                     }
                 }
-                else{
+
+                @Override
+                public void onFailure(Call<PemilikResponse> call, Throwable t) {
+                    pDialog.dismiss();
                     SweetAlertDialog swal = new SweetAlertDialog(PemilikAddActivity.this, SweetAlertDialog.ERROR_TYPE);
                     swal.setTitleText("Error");
-                    swal.setContentText(response.message());
+                    swal.setContentText(t.getMessage());
                     swal.show();
                 }
-            }
+            });
+        }
+        else {
+            pDialog.dismiss();
 
-            @Override
-            public void onFailure(Call<PemilikResponse> call, Throwable t) {
-                pDialog.dismiss();
-                SweetAlertDialog swal = new SweetAlertDialog(PemilikAddActivity.this, SweetAlertDialog.ERROR_TYPE);
-                swal.setTitleText("Error");
-                swal.setContentText(t.getMessage());
-                swal.show();
-            }
-        });
+            FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference mReference = mDatabase.getReference("datas");
+
+            PemilikModel datas = new PemilikModel(ktp, nama);
+            mReference.child("addData").child("pemilik").push().setValue(datas);
+
+            Toast.makeText(this, "Disimpan", Toast.LENGTH_SHORT).show();
+
+            PemilikAddActivity.this.finish();
+        }
     }
 }

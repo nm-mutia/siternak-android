@@ -25,6 +25,17 @@ public class PemilikModel implements Serializable {
     public PemilikModel() {
     }
 
+    public PemilikModel(String ktp, String nama_pemilik) {
+        this.ktp = ktp;
+        this.nama_pemilik = nama_pemilik;
+    }
+
+    public PemilikModel(Integer id, String ktp, String nama_pemilik) {
+        this.id = id;
+        this.ktp = ktp;
+        this.nama_pemilik = nama_pemilik;
+    }
+
     public PemilikModel(Integer id, String ktp, String nama_pemilik, String created_at, String updated_at) {
         this.id = id;
         this.ktp = ktp;

@@ -17,6 +17,8 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.project.siternak.R;
 import com.project.siternak.activities.option.KematianOptionActivity;
 import com.project.siternak.activities.option.TernakParentOptionActivity;
@@ -33,6 +35,7 @@ import com.project.siternak.models.data.TernakModel;
 import com.project.siternak.responses.TernakResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.DialogUtils;
+import com.project.siternak.utils.NetworkManager;
 import com.project.siternak.utils.SharedPrefManager;
 
 import java.io.Serializable;
@@ -383,57 +386,74 @@ public class TernakEditActivity extends AppCompatActivity implements DatePickerD
             statusAda = false;
         }
 
-        Call<TernakResponse> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .editTernak(necktag, pemilik, peternakan, ras, kematian,
-                        jk, tglLahir, bobotLahir, pukulLahir, lamaDiKandungan, lamaLaktasi,
-                        tglLepasSapih, blood, ayah, ibu, bobotTubuh, panjangTubuh,tinggiTubuh,
-                        cacatFisik, ciriLain, statusAda, "Bearer " + userToken);
+        if(NetworkManager.isNetworkAvailable(TernakEditActivity.this)){
+            Call<TernakResponse> call = RetrofitClient
+                    .getInstance()
+                    .getApi()
+                    .editTernak(necktag, pemilik, peternakan, ras, kematian,
+                            jk, tglLahir, bobotLahir, pukulLahir, lamaDiKandungan, lamaLaktasi,
+                            tglLepasSapih, blood, ayah, ibu, bobotTubuh, panjangTubuh,tinggiTubuh,
+                            cacatFisik, ciriLain, statusAda, "Bearer " + userToken);
 
-        call.enqueue((new Callback<TernakResponse>() {
-            @Override
-            public void onResponse(Call<TernakResponse> call, Response<TernakResponse> response) {
-                if(response.isSuccessful()){
-                    TernakResponse resp = response.body();
-                    pDialog.dismiss();
+            call.enqueue((new Callback<TernakResponse>() {
+                @Override
+                public void onResponse(Call<TernakResponse> call, Response<TernakResponse> response) {
+                    if(response.isSuccessful()){
+                        TernakResponse resp = response.body();
+                        pDialog.dismiss();
 
-                    if(resp.getStatus().equals("error")){
-                        Toast.makeText(TernakEditActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
+                        if(resp.getStatus().equals("error")){
+                            Toast.makeText(TernakEditActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            TernakModel datas = new TernakModel(necktag, pemilik, peternakan, ras, kematian,
+                                    jk, tglLahir, bobotLahir, pukulLahir, lamaDiKandungan, lamaLaktasi, tglLepasSapih,
+                                    blood, ayah, ibu, bobotTubuh, panjangTubuh, tinggiTubuh, cacatFisik, ciriLain, statusAda,
+                                    resp.getTernaks().getCreated_at(), resp.getTernaks().getUpdated_at(), resp.getTernaks().getDeleted_at());
+                            Toast.makeText(TernakEditActivity.this, "Data berhasil diubah: id " + resp.getTernaks().getNecktag(), Toast.LENGTH_LONG).show();
+
+                            Intent intent = new Intent(TernakEditActivity.this, TernakDetailActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.putExtra("ternak", (Serializable) datas);
+                            intent.putExtra("finish", backFinish);
+                            startActivity(intent);
+
+                            TernakEditActivity.this.finish();
+                        }
                     }
-                    else {
-                        TernakModel datas = new TernakModel(necktag, pemilik, peternakan, ras, kematian,
-                                jk, tglLahir, bobotLahir, pukulLahir, lamaDiKandungan, lamaLaktasi, tglLepasSapih,
-                                blood, ayah, ibu, bobotTubuh, panjangTubuh, tinggiTubuh, cacatFisik, ciriLain, statusAda,
-                                resp.getTernaks().getCreated_at(), resp.getTernaks().getUpdated_at(), resp.getTernaks().getDeleted_at());
-                        Toast.makeText(TernakEditActivity.this, "Data berhasil diubah: id " + resp.getTernaks().getNecktag(), Toast.LENGTH_LONG).show();
-
-                        Intent intent = new Intent(TernakEditActivity.this, TernakDetailActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("ternak", (Serializable) datas);
-                        intent.putExtra("finish", backFinish);
-                        startActivity(intent);
-
-                        TernakEditActivity.this.finish();
+                    else{
+                        SweetAlertDialog swal = new SweetAlertDialog(TernakEditActivity.this, SweetAlertDialog.ERROR_TYPE);
+                        swal.setTitleText("Error");
+                        swal.setContentText(response.message());
+                        swal.show();
                     }
                 }
-                else{
+
+                @Override
+                public void onFailure(Call<TernakResponse> call, Throwable t) {
+                    pDialog.dismiss();
                     SweetAlertDialog swal = new SweetAlertDialog(TernakEditActivity.this, SweetAlertDialog.ERROR_TYPE);
                     swal.setTitleText("Error");
-                    swal.setContentText(response.message());
+                    swal.setContentText(t.getMessage());
                     swal.show();
                 }
-            }
+            }));
+        }
+        else{
+            pDialog.dismiss();
 
-            @Override
-            public void onFailure(Call<TernakResponse> call, Throwable t) {
-                pDialog.dismiss();
-                SweetAlertDialog swal = new SweetAlertDialog(TernakEditActivity.this, SweetAlertDialog.ERROR_TYPE);
-                swal.setTitleText("Error");
-                swal.setContentText(t.getMessage());
-                swal.show();
-            }
-        }));
+            FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference mReference = mDatabase.getReference("datas");
+
+            TernakModel datas = new TernakModel(necktag, pemilik, peternakan, ras, kematian,
+                    jk, tglLahir, bobotLahir, pukulLahir, lamaDiKandungan, lamaLaktasi, tglLepasSapih,
+                    blood, ayah, ibu, bobotTubuh, panjangTubuh, tinggiTubuh, cacatFisik, ciriLain, statusAda);
+            mReference.child("editData").child("ternak").child(necktag).setValue(datas);
+
+            Toast.makeText(this, "Disimpan", Toast.LENGTH_SHORT).show();
+
+            TernakEditActivity.this.finish();
+        }
     }
 
 }

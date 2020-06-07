@@ -31,6 +31,13 @@ public class KematianModel implements Serializable {
     public KematianModel() {
     }
 
+    public KematianModel(String tgl_kematian, String waktu_kematian, String penyebab, String kondisi) {
+        this.tgl_kematian = tgl_kematian;
+        this.waktu_kematian = waktu_kematian;
+        this.penyebab = penyebab;
+        this.kondisi = kondisi;
+    }
+
     public KematianModel(Integer id, String tgl_kematian, String waktu_kematian, String penyebab, String kondisi) {
         this.id = id;
         this.tgl_kematian = tgl_kematian;

@@ -37,6 +37,25 @@ public class RiwayatPenyakitModel implements Serializable {
     public RiwayatPenyakitModel() {
     }
 
+    public RiwayatPenyakitModel(Integer penyakitId, String necktag, String tglSakit, String obat, Integer lamaSakit, String keterangan) {
+        this.penyakitId = penyakitId;
+        this.necktag = necktag;
+        this.tglSakit = tglSakit;
+        this.obat = obat;
+        this.lamaSakit = lamaSakit;
+        this.keterangan = keterangan;
+    }
+
+    public RiwayatPenyakitModel(Integer id, Integer penyakitId, String necktag, String tglSakit, String obat, Integer lamaSakit, String keterangan) {
+        this.id = id;
+        this.penyakitId = penyakitId;
+        this.necktag = necktag;
+        this.tglSakit = tglSakit;
+        this.obat = obat;
+        this.lamaSakit = lamaSakit;
+        this.keterangan = keterangan;
+    }
+
     public RiwayatPenyakitModel(Integer id, Integer penyakitId, String necktag, String tglSakit, String obat, Integer lamaSakit, String keterangan, String created_at, String updated_at) {
         this.id = id;
         this.penyakitId = penyakitId;

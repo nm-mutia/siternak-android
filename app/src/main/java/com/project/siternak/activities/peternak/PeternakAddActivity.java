@@ -10,12 +10,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.project.siternak.R;
 import com.project.siternak.activities.option.PeternakanOptionActivity;
 import com.project.siternak.models.data.PeternakanModel;
+import com.project.siternak.models.peternak.PeternakModel;
 import com.project.siternak.responses.PeternakResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.DialogUtils;
+import com.project.siternak.utils.NetworkManager;
 import com.project.siternak.utils.SharedPrefManager;
 
 import butterknife.BindView;
@@ -132,47 +136,62 @@ public class PeternakAddActivity extends AppCompatActivity {
         String username = tietUsername.getText().toString();
         String email = tietEmail.getText().toString();
 
-        Call<PeternakResponse> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .addPeternak(peternakan, nama, username, email, "Bearer " + userToken);
+        if(NetworkManager.isNetworkAvailable(PeternakAddActivity.this)){
+            Call<PeternakResponse> call = RetrofitClient
+                    .getInstance()
+                    .getApi()
+                    .addPeternak(peternakan, nama, username, email, "Bearer " + userToken);
 
-        call.enqueue(new Callback<PeternakResponse>() {
-            @Override
-            public void onResponse(Call<PeternakResponse> call, Response<PeternakResponse> response) {
-                PeternakResponse resp = response.body();
-                pDialog.dismiss();
+            call.enqueue(new Callback<PeternakResponse>() {
+                @Override
+                public void onResponse(Call<PeternakResponse> call, Response<PeternakResponse> response) {
+                    PeternakResponse resp = response.body();
+                    pDialog.dismiss();
 
-                if(response.isSuccessful()){
-                    if(resp.getStatus().equals("error")){
-                        Toast.makeText(PeternakAddActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
+                    if(response.isSuccessful()){
+                        if(resp.getStatus().equals("error")){
+                            Toast.makeText(PeternakAddActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
+                        }
+                        else{
+                            Toast.makeText(PeternakAddActivity.this, "Data berhasil dibuat: id " + resp.getPeternaks().getId(), Toast.LENGTH_LONG).show();
+
+                            Intent intent = new Intent(PeternakAddActivity.this, PeternakActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+
+                            PeternakAddActivity.this.finish();
+                        }
                     }
                     else{
-                        Toast.makeText(PeternakAddActivity.this, "Data berhasil dibuat: id " + resp.getPeternaks().getId(), Toast.LENGTH_LONG).show();
-
-                        Intent intent = new Intent(PeternakAddActivity.this, PeternakActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-
-                        PeternakAddActivity.this.finish();
+                        SweetAlertDialog swal = new SweetAlertDialog(PeternakAddActivity.this, SweetAlertDialog.ERROR_TYPE);
+                        swal.setTitleText("Error");
+                        swal.setContentText(response.message());
+                        swal.show();
                     }
                 }
-                else{
+
+                @Override
+                public void onFailure(Call<PeternakResponse> call, Throwable t) {
+                    pDialog.dismiss();
                     SweetAlertDialog swal = new SweetAlertDialog(PeternakAddActivity.this, SweetAlertDialog.ERROR_TYPE);
                     swal.setTitleText("Error");
-                    swal.setContentText(response.message());
+                    swal.setContentText(t.getMessage());
                     swal.show();
                 }
-            }
+            });
+        }
+        else {
+            pDialog.dismiss();
 
-            @Override
-            public void onFailure(Call<PeternakResponse> call, Throwable t) {
-                pDialog.dismiss();
-                SweetAlertDialog swal = new SweetAlertDialog(PeternakAddActivity.this, SweetAlertDialog.ERROR_TYPE);
-                swal.setTitleText("Error");
-                swal.setContentText(t.getMessage());
-                swal.show();
-            }
-        });
+            FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference mReference = mDatabase.getReference("datas");
+
+            PeternakModel datas = new PeternakModel(peternakan, nama, username, email);
+            mReference.child("addData").child("peternak").push().setValue(datas);
+
+            Toast.makeText(this, "Disimpan", Toast.LENGTH_SHORT).show();
+
+            PeternakAddActivity.this.finish();
+        }
     }
 }

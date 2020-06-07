@@ -25,6 +25,17 @@ public class PenyakitModel implements Serializable {
     public PenyakitModel() {
     }
 
+    public PenyakitModel(String namaPenyakit, String ketPenyakit) {
+        this.namaPenyakit = namaPenyakit;
+        this.ketPenyakit = ketPenyakit;
+    }
+
+    public PenyakitModel(Integer id, String namaPenyakit, String ketPenyakit) {
+        this.id = id;
+        this.namaPenyakit = namaPenyakit;
+        this.ketPenyakit = ketPenyakit;
+    }
+
     public PenyakitModel(Integer id, String namaPenyakit, String ketPenyakit, String created_at, String updated_at) {
         this.id = id;
         this.namaPenyakit = namaPenyakit;

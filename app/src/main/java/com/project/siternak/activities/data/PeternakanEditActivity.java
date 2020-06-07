@@ -9,11 +9,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.project.siternak.R;
+import com.project.siternak.activities.peternak.PeternakEditActivity;
 import com.project.siternak.models.data.PeternakanModel;
 import com.project.siternak.responses.PeternakanResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.DialogUtils;
+import com.project.siternak.utils.NetworkManager;
 import com.project.siternak.utils.SharedPrefManager;
 
 import java.io.Serializable;
@@ -85,7 +89,7 @@ public class PeternakanEditActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.tv_submit)
-    public void action_add() {
+    public void action_edit() {
         if (!validateNama() | !validateKet()) {
             return;
         }
@@ -96,50 +100,65 @@ public class PeternakanEditActivity extends AppCompatActivity {
         String nama = tilNama.getEditText().getText().toString();
         String ket = tilKet.getEditText().getText().toString();
 
-        Call<PeternakanResponse> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .editPeternakan(id, nama, ket, "Bearer " + userToken);
+        if(NetworkManager.isNetworkAvailable(PeternakanEditActivity.this)){
+            Call<PeternakanResponse> call = RetrofitClient
+                    .getInstance()
+                    .getApi()
+                    .editPeternakan(id, nama, ket, "Bearer " + userToken);
 
-        call.enqueue(new Callback<PeternakanResponse>() {
-            @Override
-            public void onResponse(Call<PeternakanResponse> call, Response<PeternakanResponse> response) {
-                PeternakanResponse resp = response.body();
-                pDialog.dismiss();
+            call.enqueue(new Callback<PeternakanResponse>() {
+                @Override
+                public void onResponse(Call<PeternakanResponse> call, Response<PeternakanResponse> response) {
+                    PeternakanResponse resp = response.body();
+                    pDialog.dismiss();
 
-                if(response.isSuccessful()){
-                    if(resp.getStatus().equals("error")){
-                        Toast.makeText(PeternakanEditActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
+                    if(response.isSuccessful()){
+                        if(resp.getStatus().equals("error")){
+                            Toast.makeText(PeternakanEditActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            PeternakanModel datas = new PeternakanModel(id, nama, ket, resp.getPeternakans().getCreated_at(), resp.getPeternakans().getUpdated_at());
+                            Toast.makeText(PeternakanEditActivity.this, "Data berhasil diubah: id " + resp.getPeternakans().getId(), Toast.LENGTH_LONG).show();
+
+                            Intent intent = new Intent(PeternakanEditActivity.this, PeternakanDetailActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.putExtra("peternakan", (Serializable) datas);
+                            intent.putExtra("finish", backFinish);
+                            startActivity(intent);
+
+                            PeternakanEditActivity.this.finish();
+                        }
                     }
-                    else {
-                        PeternakanModel datas = new PeternakanModel(id, nama, ket, resp.getPeternakans().getCreated_at(), resp.getPeternakans().getUpdated_at());
-                        Toast.makeText(PeternakanEditActivity.this, "Data berhasil diubah: id " + resp.getPeternakans().getId(), Toast.LENGTH_LONG).show();
-
-                        Intent intent = new Intent(PeternakanEditActivity.this, PeternakanDetailActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("peternakan", (Serializable) datas);
-                        intent.putExtra("finish", backFinish);
-                        startActivity(intent);
-
-                        PeternakanEditActivity.this.finish();
+                    else{
+                        SweetAlertDialog swal = new SweetAlertDialog(PeternakanEditActivity.this, SweetAlertDialog.ERROR_TYPE);
+                        swal.setTitleText("Error");
+                        swal.setContentText(response.message());
+                        swal.show();
                     }
                 }
-                else{
+
+                @Override
+                public void onFailure(Call<PeternakanResponse> call, Throwable t) {
+                    pDialog.dismiss();
                     SweetAlertDialog swal = new SweetAlertDialog(PeternakanEditActivity.this, SweetAlertDialog.ERROR_TYPE);
                     swal.setTitleText("Error");
-                    swal.setContentText(response.message());
+                    swal.setContentText(t.getMessage());
                     swal.show();
                 }
-            }
+            });
+        }
+        else{
+            pDialog.dismiss();
 
-            @Override
-            public void onFailure(Call<PeternakanResponse> call, Throwable t) {
-                pDialog.dismiss();
-                SweetAlertDialog swal = new SweetAlertDialog(PeternakanEditActivity.this, SweetAlertDialog.ERROR_TYPE);
-                swal.setTitleText("Error");
-                swal.setContentText(t.getMessage());
-                swal.show();
-            }
-        });
+            FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference mReference = mDatabase.getReference("datas");
+
+            PeternakanModel datas = new PeternakanModel(id, nama, ket);
+            mReference.child("editData").child("peternakan").child(id.toString()).setValue(datas);
+
+            Toast.makeText(this, "Disimpan", Toast.LENGTH_SHORT).show();
+
+            PeternakanEditActivity.this.finish();
+        }
     }
 }

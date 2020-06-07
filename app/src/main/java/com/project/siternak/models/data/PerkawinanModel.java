@@ -28,6 +28,19 @@ public class PerkawinanModel implements Serializable {
     public PerkawinanModel() {
     }
 
+    public PerkawinanModel(String necktag, String necktag_psg, String tgl) {
+        this.necktag = necktag;
+        this.necktag_psg = necktag_psg;
+        this.tgl = tgl;
+    }
+
+    public PerkawinanModel(Integer id, String necktag, String necktag_psg, String tgl) {
+        this.id = id;
+        this.necktag = necktag;
+        this.necktag_psg = necktag_psg;
+        this.tgl = tgl;
+    }
+
     public PerkawinanModel(Integer id, String necktag, String necktag_psg, String tgl, String created_at, String updated_at) {
         this.id = id;
         this.necktag = necktag;

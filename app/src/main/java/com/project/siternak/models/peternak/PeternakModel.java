@@ -28,6 +28,24 @@ public class PeternakModel implements Serializable {
     @Expose
     String updated_at;
 
+    // for add only
+    String email;
+    public PeternakModel(Integer peternakanId, String namaPeternak, String username, String email) {
+        this.peternakanId = peternakanId;
+        this.namaPeternak = namaPeternak;
+        this.username = username;
+        this.email = email;
+    }
+
+    public PeternakModel() {
+    }
+
+    public PeternakModel(Integer id, Integer peternakanId, String namaPeternak) {
+        this.id = id;
+        this.peternakanId = peternakanId;
+        this.namaPeternak = namaPeternak;
+    }
+
     public PeternakModel(Integer id, Integer peternakanId, String namaPeternak, String username, String password, String created_at, String updated_at) {
         this.id = id;
         this.peternakanId = peternakanId;
@@ -92,5 +110,13 @@ public class PeternakModel implements Serializable {
 
     public void setUpdated_at(String updated_at) {
         this.updated_at = updated_at;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

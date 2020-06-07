@@ -13,15 +13,19 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.project.siternak.R;
 import com.project.siternak.activities.option.PenyakitOptionActivity;
 import com.project.siternak.activities.option.TernakRiwayatOptionActivity;
 import com.project.siternak.fragments.DatePickerFragment;
 import com.project.siternak.models.data.PenyakitModel;
+import com.project.siternak.models.data.RiwayatPenyakitModel;
 import com.project.siternak.models.data.TernakModel;
 import com.project.siternak.responses.RiwayatPenyakitResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.DialogUtils;
+import com.project.siternak.utils.NetworkManager;
 import com.project.siternak.utils.SharedPrefManager;
 
 import java.util.Calendar;
@@ -152,48 +156,63 @@ public class RiwayatPenyakitAddActivity extends AppCompatActivity implements Dat
             lama = Integer.valueOf(tietRiwayatLamaSakit.getText().toString());
         }
 
-        Call<RiwayatPenyakitResponse> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .addRiwayat(penyakit, necktag, tgl, obat, lama, ket, "Bearer " + userToken);
+        if(NetworkManager.isNetworkAvailable(RiwayatPenyakitAddActivity.this)){
+            Call<RiwayatPenyakitResponse> call = RetrofitClient
+                    .getInstance()
+                    .getApi()
+                    .addRiwayat(penyakit, necktag, tgl, obat, lama, ket, "Bearer " + userToken);
 
-        call.enqueue(new Callback<RiwayatPenyakitResponse>() {
-            @Override
-            public void onResponse(Call<RiwayatPenyakitResponse> call, Response<RiwayatPenyakitResponse> response) {
-                RiwayatPenyakitResponse resp = response.body();
-                pDialog.dismiss();
+            call.enqueue(new Callback<RiwayatPenyakitResponse>() {
+                @Override
+                public void onResponse(Call<RiwayatPenyakitResponse> call, Response<RiwayatPenyakitResponse> response) {
+                    RiwayatPenyakitResponse resp = response.body();
+                    pDialog.dismiss();
 
-                if(response.isSuccessful()){
-                    if(resp.getStatus().equals("error")){
-                        Toast.makeText(RiwayatPenyakitAddActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
+                    if(response.isSuccessful()){
+                        if(resp.getStatus().equals("error")){
+                            Toast.makeText(RiwayatPenyakitAddActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            Toast.makeText(RiwayatPenyakitAddActivity.this, "Data berhasil dibuat: id " + resp.getRiwayats().getId(), Toast.LENGTH_LONG).show();
+
+                            Intent intent = new Intent(RiwayatPenyakitAddActivity.this, RiwayatPenyakitActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+
+                            RiwayatPenyakitAddActivity.this.finish();
+                        }
                     }
-                    else {
-                        Toast.makeText(RiwayatPenyakitAddActivity.this, "Data berhasil dibuat: id " + resp.getRiwayats().getId(), Toast.LENGTH_LONG).show();
-
-                        Intent intent = new Intent(RiwayatPenyakitAddActivity.this, RiwayatPenyakitActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-
-                        RiwayatPenyakitAddActivity.this.finish();
+                    else{
+                        SweetAlertDialog swal = new SweetAlertDialog(RiwayatPenyakitAddActivity.this, SweetAlertDialog.ERROR_TYPE);
+                        swal.setTitleText("Error");
+                        swal.setContentText(response.message());
+                        swal.show();
                     }
                 }
-                else{
+
+                @Override
+                public void onFailure(Call<RiwayatPenyakitResponse> call, Throwable t) {
+                    pDialog.dismiss();
                     SweetAlertDialog swal = new SweetAlertDialog(RiwayatPenyakitAddActivity.this, SweetAlertDialog.ERROR_TYPE);
                     swal.setTitleText("Error");
-                    swal.setContentText(response.message());
+                    swal.setContentText(t.getMessage());
                     swal.show();
                 }
-            }
+            });
+        }
+        else {
+            pDialog.dismiss();
 
-            @Override
-            public void onFailure(Call<RiwayatPenyakitResponse> call, Throwable t) {
-                pDialog.dismiss();
-                SweetAlertDialog swal = new SweetAlertDialog(RiwayatPenyakitAddActivity.this, SweetAlertDialog.ERROR_TYPE);
-                swal.setTitleText("Error");
-                swal.setContentText(t.getMessage());
-                swal.show();
-            }
-        });
+            FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference mReference = mDatabase.getReference("datas");
+
+            RiwayatPenyakitModel datas = new RiwayatPenyakitModel(penyakit, necktag, tgl, obat, lama, ket);
+            mReference.child("addData").child("riwayatPenyakit").push().setValue(datas);
+
+            Toast.makeText(this, "Disimpan", Toast.LENGTH_SHORT).show();
+
+            RiwayatPenyakitAddActivity.this.finish();
+        }
     }
 
     @OnClick(R.id.tiet_riwayat_tgl)

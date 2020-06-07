@@ -25,6 +25,17 @@ public class RasModel implements Serializable {
     public RasModel() {
     }
 
+    public RasModel(String jenisRas, String ketRas) {
+        this.jenisRas = jenisRas;
+        this.ketRas = ketRas;
+    }
+
+    public RasModel(Integer id, String jenisRas, String ketRas) {
+        this.id = id;
+        this.jenisRas = jenisRas;
+        this.ketRas = ketRas;
+    }
+
     public RasModel(Integer id, String jenisRas, String ketRas, String created_at, String updated_at) {
         this.id = id;
         this.jenisRas = jenisRas;

@@ -82,6 +82,59 @@ public class TernakModel implements Serializable {
     public TernakModel() {
     }
 
+    public TernakModel(Integer pemilikId, Integer peternakanId, Integer rasId, Integer kematianId, String jenisKelamin,
+                       String tglLahir, String bobotLahir, String pukulLahir, String lamaDiKandungan, String lamaLaktasi,
+                       String tglLepasSapih, String blood, String necktag_ayah, String necktag_ibu, String bobotTubuh,
+                       String panjangTubuh, String tinggiTubuh, String cacatFisik, String ciriLain, Boolean statusAda) {
+        this.pemilikId = pemilikId;
+        this.peternakanId = peternakanId;
+        this.rasId = rasId;
+        this.kematianId = kematianId;
+        this.jenisKelamin = jenisKelamin;
+        this.tglLahir = tglLahir;
+        this.bobotLahir = bobotLahir;
+        this.pukulLahir = pukulLahir;
+        this.lamaDiKandungan = lamaDiKandungan;
+        this.lamaLaktasi = lamaLaktasi;
+        this.tglLepasSapih = tglLepasSapih;
+        this.blood = blood;
+        this.necktag_ayah = necktag_ayah;
+        this.necktag_ibu = necktag_ibu;
+        this.bobotTubuh = bobotTubuh;
+        this.panjangTubuh = panjangTubuh;
+        this.tinggiTubuh = tinggiTubuh;
+        this.cacatFisik = cacatFisik;
+        this.ciriLain = ciriLain;
+        this.statusAda = statusAda;
+    }
+
+    public TernakModel(String necktag, Integer pemilikId, Integer peternakanId, Integer rasId, Integer kematianId,
+                       String jenisKelamin, String tglLahir, String bobotLahir, String pukulLahir, String lamaDiKandungan,
+                       String lamaLaktasi, String tglLepasSapih, String blood, String necktag_ayah, String necktag_ibu,
+                       String bobotTubuh, String panjangTubuh, String tinggiTubuh, String cacatFisik, String ciriLain, Boolean statusAda) {
+        this.necktag = necktag;
+        this.pemilikId = pemilikId;
+        this.peternakanId = peternakanId;
+        this.rasId = rasId;
+        this.kematianId = kematianId;
+        this.jenisKelamin = jenisKelamin;
+        this.tglLahir = tglLahir;
+        this.bobotLahir = bobotLahir;
+        this.pukulLahir = pukulLahir;
+        this.lamaDiKandungan = lamaDiKandungan;
+        this.lamaLaktasi = lamaLaktasi;
+        this.tglLepasSapih = tglLepasSapih;
+        this.blood = blood;
+        this.necktag_ayah = necktag_ayah;
+        this.necktag_ibu = necktag_ibu;
+        this.bobotTubuh = bobotTubuh;
+        this.panjangTubuh = panjangTubuh;
+        this.tinggiTubuh = tinggiTubuh;
+        this.cacatFisik = cacatFisik;
+        this.ciriLain = ciriLain;
+        this.statusAda = statusAda;
+    }
+
     public TernakModel(String necktag, Integer rasId, String jenisKelamin, String tglLahir, String blood, String necktag_ayah, String necktag_ibu, Boolean statusAda) {
         this.necktag = necktag;
         this.rasId = rasId;

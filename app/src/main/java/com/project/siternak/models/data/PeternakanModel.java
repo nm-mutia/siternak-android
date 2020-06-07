@@ -25,6 +25,17 @@ public class PeternakanModel implements Serializable {
     public PeternakanModel() {
     }
 
+    public PeternakanModel(String namaPeternakan, String keterangan) {
+        this.namaPeternakan = namaPeternakan;
+        this.keterangan = keterangan;
+    }
+
+    public PeternakanModel(Integer id, String namaPeternakan, String keterangan) {
+        this.id = id;
+        this.namaPeternakan = namaPeternakan;
+        this.keterangan = keterangan;
+    }
+
     public PeternakanModel(Integer id, String namaPeternakan, String keterangan, String created_at, String updated_at) {
         this.id = id;
         this.namaPeternakan = namaPeternakan;

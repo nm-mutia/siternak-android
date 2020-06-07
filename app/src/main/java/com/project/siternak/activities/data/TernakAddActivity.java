@@ -17,6 +17,8 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.project.siternak.R;
 import com.project.siternak.activities.option.KematianOptionActivity;
 import com.project.siternak.activities.option.TernakParentOptionActivity;
@@ -33,6 +35,7 @@ import com.project.siternak.models.data.TernakModel;
 import com.project.siternak.responses.TernakResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.DialogUtils;
+import com.project.siternak.utils.NetworkManager;
 import com.project.siternak.utils.SharedPrefManager;
 
 import java.util.Calendar;
@@ -357,52 +360,68 @@ public class TernakAddActivity extends AppCompatActivity implements DatePickerDi
             statusAda = false;
         }
 
-        Call<TernakResponse> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .addTernak(pemilik, peternakan, ras, kematian,
-                        jk, tglLahir, bobotLahir, pukulLahir, lamaDiKandungan, lamaLaktasi,
-                        tglLepasSapih, blood, ayah, ibu, bobotTubuh, panjangTubuh,tinggiTubuh,
-                        cacatFisik, ciriLain, statusAda, "Bearer " + userToken);
+        if(NetworkManager.isNetworkAvailable(TernakAddActivity.this)){
+            Call<TernakResponse> call = RetrofitClient
+                    .getInstance()
+                    .getApi()
+                    .addTernak(pemilik, peternakan, ras, kematian,
+                            jk, tglLahir, bobotLahir, pukulLahir, lamaDiKandungan, lamaLaktasi,
+                            tglLepasSapih, blood, ayah, ibu, bobotTubuh, panjangTubuh,tinggiTubuh,
+                            cacatFisik, ciriLain, statusAda, "Bearer " + userToken);
 
-        call.enqueue(new Callback<TernakResponse>() {
-            @Override
-            public void onResponse(Call<TernakResponse> call, Response<TernakResponse> response) {
-                TernakResponse resp = response.body();
-                pDialog.dismiss();
+            call.enqueue(new Callback<TernakResponse>() {
+                @Override
+                public void onResponse(Call<TernakResponse> call, Response<TernakResponse> response) {
+                    TernakResponse resp = response.body();
+                    pDialog.dismiss();
 
-                if(response.isSuccessful()){
-                    if(resp.getStatus().equals("error")){
-                        Toast.makeText(TernakAddActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
+                    if(response.isSuccessful()){
+                        if(resp.getStatus().equals("error")){
+                            Toast.makeText(TernakAddActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
+                        }
+                        else{
+                            Toast.makeText(TernakAddActivity.this, "Data berhasil dibuat: necktag " + resp.getTernaks().getNecktag(), Toast.LENGTH_LONG).show();
+
+                            Intent intent = new Intent(TernakAddActivity.this, TernakActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+
+                            TernakAddActivity.this.finish();
+                        }
                     }
                     else{
-                        Toast.makeText(TernakAddActivity.this, "Data berhasil dibuat: necktag " + resp.getTernaks().getNecktag(), Toast.LENGTH_LONG).show();
-
-                        Intent intent = new Intent(TernakAddActivity.this, TernakActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-
-                        TernakAddActivity.this.finish();
+                        SweetAlertDialog swal = new SweetAlertDialog(TernakAddActivity.this, SweetAlertDialog.ERROR_TYPE);
+                        swal.setTitleText("Error");
+                        swal.setContentText(response.message());
+                        swal.show();
                     }
                 }
-                else{
+
+                @Override
+                public void onFailure(Call<TernakResponse> call, Throwable t) {
+                    pDialog.dismiss();
                     SweetAlertDialog swal = new SweetAlertDialog(TernakAddActivity.this, SweetAlertDialog.ERROR_TYPE);
                     swal.setTitleText("Error");
-                    swal.setContentText(response.message());
+                    swal.setContentText(t.getMessage());
                     swal.show();
                 }
-            }
+            });
+        }
+        else {
+            pDialog.dismiss();
 
-            @Override
-            public void onFailure(Call<TernakResponse> call, Throwable t) {
-                pDialog.dismiss();
-                SweetAlertDialog swal = new SweetAlertDialog(TernakAddActivity.this, SweetAlertDialog.ERROR_TYPE);
-                swal.setTitleText("Error");
-                swal.setContentText(t.getMessage());
-                swal.show();
-            }
-        });
+            FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference mReference = mDatabase.getReference("datas");
+
+            TernakModel datas = new TernakModel(pemilik, peternakan, ras, kematian,
+                    jk, tglLahir, bobotLahir, pukulLahir, lamaDiKandungan, lamaLaktasi,
+                    tglLepasSapih, blood, ayah, ibu, bobotTubuh, panjangTubuh,tinggiTubuh,
+                    cacatFisik, ciriLain, statusAda);
+            mReference.child("addData").child("ternak").push().setValue(datas);
+
+            Toast.makeText(this, "Disimpan", Toast.LENGTH_SHORT).show();
+
+            TernakAddActivity.this.finish();
+        }
     }
-
-
 }
