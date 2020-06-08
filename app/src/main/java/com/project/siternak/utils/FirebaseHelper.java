@@ -47,7 +47,6 @@ public class FirebaseHelper {
         this.mContext = mContext;
         userToken = SharedPrefManager.getInstance(mContext).getAccessToken();
         mDatabase = FirebaseDatabase.getInstance();
-        mDatabase.setPersistenceEnabled(true);
     }
 
     public void syncData(){

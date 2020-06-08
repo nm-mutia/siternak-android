@@ -71,7 +71,8 @@ public class DialogUtils {
 
     public static void swalFailed(Context context, String text){
         SweetAlertDialog failed= new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE);
-        failed.setTitleText(text).setConfirmText("OK");
+        failed.setTitleText("Error").setConfirmText("OK");
+        failed.setContentText(text);
         failed.show();
     }
 

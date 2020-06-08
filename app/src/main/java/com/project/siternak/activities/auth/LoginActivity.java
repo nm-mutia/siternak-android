@@ -1,7 +1,6 @@
 package com.project.siternak.activities.auth;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -15,6 +14,7 @@ import com.project.siternak.activities.home.MainActivity;
 import com.project.siternak.responses.LoginResponse;
 import com.project.siternak.responses.UserDetailsResponse;
 import com.project.siternak.rest.RetrofitClient;
+import com.project.siternak.utils.DialogUtils;
 import com.project.siternak.utils.SharedPrefManager;
 
 import butterknife.BindView;
@@ -64,11 +64,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if (!validated(email, password)) return;
 
-        SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("Mohon Tunggu");
-        pDialog.setCancelable(false);
-        pDialog.show();
+        SweetAlertDialog pDialog = DialogUtils.getLoadingPopup(this);
 
         Call<LoginResponse> call = RetrofitClient
                 .getInstance()
@@ -81,50 +77,22 @@ public class LoginActivity extends AppCompatActivity {
                 LoginResponse resp = response.body();
 
                 if (response.isSuccessful()) {
-                    SharedPrefManager.getInstance(LoginActivity.this)
-                            .saveAccessToken(resp.getData().getToken());
+                    SharedPrefManager.getInstance(LoginActivity.this).saveAccessToken(resp.getData().getToken());
+                    storeUser();
 
-                    Call<UserDetailsResponse> calls = RetrofitClient
-                            .getInstance()
-                            .getApi()
-                            .userDetails("Bearer " + SharedPrefManager.getInstance(LoginActivity.this).getAccessToken());
-
-                    calls.enqueue(new Callback<UserDetailsResponse>() {
-                        @Override
-                        public void onResponse(Call<UserDetailsResponse> call, Response<UserDetailsResponse> response) {
-                            UserDetailsResponse resp = response.body();
-
-                            if (response.isSuccessful()) {
-                                SharedPrefManager.getInstance(LoginActivity.this)
-                                        .saveUser(resp.getData());
-                            }
-                            Toast.makeText(LoginActivity.this, "Selamat datang, " + resp.getData().getName(), Toast.LENGTH_LONG).show();
-                        }
-
-                        @Override
-                        public void onFailure(Call<UserDetailsResponse> call, Throwable t) {
-                            Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    });
                     pDialog.dismiss();
                     moveToDashboard();
                 }
                 else{
                     pDialog.dismiss();
-                    SweetAlertDialog swal = new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.ERROR_TYPE);
-                    swal.setTitleText("Error");
-                    swal.setContentText(response.message());
-                    swal.show();
+                    DialogUtils.swalFailed(LoginActivity.this, response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
                 pDialog.dismiss();
-                SweetAlertDialog swal = new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.ERROR_TYPE);
-                swal.setTitleText("Error");
-                swal.setContentText(t.getMessage());
-                swal.show();
+                DialogUtils.swalFailed(LoginActivity.this, t.getMessage());
             }
         });
     }
@@ -152,6 +120,27 @@ public class LoginActivity extends AppCompatActivity {
             this.editTextPassword.setError("Password perlu diisi");
         }
         return pass;
+    }
+
+    private void storeUser(){
+        Call<UserDetailsResponse> calls = RetrofitClient
+                .getInstance()
+                .getApi()
+                .userDetails("Bearer " + SharedPrefManager.getInstance(LoginActivity.this).getAccessToken());
+
+        calls.enqueue(new Callback<UserDetailsResponse>() {
+            @Override
+            public void onResponse(Call<UserDetailsResponse> call, Response<UserDetailsResponse> response) {
+                UserDetailsResponse resp = response.body();
+                SharedPrefManager.getInstance(LoginActivity.this).saveUser(resp.getData());
+                Toast.makeText(LoginActivity.this, "Selamat datang, " + resp.getData().getName(), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFailure(Call<UserDetailsResponse> call, Throwable t) {
+                Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }
 

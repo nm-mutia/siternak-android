@@ -1,7 +1,10 @@
 package com.project.siternak.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +36,13 @@ public class DashboardFragment extends Fragment {
 
     private Unbinder unbinder;
     private UserModel mUser;
+    private Context context;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
 
     @Nullable
     @Override
@@ -40,19 +50,20 @@ public class DashboardFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
         unbinder = ButterKnife.bind(this, view);
         
-        ButterKnife.bind(getActivity());
-        mUser = SharedPrefManager.getInstance(getActivity()).getUser();
-
-        if(mUser.getRole() != null && mUser.getRole().equals("admin")){
-            llPeternak.setVisibility(View.VISIBLE);
-        }
+        ButterKnife.bind((Activity) context);
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        mUser = SharedPrefManager.getInstance(context).getUser();
         tvFullname.setText(mUser.getName()+ ", " + mUser.getRole());
+
+        if(mUser.getRole() != null && mUser.getRole().equals("admin")){
+            llPeternak.setVisibility(View.VISIBLE);
+        }
     }
 
     @OnClick(R.id.ll_data)

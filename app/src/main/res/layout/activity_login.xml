@@ -41,6 +41,7 @@
                 android:background="@drawable/rc_white"
                 android:fontFamily="@font/sourcesanspro_regular"
                 android:hint="email"
+                android:inputType="textEmailAddress"
                 android:textSize="18sp" />
 
             <EditText
