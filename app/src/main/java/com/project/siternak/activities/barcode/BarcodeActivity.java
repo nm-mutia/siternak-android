@@ -214,16 +214,17 @@ public class BarcodeActivity extends AppCompatActivity {
 
         try {
             fileOutputStream = new FileOutputStream(file);
-            PdfWriter writer = PdfWriter.getInstance(document, fileOutputStream);
+//            PdfWriter writer = PdfWriter.getInstance(document, fileOutputStream);
+            PdfWriter.getInstance(document, fileOutputStream);
             document.open();
-            PdfContentByte content = writer.getDirectContent();
+//            PdfContentByte content = writer.getDirectContent();
             PdfPTable table = new PdfPTable(3);
 
             for (int k = 0; k < arrayList.size(); k++) {
                 if(k % 24 == 0){
                     document.newPage();
                 }
-                content.createTemplate(10f,16f);
+//                content.createTemplate(10f,36f);
 
                 MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
                 try {
@@ -257,7 +258,7 @@ public class BarcodeActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-
+            table.completeRow();
             document.add(table);
             document.close();
             fileOutputStream.close();

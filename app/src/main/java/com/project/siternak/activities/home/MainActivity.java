@@ -23,8 +23,6 @@ import com.project.siternak.utils.SharedPrefManager;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
     Fragment selectedFragment;
-    private String userToken;
-    private boolean isInitialState = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,8 +30,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
-
-        userToken = SharedPrefManager.getInstance(this).getAccessToken();
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(this);
@@ -48,7 +44,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private void displayFragment(Fragment fragment){
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
-        transaction.addToBackStack(null);
         transaction.commit();
     }
 
@@ -63,13 +58,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         }
 
         if(NetworkManager.isNetworkAvailable(MainActivity.this)){
-            Toast.makeText(this, "Initial state: " + isInitialState, Toast.LENGTH_SHORT).show();
-
-//            if(isInitialState){
-                FirebaseHelper firebaseHelper = new FirebaseHelper(this);
-                firebaseHelper.syncData();
-//                isInitialState = false;
-//            }
+            FirebaseHelper firebaseHelper = new FirebaseHelper(MainActivity.this);
+            firebaseHelper.syncData();
+        }
+        else{
+            Toast.makeText(this, "Gagal sync: tidak ada koneksi", Toast.LENGTH_SHORT).show();
         }
     }
 

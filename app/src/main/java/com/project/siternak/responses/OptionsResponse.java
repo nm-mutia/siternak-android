@@ -12,10 +12,6 @@ import com.project.siternak.models.data.TernakModel;
 import java.util.List;
 
 public class OptionsResponse {
-    @SerializedName("status")
-    @Expose
-    private String status;
-
     @SerializedName("kematian")
     @Expose
     private List<KematianModel> kematians;
@@ -39,14 +35,6 @@ public class OptionsResponse {
     @SerializedName("ternak")
     @Expose
     private List<TernakModel> ternaks;
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 
     public List<KematianModel> getKematians() {
         return kematians;

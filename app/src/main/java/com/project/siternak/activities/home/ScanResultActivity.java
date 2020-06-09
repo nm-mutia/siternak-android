@@ -128,6 +128,7 @@ public class ScanResultActivity extends AppCompatActivity {
                         if (scanAdapter.getItemCount() != 0) {
                             rvParent.setAdapter(scanAdapter);
                             scanAdapter.notifyDataSetChanged();
+                            rvParent.setNestedScrollingEnabled(false);
                         }
 
                         List<Instance> sibling = fam.getSibling();
@@ -137,6 +138,7 @@ public class ScanResultActivity extends AppCompatActivity {
                         if (scanAdapter.getItemCount() != 0) {
                             rvSibling.setAdapter(scanAdapter);
                             scanAdapter.notifyDataSetChanged();
+                            rvSibling.setNestedScrollingEnabled(false);
                         }
 
                         List<Instance> child = fam.getChild();
@@ -146,6 +148,7 @@ public class ScanResultActivity extends AppCompatActivity {
                         if (scanAdapter.getItemCount() != 0) {
                             rvChild.setAdapter(scanAdapter);
                             scanAdapter.notifyDataSetChanged();
+                            rvChild.setNestedScrollingEnabled(false);
                         }
 
                         List<Instance> gparent = fam.getGparent();
@@ -155,6 +158,7 @@ public class ScanResultActivity extends AppCompatActivity {
                         if (scanAdapter.getItemCount() != 0) {
                             rvGParent.setAdapter(scanAdapter);
                             scanAdapter.notifyDataSetChanged();
+                            rvGParent.setNestedScrollingEnabled(false);
                         }
 
                         List<Instance> gchild = fam.getGchild();
@@ -164,6 +168,7 @@ public class ScanResultActivity extends AppCompatActivity {
                         if (scanAdapter.getItemCount() != 0) {
                             rvGChild.setAdapter(scanAdapter);
                             scanAdapter.notifyDataSetChanged();
+                            rvGChild.setNestedScrollingEnabled(false);
                         }
 
                     }

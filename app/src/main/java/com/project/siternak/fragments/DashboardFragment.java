@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +50,8 @@ public class DashboardFragment extends Fragment {
         unbinder = ButterKnife.bind(this, view);
         
         ButterKnife.bind((Activity) context);
+        mUser = SharedPrefManager.getInstance(context).getUser();
+
         return view;
     }
 
@@ -58,7 +59,6 @@ public class DashboardFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mUser = SharedPrefManager.getInstance(context).getUser();
         tvFullname.setText(mUser.getName()+ ", " + mUser.getRole());
 
         if(mUser.getRole() != null && mUser.getRole().equals("admin")){

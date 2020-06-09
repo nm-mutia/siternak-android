@@ -1,9 +1,10 @@
 package com.project.siternak.utils;
 
 import android.content.Context;
-import android.widget.Toast;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -38,10 +39,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class FirebaseHelper {
+    private static final String TAG = "sync";
+
     private Context mContext ;
     private String userToken;
     private FirebaseDatabase mDatabase;
-    private DatabaseReference mRef, mReference;
+    private DatabaseReference mRef;
 
     public FirebaseHelper(Context mContext){
         this.mContext = mContext;
@@ -54,6 +57,11 @@ public class FirebaseHelper {
         pushToDb(); // retrieve from firebase
     }
 
+    private void message(String msg){
+        Log.e(TAG, msg);
+//        Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+    }
+
     private void pullFromDb(){
         Call<OptionsResponse> call = RetrofitClient
                 .getInstance()
@@ -62,40 +70,46 @@ public class FirebaseHelper {
 
         call.enqueue(new Callback<OptionsResponse>() {
             @Override
-            public void onResponse(Call<OptionsResponse> call, Response<OptionsResponse> response) {
+            public void onResponse(Call<OptionsResponse> call, @Nullable Response<OptionsResponse> response) {
                 OptionsResponse resp = response.body();
 
                 mRef = mDatabase.getReference("options");
 
-                List<KematianModel> kematians = resp.getKematians();
-                List<PemilikModel> pemiliks = resp.getPemiliks();
-                List<PenyakitModel> penyakits = resp.getPenyakits();
-                List<PeternakanModel> peternakans = resp.getPeternakan();
-                List<RasModel> ras = resp.getRas();
-                List<TernakModel> ternaks = resp.getTernaks();
+                if(response.isSuccessful()){
+                    List<KematianModel> kematians = resp.getKematians();
+                    List<PemilikModel> pemiliks = resp.getPemiliks();
+                    List<PenyakitModel> penyakits = resp.getPenyakits();
+                    List<PeternakanModel> peternakans = resp.getPeternakan();
+                    List<RasModel> ras = resp.getRas();
+                    List<TernakModel> ternaks = resp.getTernaks();
 
-                for(KematianModel data : kematians){
-                    mRef.child("kematian").child(data.getId().toString()).setValue(data);
-                }
+                    mRef.removeValue();
 
-                for(PemilikModel data : pemiliks){
-                    mRef.child("pemilik").child(data.getId().toString()).setValue(data);
-                }
+                    for(KematianModel data : kematians){
+                        mRef.child("kematian").child(data.getId().toString()).setValue(data);
+                    }
 
-                for(PenyakitModel data : penyakits){
-                    mRef.child("penyakit").child(data.getId().toString()).setValue(data);
-                }
+                    for(PemilikModel data : pemiliks){
+                        mRef.child("pemilik").child(data.getId().toString()).setValue(data);
+                    }
 
-                for(PeternakanModel data : peternakans){
-                    mRef.child("peternakan").child(data.getId().toString()).setValue(data);
-                }
+                    for(PenyakitModel data : penyakits){
+                        mRef.child("penyakit").child(data.getId().toString()).setValue(data);
+                    }
 
-                for(RasModel data : ras){
-                    mRef.child("ras").child(data.getId().toString()).setValue(data);
-                }
+                    for(PeternakanModel data : peternakans){
+                        mRef.child("peternakan").child(data.getId().toString()).setValue(data);
+                    }
 
-                for(TernakModel data : ternaks){
-                    mRef.child("ternak").child(data.getNecktag()).setValue(data);
+                    for(RasModel data : ras){
+                        mRef.child("ras").child(data.getId().toString()).setValue(data);
+                    }
+
+                    for(TernakModel data : ternaks){
+                        mRef.child("ternak").child(data.getNecktag()).setValue(data);
+                    }
+
+                    Log.d(TAG, "Pull success");
                 }
 
                 mRef.keepSynced(true);
@@ -103,14 +117,14 @@ public class FirebaseHelper {
 
             @Override
             public void onFailure(Call<OptionsResponse> call, Throwable t) {
-                Toast.makeText(mContext, "Gagal sync: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                message("Pull failed: " + t.getMessage());
             }
         });
     }
 
 
     private void pushToDb(){
-        mReference = mDatabase.getReference("datas").child("addData");
+        DatabaseReference mReference = mDatabase.getReference("datas").child("addData");
 
         mReference.child("kematian").addValueEventListener(new ValueEventListener() {
             @Override
@@ -127,13 +141,14 @@ public class FirebaseHelper {
                         call.enqueue(new Callback<KematianResponse>() {
                             @Override
                             public void onResponse(Call<KematianResponse> call, Response<KematianResponse> response) {
-                                Toast.makeText(mContext, "Push kematian " + data.getKey(), Toast.LENGTH_SHORT).show();
-                                data.getRef().removeValue();
+                                if(response.isSuccessful()){
+                                    data.getRef().removeValue();
+                                }
                             }
 
                             @Override
                             public void onFailure(Call<KematianResponse> call, Throwable t) {
-                                Toast.makeText(mContext, "Gagal push kematian: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                message("Failed to push data kematian: " + t.getMessage());
                             }
                         });
                     }
@@ -161,13 +176,14 @@ public class FirebaseHelper {
                         call.enqueue(new Callback<PemilikResponse>() {
                             @Override
                             public void onResponse(Call<PemilikResponse> call, Response<PemilikResponse> response) {
-                                Toast.makeText(mContext, "Push pemilik", Toast.LENGTH_SHORT).show();
-                                data.getRef().removeValue();
+                                if(response.isSuccessful()){
+                                    data.getRef().removeValue();
+                                }
                             }
 
                             @Override
                             public void onFailure(Call<PemilikResponse> call, Throwable t) {
-                                Toast.makeText(mContext, "Gagal push pemilik: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                message("Failed to push data pemilik: " + t.getMessage());
                             }
                         });
                     }
@@ -195,13 +211,14 @@ public class FirebaseHelper {
                         call.enqueue(new Callback<PenyakitResponse>() {
                             @Override
                             public void onResponse(Call<PenyakitResponse> call, Response<PenyakitResponse> response) {
-                                Toast.makeText(mContext, "Push penyakit", Toast.LENGTH_SHORT).show();
-                                data.getRef().removeValue();
+                                if(response.isSuccessful()){
+                                    data.getRef().removeValue();
+                                }
                             }
 
                             @Override
                             public void onFailure(Call<PenyakitResponse> call, Throwable t) {
-                                Toast.makeText(mContext, "Gagal push penyakit: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                message("Failed to push data penyakit: " + t.getMessage());
                             }
                         });
                     }
@@ -229,13 +246,14 @@ public class FirebaseHelper {
                         call.enqueue(new Callback<PeternakanResponse>() {
                             @Override
                             public void onResponse(Call<PeternakanResponse> call, Response<PeternakanResponse> response) {
-                                Toast.makeText(mContext, "Push peternakan", Toast.LENGTH_SHORT).show();
-                                data.getRef().removeValue();
+                                if(response.isSuccessful()){
+                                    data.getRef().removeValue();
+                                }
                             }
 
                             @Override
                             public void onFailure(Call<PeternakanResponse> call, Throwable t) {
-                                Toast.makeText(mContext, "Gagal push peternakan: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                message("Failed to push data peternakan: " + t.getMessage());
                             }
                         });
                     }
@@ -263,13 +281,14 @@ public class FirebaseHelper {
                         call.enqueue(new Callback<RasResponse>() {
                             @Override
                             public void onResponse(Call<RasResponse> call, Response<RasResponse> response) {
-                                Toast.makeText(mContext, "Push ras", Toast.LENGTH_SHORT).show();
-                                data.getRef().removeValue();
+                                if(response.isSuccessful()){
+                                    data.getRef().removeValue();
+                                }
                             }
 
                             @Override
                             public void onFailure(Call<RasResponse> call, Throwable t) {
-                                Toast.makeText(mContext, "Gagal push ras: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                message("Failed to push data ras: " + t.getMessage());
                             }
                         });
                     }
@@ -297,13 +316,14 @@ public class FirebaseHelper {
                         call.enqueue(new Callback<PerkawinanResponse>() {
                             @Override
                             public void onResponse(Call<PerkawinanResponse> call, Response<PerkawinanResponse> response) {
-                                Toast.makeText(mContext, "Push perkawinan", Toast.LENGTH_SHORT).show();
-                                data.getRef().removeValue();
+                                if(response.isSuccessful()){
+                                    data.getRef().removeValue();
+                                }
                             }
 
                             @Override
                             public void onFailure(Call<PerkawinanResponse> call, Throwable t) {
-                                Toast.makeText(mContext, "Gagal push perkawinan: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                message("Failed to push data perkawinan: " + t.getMessage());
                             }
                         });
                     }
@@ -332,13 +352,14 @@ public class FirebaseHelper {
                         call.enqueue(new Callback<RiwayatPenyakitResponse>() {
                             @Override
                             public void onResponse(Call<RiwayatPenyakitResponse> call, Response<RiwayatPenyakitResponse> response) {
-                                Toast.makeText(mContext, "Push riwayat", Toast.LENGTH_SHORT).show();
-                                data.getRef().removeValue();
+                                if(response.isSuccessful()){
+                                    data.getRef().removeValue();
+                                }
                             }
 
                             @Override
                             public void onFailure(Call<RiwayatPenyakitResponse> call, Throwable t) {
-                                Toast.makeText(mContext, "Gagal push riwayat: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                message("Failed to push data riwayat: " + t.getMessage());
                             }
                         });
                     }
@@ -370,13 +391,14 @@ public class FirebaseHelper {
                         call.enqueue(new Callback<TernakResponse>() {
                             @Override
                             public void onResponse(Call<TernakResponse> call, Response<TernakResponse> response) {
-                                Toast.makeText(mContext, "Push ternak", Toast.LENGTH_SHORT).show();
-                                data.getRef().removeValue();
+                                if(response.isSuccessful()){
+                                    data.getRef().removeValue();
+                                }
                             }
 
                             @Override
                             public void onFailure(Call<TernakResponse> call, Throwable t) {
-                                Toast.makeText(mContext, "Gagal push ternak: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                message("Failed to push data ternak: " + t.getMessage());
                             }
                         });
                     }
@@ -404,13 +426,14 @@ public class FirebaseHelper {
                         call.enqueue(new Callback<PeternakResponse>() {
                             @Override
                             public void onResponse(Call<PeternakResponse> call, Response<PeternakResponse> response) {
-                                Toast.makeText(mContext, "Push peternak", Toast.LENGTH_SHORT).show();
-                                data.getRef().removeValue();
+                                if(response.isSuccessful()){
+                                    data.getRef().removeValue();
+                                }
                             }
 
                             @Override
                             public void onFailure(Call<PeternakResponse> call, Throwable t) {
-                                Toast.makeText(mContext, "Gagal push peternak: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                message("Failed to push data peternak: " + t.getMessage());
                             }
                         });
                     }
@@ -442,13 +465,14 @@ public class FirebaseHelper {
                         call.enqueue(new Callback<KematianResponse>() {
                             @Override
                             public void onResponse(Call<KematianResponse> call, Response<KematianResponse> response) {
-                                Toast.makeText(mContext, "Push data kematian: " + kematian.getId(), Toast.LENGTH_SHORT).show();
-                                data.getRef().removeValue();
+                                if(response.isSuccessful()){
+                                    data.getRef().removeValue();
+                                }
                             }
 
                             @Override
                             public void onFailure(Call<KematianResponse> call, Throwable t) {
-                                Toast.makeText(mContext, "Gagal push kematian "+ kematian.getId() + ": " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                message("Failed to push data kematian: " + t.getMessage());
                             }
                         });
                     }
@@ -476,13 +500,14 @@ public class FirebaseHelper {
                         call.enqueue(new Callback<PemilikResponse>() {
                             @Override
                             public void onResponse(Call<PemilikResponse> call, Response<PemilikResponse> response) {
-                                Toast.makeText(mContext, "Push pemilik: " + pemilik.getId(), Toast.LENGTH_SHORT).show();
-                                data.getRef().removeValue();
+                                if(response.isSuccessful()){
+                                    data.getRef().removeValue();
+                                }
                             }
 
                             @Override
                             public void onFailure(Call<PemilikResponse> call, Throwable t) {
-                                Toast.makeText(mContext, "Gagal push pemilik: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                message("Failed to push data pemilik: " + t.getMessage());
                             }
                         });
                     }
@@ -510,13 +535,14 @@ public class FirebaseHelper {
                         call.enqueue(new Callback<PenyakitResponse>() {
                             @Override
                             public void onResponse(Call<PenyakitResponse> call, Response<PenyakitResponse> response) {
-                                Toast.makeText(mContext, "Push penyakit: " + penyakit.getId(), Toast.LENGTH_SHORT).show();
-                                data.getRef().removeValue();
+                                if(response.isSuccessful()){
+                                    data.getRef().removeValue();
+                                }
                             }
 
                             @Override
                             public void onFailure(Call<PenyakitResponse> call, Throwable t) {
-                                Toast.makeText(mContext, "Gagal push penyakit: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                message("Failed to push data penyakit: " + t.getMessage());
                             }
                         });
                     }
@@ -544,17 +570,19 @@ public class FirebaseHelper {
                         call.enqueue(new Callback<PeternakanResponse>() {
                             @Override
                             public void onResponse(Call<PeternakanResponse> call, Response<PeternakanResponse> response) {
-                                Toast.makeText(mContext, "Push peternakan", Toast.LENGTH_SHORT).show();
-                                data.getRef().removeValue();
+                                if(response.isSuccessful()){
+                                    data.getRef().removeValue();
+                                }
                             }
 
                             @Override
                             public void onFailure(Call<PeternakanResponse> call, Throwable t) {
-                                Toast.makeText(mContext, "Gagal push peternakan: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                message("Failed to push data peternakan: " + t.getMessage());
                             }
                         });
                     }
                 }
+
             }
 
             @Override
@@ -578,13 +606,14 @@ public class FirebaseHelper {
                         call.enqueue(new Callback<RasResponse>() {
                             @Override
                             public void onResponse(Call<RasResponse> call, Response<RasResponse> response) {
-                                Toast.makeText(mContext, "Push ras", Toast.LENGTH_SHORT).show();
-                                data.getRef().removeValue();
+                                if(response.isSuccessful()){
+                                    data.getRef().removeValue();
+                                }
                             }
 
                             @Override
                             public void onFailure(Call<RasResponse> call, Throwable t) {
-                                Toast.makeText(mContext, "Gagal push ras: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                message("Failed to push data ras: " + t.getMessage());
                             }
                         });
                     }
@@ -612,13 +641,14 @@ public class FirebaseHelper {
                         call.enqueue(new Callback<PerkawinanResponse>() {
                             @Override
                             public void onResponse(Call<PerkawinanResponse> call, Response<PerkawinanResponse> response) {
-                                Toast.makeText(mContext, "Push perkawinan", Toast.LENGTH_SHORT).show();
-                                data.getRef().removeValue();
+                                if(response.isSuccessful()){
+                                    data.getRef().removeValue();
+                                }
                             }
 
                             @Override
                             public void onFailure(Call<PerkawinanResponse> call, Throwable t) {
-                                Toast.makeText(mContext, "Gagal push perkawinan: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                message("Failed to push data perkawinan: " + t.getMessage());
                             }
                         });
                     }
@@ -647,13 +677,14 @@ public class FirebaseHelper {
                         call.enqueue(new Callback<RiwayatPenyakitResponse>() {
                             @Override
                             public void onResponse(Call<RiwayatPenyakitResponse> call, Response<RiwayatPenyakitResponse> response) {
-                                Toast.makeText(mContext, "Push riwayat", Toast.LENGTH_SHORT).show();
-                                data.getRef().removeValue();
+                                if(response.isSuccessful()){
+                                    data.getRef().removeValue();
+                                }
                             }
 
                             @Override
                             public void onFailure(Call<RiwayatPenyakitResponse> call, Throwable t) {
-                                Toast.makeText(mContext, "Gagal push riwayat: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                message("Failed to push data riwayat: " + t.getMessage());
                             }
                         });
                     }
@@ -685,13 +716,14 @@ public class FirebaseHelper {
                         call.enqueue(new Callback<TernakResponse>() {
                             @Override
                             public void onResponse(Call<TernakResponse> call, Response<TernakResponse> response) {
-                                Toast.makeText(mContext, "Push ternak", Toast.LENGTH_SHORT).show();
-                                data.getRef().removeValue();
+                                if(response.isSuccessful()){
+                                    data.getRef().removeValue();
+                                }
                             }
 
                             @Override
                             public void onFailure(Call<TernakResponse> call, Throwable t) {
-                                Toast.makeText(mContext, "Gagal push ternak: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                message("Failed to push data ternak: " + t.getMessage());
                             }
                         });
                     }
@@ -719,13 +751,14 @@ public class FirebaseHelper {
                         call.enqueue(new Callback<PeternakResponse>() {
                             @Override
                             public void onResponse(Call<PeternakResponse> call, Response<PeternakResponse> response) {
-                                Toast.makeText(mContext, "Push peternak", Toast.LENGTH_SHORT).show();
-                                data.getRef().removeValue();
+                                if(response.isSuccessful()){
+                                    data.getRef().removeValue();
+                                }
                             }
 
                             @Override
                             public void onFailure(Call<PeternakResponse> call, Throwable t) {
-                                Toast.makeText(mContext, "Gagal push peternak: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                message("Failed to push data peternak: " + t.getMessage());
                             }
                         });
                     }
