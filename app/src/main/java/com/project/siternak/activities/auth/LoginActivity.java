@@ -2,13 +2,20 @@ package com.project.siternak.activities.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.project.siternak.R;
 import com.project.siternak.activities.home.MainActivity;
 import com.project.siternak.responses.LoginResponse;
@@ -31,6 +38,9 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.et_passsword)
     EditText editTextPassword;
 
+    private FirebaseAuth mAuth;
+    public static final String TAG = "LoginActivityTAG";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +49,8 @@ public class LoginActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         ButterKnife.bind(this);
+
+        mAuth = FirebaseAuth.getInstance();
     }
 
     @Override
@@ -77,11 +89,11 @@ public class LoginActivity extends AppCompatActivity {
                 LoginResponse resp = response.body();
 
                 if (response.isSuccessful()) {
+                    checkUserFirebase(email, password);
                     SharedPrefManager.getInstance(LoginActivity.this).saveAccessToken(resp.getData().getToken());
-                    storeUser();
+                    storeUser(pDialog);
 
-                    pDialog.dismiss();
-                    moveToDashboard();
+//                    pDialog.dismiss();
                 }
                 else{
                     pDialog.dismiss();
@@ -104,6 +116,12 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void moveToVerifyEmail() {
+        Intent intent = new Intent(LoginActivity.this, VerifyActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
     private boolean validated(String email, String password) {
         boolean pass = true;
 
@@ -122,7 +140,7 @@ public class LoginActivity extends AppCompatActivity {
         return pass;
     }
 
-    private void storeUser(){
+    private void storeUser(SweetAlertDialog pDialog){
         Call<UserDetailsResponse> calls = RetrofitClient
                 .getInstance()
                 .getApi()
@@ -132,13 +150,52 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<UserDetailsResponse> call, Response<UserDetailsResponse> response) {
                 UserDetailsResponse resp = response.body();
-                SharedPrefManager.getInstance(LoginActivity.this).saveUser(resp.getData());
-                Toast.makeText(LoginActivity.this, "Selamat datang, " + resp.getData().getName(), Toast.LENGTH_LONG).show();
+
+                if(response.isSuccessful()){
+                    pDialog.dismiss();
+                    SharedPrefManager.getInstance(LoginActivity.this).saveUser(resp.getData());
+                    Toast.makeText(LoginActivity.this, "Selamat datang, " + resp.getData().getName(), Toast.LENGTH_LONG).show();
+                    moveToDashboard();
+
+//                    if(resp.getData().getEmail_verified_at() == null){
+//                        moveToVerifyEmail();
+//                    }
+//                    else{
+//                        moveToDashboard();
+//                    }
+                }
             }
 
             @Override
             public void onFailure(Call<UserDetailsResponse> call, Throwable t) {
                 Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void checkUserFirebase(String email, String password){
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()){
+                    //create email and password to firebase
+                    Log.d(TAG, "createUserWithEmail:success");
+                }
+                else {
+                    //login only
+                    loginFirebase(email, password);
+                }
+            }
+        });
+    }
+
+    private void loginFirebase(String email, String password){
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()){
+                    Log.d(TAG, "signInWithEmail:success");
+                }
             }
         });
     }

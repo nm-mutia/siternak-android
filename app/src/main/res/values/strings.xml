@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">SITERNAK</string>
 
+    <string name="verify_email">Silahkan verifikasi email Anda. Jika Anda tidak menerima email, silahkan klik tombol Kirim Ulang Link.</string>
+    <string name="verify_send_link">Kirim ulang link</string>
+    <string name="verify_done">Sudah terverifikasi</string>
+
     <string-array name="jenis_kelamin">
         <item>Jantan</item>
         <item>Betina</item>

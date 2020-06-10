@@ -32,47 +32,61 @@
                 android:src="@drawable/siternak"
                 android:contentDescription="@string/app_name"/>
 
-            <EditText
-                android:id="@+id/et_email"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="56dp"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="15dp"
-                android:background="@drawable/rc_white"
-                android:fontFamily="@font/sourcesanspro_regular"
-                android:hint="email"
-                android:inputType="textEmailAddress"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/et_passsword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="15dp"
-                android:background="@drawable/rc_white"
-                android:fontFamily="@font/sourcesanspro_regular"
-                android:hint="password"
-                android:inputType="textPassword"
-                android:textSize="18sp" />
+                android:text="@string/verify_email"
+                android:fontFamily="@font/sourcesanspro_semibold"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:textColor="@color/colorPrimaryDark"/>
 
             <Button
-                android:id="@+id/b_login"
+                android:id="@+id/b_sent_link"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="48dp"
+                android:layout_marginTop="20dp"
                 android:paddingHorizontal="20dp"
-                android:paddingVertical="15dp"
+                android:paddingVertical="12dp"
                 android:background="@drawable/rc_primary_to_acc_side"
                 android:fontFamily="@font/sourcesanspro_bold"
                 android:gravity="end"
-                android:text="LOG IN"
+                android:text="@string/verify_send_link"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="18sp"/>
+
+            <Button
+                android:id="@+id/b_verified"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="12dp"
+                android:background="@drawable/rc_primary_to_acc_side"
+                android:fontFamily="@font/sourcesanspro_bold"
+                android:gravity="end"
+                android:text="@string/verify_done"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="18sp"/>
+
+            <Button
+                android:id="@+id/b_logout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="LOG OUT"
+                android:fontFamily="@font/sourcesanspro_bold"
+                android:layout_marginTop="20dp"
+                android:padding="16dp"
+                android:gravity="end"
+                android:background="@drawable/rc_danger"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="18sp"/>
 
         </LinearLayout>
+
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

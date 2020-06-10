@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.project.siternak.R;
 import com.project.siternak.activities.auth.LoginActivity;
 import com.project.siternak.models.auth.UserModel;
@@ -58,6 +59,7 @@ public class ProfileFragment extends Fragment {
     @OnClick(R.id.tv_logout)
     public void logout(){
         SharedPrefManager.getInstance(getActivity()).logout();
+        FirebaseAuth.getInstance().signOut();
 
         Intent intent = new Intent(getActivity(), LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

@@ -50,8 +50,8 @@ public class ScanResultActivity extends AppCompatActivity {
     @BindView(R.id.tv_inst_ayah) TextView tvAyah;
     @BindView(R.id.tv_inst_ibu) TextView tvIbu;
 
-    private ScanResultAdapter scanAdapter, adapterP, adapterS, adapterC, adapterGP, adapterGC;
-    private ArrayList<Instance> instanceArrayList;
+    private ScanResultAdapter adapterP, adapterS, adapterC, adapterGP, adapterGC;
+    private ArrayList<Instance> parentArrayList, siblingArrayList, childArrayList, gpArrayList, gcArrayList;
 
     private String userToken, necktag;
 
@@ -86,6 +86,7 @@ public class ScanResultActivity extends AppCompatActivity {
     }
 
     public void setDetailTernak() {
+        LinearLayoutManager llm = new LinearLayoutManager(this);
         SweetAlertDialog pDialog = DialogUtils.getLoadingPopup(this);
 
         Call<ScanResponse> call = RetrofitClient
@@ -122,52 +123,52 @@ public class ScanResultActivity extends AppCompatActivity {
                         tvIbu.setText(inst.getIbu());
 
                         List<Instance> parent = fam.getParent();
+                        parentArrayList = (ArrayList<Instance>)parent;
                         rvParent.setLayoutManager(new LinearLayoutManager(ScanResultActivity.this));
-                        instanceArrayList = (ArrayList<Instance>)parent;
-                        scanAdapter = new ScanResultAdapter(ScanResultActivity.this, instanceArrayList, "Orang Tua");
-                        if (scanAdapter.getItemCount() != 0) {
-                            rvParent.setAdapter(scanAdapter);
-                            scanAdapter.notifyDataSetChanged();
+                        adapterP = new ScanResultAdapter(ScanResultActivity.this, parentArrayList, "Orang Tua");
+                        if (adapterP.getItemCount() != 0) {
+                            rvParent.setAdapter(adapterP);
+                            adapterP.notifyDataSetChanged();
                             rvParent.setNestedScrollingEnabled(false);
                         }
 
                         List<Instance> sibling = fam.getSibling();
+                        siblingArrayList = (ArrayList<Instance>)sibling;
                         rvSibling.setLayoutManager(new LinearLayoutManager(ScanResultActivity.this));
-                        instanceArrayList = (ArrayList<Instance>)sibling;
-                        scanAdapter = new ScanResultAdapter(ScanResultActivity.this, instanceArrayList, "Saudara");
-                        if (scanAdapter.getItemCount() != 0) {
-                            rvSibling.setAdapter(scanAdapter);
-                            scanAdapter.notifyDataSetChanged();
+                        adapterS = new ScanResultAdapter(ScanResultActivity.this, siblingArrayList, "Saudara");
+                        if (adapterS.getItemCount() != 0) {
+                            rvSibling.setAdapter(adapterS);
+                            adapterS.notifyDataSetChanged();
                             rvSibling.setNestedScrollingEnabled(false);
                         }
 
                         List<Instance> child = fam.getChild();
+                        childArrayList = (ArrayList<Instance>)child;
                         rvChild.setLayoutManager(new LinearLayoutManager(ScanResultActivity.this));
-                        instanceArrayList = (ArrayList<Instance>)child;
-                        scanAdapter = new ScanResultAdapter(ScanResultActivity.this, instanceArrayList, "Anak");
-                        if (scanAdapter.getItemCount() != 0) {
-                            rvChild.setAdapter(scanAdapter);
-                            scanAdapter.notifyDataSetChanged();
+                        adapterC = new ScanResultAdapter(ScanResultActivity.this, childArrayList, "Anak");
+                        if (adapterC.getItemCount() != 0) {
+                            rvChild.setAdapter(adapterC);
+                            adapterC.notifyDataSetChanged();
                             rvChild.setNestedScrollingEnabled(false);
                         }
 
                         List<Instance> gparent = fam.getGparent();
+                        gpArrayList = (ArrayList<Instance>)gparent;
                         rvGParent.setLayoutManager(new LinearLayoutManager(ScanResultActivity.this));
-                        instanceArrayList = (ArrayList<Instance>)gparent;
-                        scanAdapter = new ScanResultAdapter(ScanResultActivity.this, instanceArrayList, "Kakek - Nenek");
-                        if (scanAdapter.getItemCount() != 0) {
-                            rvGParent.setAdapter(scanAdapter);
-                            scanAdapter.notifyDataSetChanged();
+                        adapterGP = new ScanResultAdapter(ScanResultActivity.this, gpArrayList, "Kakek - Nenek");
+                        if (adapterGP.getItemCount() != 0) {
+                            rvGParent.setAdapter(adapterGP);
+                            adapterGP.notifyDataSetChanged();
                             rvGParent.setNestedScrollingEnabled(false);
                         }
 
                         List<Instance> gchild = fam.getGchild();
+                        gcArrayList = (ArrayList<Instance>)gchild;
                         rvGChild.setLayoutManager(new LinearLayoutManager(ScanResultActivity.this));
-                        instanceArrayList = (ArrayList<Instance>)gchild;
-                        scanAdapter = new ScanResultAdapter(ScanResultActivity.this, instanceArrayList, "Cucu");
-                        if (scanAdapter.getItemCount() != 0) {
-                            rvGChild.setAdapter(scanAdapter);
-                            scanAdapter.notifyDataSetChanged();
+                        adapterGC = new ScanResultAdapter(ScanResultActivity.this, gcArrayList, "Cucu");
+                        if (adapterGC.getItemCount() != 0) {
+                            rvGChild.setAdapter(adapterGC);
+                            adapterGC.notifyDataSetChanged();
                             rvGChild.setNestedScrollingEnabled(false);
                         }
 

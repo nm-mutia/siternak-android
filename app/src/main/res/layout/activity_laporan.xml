@@ -46,10 +46,11 @@
     <ScrollView
         android:id="@+id/sv_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:fillViewport="true"
         android:orientation="vertical"
-        android:layout_below="@+id/ll_data_title">
+        android:layout_below="@+id/ll_data_title"
+        android:scrollbars="horizontal|vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -60,7 +61,7 @@
                 android:id="@+id/btn_laporan_download"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:paddingHorizontal="20dp"
@@ -78,7 +79,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="12dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:text="Rentang Waktu"
@@ -172,6 +173,7 @@
             </LinearLayout>
 
             <HorizontalScrollView
+                android:id="@+id/hsv_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
@@ -180,17 +182,16 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:scrollbars="horizontal|vertical"
-                android:clipToPadding="false">
+                android:clipToPadding="false"
+                android:fillViewport="true"
+                android:scrollbars="horizontal|vertical">
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
                     tools:listitem="@layout/row_table_ternak"/>
             </HorizontalScrollView>
 
         </LinearLayout>
-
     </ScrollView>
 </RelativeLayout>

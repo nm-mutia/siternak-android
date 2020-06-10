@@ -2,6 +2,7 @@ package com.project.siternak.utils;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,12 +40,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class FirebaseHelper {
-    private static final String TAG = "sync";
+    private static final String TAG = "FrebaseHelperTAG";
 
     private Context mContext ;
     private String userToken;
     private FirebaseDatabase mDatabase;
     private DatabaseReference mRef;
+    private List<String> msg;
 
     public FirebaseHelper(Context mContext){
         this.mContext = mContext;
@@ -59,7 +61,7 @@ public class FirebaseHelper {
 
     private void message(String msg){
         Log.e(TAG, msg);
-//        Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
     }
 
     private void pullFromDb(){
@@ -157,7 +159,7 @@ public class FirebaseHelper {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Log.d(TAG, databaseError.getMessage());
             }
         });
 
@@ -192,7 +194,7 @@ public class FirebaseHelper {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Log.d(TAG, databaseError.getMessage());
             }
         });
 
@@ -227,7 +229,7 @@ public class FirebaseHelper {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Log.d(TAG, databaseError.getMessage());
             }
         });
 
@@ -262,7 +264,7 @@ public class FirebaseHelper {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Log.d(TAG, databaseError.getMessage());
             }
         });
 
@@ -297,7 +299,7 @@ public class FirebaseHelper {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Log.d(TAG, databaseError.getMessage());
             }
         });
 
@@ -332,7 +334,7 @@ public class FirebaseHelper {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Log.d(TAG, databaseError.getMessage());
             }
         });
 
@@ -368,7 +370,7 @@ public class FirebaseHelper {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Log.d(TAG, databaseError.getMessage());
             }
         });
 
@@ -407,7 +409,7 @@ public class FirebaseHelper {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Log.d(TAG, databaseError.getMessage());
             }
         });
 
@@ -442,7 +444,7 @@ public class FirebaseHelper {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Log.d(TAG, databaseError.getMessage());
             }
         });
 
@@ -481,7 +483,7 @@ public class FirebaseHelper {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Log.d(TAG, databaseError.getMessage());
             }
         });
 
@@ -516,7 +518,7 @@ public class FirebaseHelper {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Log.d(TAG, databaseError.getMessage());
             }
         });
 
@@ -551,7 +553,7 @@ public class FirebaseHelper {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Log.d(TAG, databaseError.getMessage());
             }
         });
 
@@ -587,7 +589,7 @@ public class FirebaseHelper {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Log.d(TAG, databaseError.getMessage());
             }
         });
 
@@ -622,7 +624,7 @@ public class FirebaseHelper {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Log.d(TAG, databaseError.getMessage());
             }
         });
 
@@ -657,7 +659,7 @@ public class FirebaseHelper {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Log.d(TAG, databaseError.getMessage());
             }
         });
 
@@ -693,7 +695,7 @@ public class FirebaseHelper {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Log.d(TAG, databaseError.getMessage());
             }
         });
 
@@ -732,7 +734,7 @@ public class FirebaseHelper {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Log.d(TAG, databaseError.getMessage());
             }
         });
 
@@ -767,7 +769,7 @@ public class FirebaseHelper {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Log.d(TAG, databaseError.getMessage());
             }
         });
     }
