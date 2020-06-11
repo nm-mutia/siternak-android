@@ -18,11 +18,16 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.project.siternak.R;
 import com.project.siternak.activities.home.MainActivity;
+import com.project.siternak.models.auth.UserModel;
+import com.project.siternak.models.peternak.PeternakModel;
 import com.project.siternak.responses.LoginResponse;
+import com.project.siternak.responses.PeternakGetResponse;
 import com.project.siternak.responses.UserDetailsResponse;
 import com.project.siternak.rest.RetrofitClient;
 import com.project.siternak.utils.DialogUtils;
 import com.project.siternak.utils.SharedPrefManager;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -89,9 +94,8 @@ public class LoginActivity extends AppCompatActivity {
                 LoginResponse resp = response.body();
 
                 if (response.isSuccessful()) {
-                    addUserToFirebase(email, password);
                     SharedPrefManager.getInstance(LoginActivity.this).saveAccessToken(resp.getData().getToken());
-                    storeUser(pDialog);
+                    storeUser(pDialog, email, password);
                 }
                 else{
                     pDialog.dismiss();
@@ -138,7 +142,7 @@ public class LoginActivity extends AppCompatActivity {
         return pass;
     }
 
-    private void storeUser(SweetAlertDialog pDialog){
+    private void storeUser(SweetAlertDialog pDialog, String email, String password){
         Call<UserDetailsResponse> calls = RetrofitClient
                 .getInstance()
                 .getApi()
@@ -150,10 +154,17 @@ public class LoginActivity extends AppCompatActivity {
                 UserDetailsResponse resp = response.body();
 
                 if(response.isSuccessful()){
-                    pDialog.dismiss();
                     SharedPrefManager.getInstance(LoginActivity.this).saveUser(resp.getData());
-                    Toast.makeText(LoginActivity.this, "Selamat datang, " + resp.getData().getName(), Toast.LENGTH_LONG).show();
-                    moveToDashboard();
+
+                    if(resp.getData().getRole().equals("peternak")){
+                        checkPeternak(resp.getData(), pDialog, email, password);
+                    }
+                    else{
+                        pDialog.dismiss();
+                        addUserToFirebase(email, password);
+                        moveToDashboard();
+                        Toast.makeText(LoginActivity.this, "Selamat datang, " + resp.getData().getName(), Toast.LENGTH_LONG).show();
+                    }
 
 //                    if(resp.getData().getEmail_verified_at() == null){
 //                        moveToVerifyEmail();
@@ -162,21 +173,76 @@ public class LoginActivity extends AppCompatActivity {
 //                        moveToDashboard();
 //                    }
                 }
+                else{
+                    pDialog.dismiss();
+                    DialogUtils.swalFailed(LoginActivity.this, "Code: " + response.code());
+                }
             }
 
             @Override
             public void onFailure(Call<UserDetailsResponse> call, Throwable t) {
+                pDialog.dismiss();
                 Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
 
+    // cek peternak apaka ada di tabel peternak
+    private void checkPeternak(UserModel user, SweetAlertDialog pDialog, String email, String password){
+        Call<PeternakGetResponse> call = RetrofitClient
+                .getInstance()
+                .getApi()
+                .getPeternak("Bearer " + SharedPrefManager.getInstance(this).getAccessToken());
+
+        call.enqueue(new Callback<PeternakGetResponse>() {
+            @Override
+            public void onResponse(Call<PeternakGetResponse> call, Response<PeternakGetResponse> response) {
+                PeternakGetResponse resp = response.body();
+                boolean exists = false;
+
+                if(response.isSuccessful()) {
+                    List<PeternakModel> peternaks = resp.getPeternaks();
+
+                    for(PeternakModel data : peternaks){
+                        if(data.getUsername().equals(user.getUsername())){
+                            exists = true;
+                            break;
+                        }
+                    }
+
+                    pDialog.dismiss();
+
+                    if(exists){
+                        addUserToFirebase(email, password);
+                        moveToDashboard();
+                        Toast.makeText(LoginActivity.this, "Selamat datang, " + user.getName(), Toast.LENGTH_LONG).show();
+                    }
+                    else{
+                        SharedPrefManager.getInstance(LoginActivity.this).logout();
+                        DialogUtils.swalFailed(LoginActivity.this, "Tidak terauthorisasi - Register dari Admin!");
+                    }
+                }
+                else{
+                    pDialog.dismiss();
+                    DialogUtils.swalFailed(LoginActivity.this, "Code: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PeternakGetResponse> call, Throwable t) {
+                pDialog.dismiss();
+                Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
+
+    //create email and password to firebase
     private void addUserToFirebase(String email, String password){
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    //create email and password to firebase
                     Log.d(TAG, "createUserWithEmail:success");
                     loginFirebase(email, password);
                 }

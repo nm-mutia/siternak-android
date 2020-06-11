@@ -66,10 +66,6 @@ public class ProfileFragment extends Fragment {
         SharedPrefManager.getInstance(getActivity()).logout();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        Intent intent = new Intent(getActivity(), LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-
         user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -79,6 +75,10 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        //        FirebaseAuth.getInstance().signOut();
+//        FirebaseAuth.getInstance().signOut();
+
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 }
