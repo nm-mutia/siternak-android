@@ -14,6 +14,7 @@ import com.project.siternak.R;
 import com.project.siternak.models.scan.Instance;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,8 +25,8 @@ public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.Sc
     private String title;
 
     public ScanResultAdapter(Context mContext, ArrayList<Instance> instanceArrayList, String title) {
-        this.instanceArrayList = instanceArrayList;
         this.mContext = mContext;
+        this.instanceArrayList = instanceArrayList;
         this.title = title;
     }
 
@@ -35,6 +36,11 @@ public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.Sc
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(R.layout.row_instance, parent, false);
         return new ScanResultHolder(view);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return super.getItemViewType(position);
     }
 
     @Override

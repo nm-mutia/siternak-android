@@ -89,15 +89,13 @@ public class LoginActivity extends AppCompatActivity {
                 LoginResponse resp = response.body();
 
                 if (response.isSuccessful()) {
-                    checkUserFirebase(email, password);
+                    addUserToFirebase(email, password);
                     SharedPrefManager.getInstance(LoginActivity.this).saveAccessToken(resp.getData().getToken());
                     storeUser(pDialog);
-
-//                    pDialog.dismiss();
                 }
                 else{
                     pDialog.dismiss();
-                    DialogUtils.swalFailed(LoginActivity.this, response.message());
+                    DialogUtils.swalFailed(LoginActivity.this, "Code: " + response.code());
                 }
             }
 
@@ -116,11 +114,11 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void moveToVerifyEmail() {
-        Intent intent = new Intent(LoginActivity.this, VerifyActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-    }
+//    public void moveToVerifyEmail() {
+//        Intent intent = new Intent(LoginActivity.this, VerifyActivity.class);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        startActivity(intent);
+//    }
 
     private boolean validated(String email, String password) {
         boolean pass = true;
@@ -173,16 +171,13 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void checkUserFirebase(String email, String password){
+    private void addUserToFirebase(String email, String password){
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     //create email and password to firebase
                     Log.d(TAG, "createUserWithEmail:success");
-                }
-                else {
-                    //login only
                     loginFirebase(email, password);
                 }
             }

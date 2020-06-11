@@ -50,8 +50,10 @@ public class ScanResultActivity extends AppCompatActivity {
     @BindView(R.id.tv_inst_ayah) TextView tvAyah;
     @BindView(R.id.tv_inst_ibu) TextView tvIbu;
 
-    private ScanResultAdapter adapterP, adapterS, adapterC, adapterGP, adapterGC;
+    private ScanResultAdapter adapter, adapterP, adapterS, adapterC, adapterGP, adapterGC;
     private ArrayList<Instance> parentArrayList, siblingArrayList, childArrayList, gpArrayList, gcArrayList;
+    private ArrayList<ArrayList<Instance>> arrayList = new ArrayList<ArrayList<Instance>>();
+    private ArrayList<String> title;
 
     private String userToken, necktag;
 
@@ -121,6 +123,35 @@ public class ScanResultActivity extends AppCompatActivity {
                         tvPeternakan.setText(inst.getPeternakan());
                         tvAyah.setText(inst.getAyah());
                         tvIbu.setText(inst.getIbu());
+
+//                        List<Instance> parent = fam.getParent();
+//                        parentArrayList = (ArrayList<Instance>)parent;
+//                        List<Instance> sibling = fam.getSibling();
+//                        siblingArrayList = (ArrayList<Instance>)sibling;
+//                        List<Instance> child = fam.getChild();
+//                        childArrayList = (ArrayList<Instance>)child;
+//                        List<Instance> gparent = fam.getGparent();
+//                        gpArrayList = (ArrayList<Instance>)gparent;
+//                        List<Instance> gchild = fam.getGchild();
+//                        gcArrayList = (ArrayList<Instance>)gchild;
+//
+//                        arrayList.add(parentArrayList);
+//                        arrayList.add(siblingArrayList);
+//                        arrayList.add(childArrayList);
+//                        arrayList.add(gpArrayList);
+//                        arrayList.add(gcArrayList);
+//
+//                        title.add("Orang Tua");
+//                        title.add("Saudara");
+//                        title.add("Anak");
+//                        title.add("Kakek - Nenek");
+//                        title.add("Cucu");
+//
+//                        rv.setLayoutManager(new LinearLayoutManager(ScanResultActivity.this));
+//                        adapter = new ScanResultAdapter(ScanResultActivity.this, arrayList, title);
+//                        rv.setAdapter(adapter);
+//                        adapter.notifyDataSetChanged();
+//                        rv.setNestedScrollingEnabled(false);
 
                         List<Instance> parent = fam.getParent();
                         parentArrayList = (ArrayList<Instance>)parent;

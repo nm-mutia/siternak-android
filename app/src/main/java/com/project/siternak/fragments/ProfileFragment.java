@@ -2,6 +2,7 @@ package com.project.siternak.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.project.siternak.R;
 import com.project.siternak.activities.auth.LoginActivity;
 import com.project.siternak.models.auth.UserModel;
@@ -31,6 +35,7 @@ public class ProfileFragment extends Fragment {
 
     private Unbinder unbinder;
     private UserModel mUser;
+    private String TAG = "ProfileTAG";
 
     @Nullable
     @Override
@@ -59,10 +64,21 @@ public class ProfileFragment extends Fragment {
     @OnClick(R.id.tv_logout)
     public void logout(){
         SharedPrefManager.getInstance(getActivity()).logout();
-        FirebaseAuth.getInstance().signOut();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         Intent intent = new Intent(getActivity(), LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+
+        user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Log.d(TAG, "User account deleted.");
+                }
+            }
+        });
+
+        //        FirebaseAuth.getInstance().signOut();
     }
 }
