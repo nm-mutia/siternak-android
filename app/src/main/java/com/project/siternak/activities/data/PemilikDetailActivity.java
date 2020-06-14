@@ -16,6 +16,7 @@ import com.project.siternak.models.data.PemilikModel;
 import com.project.siternak.responses.DataResponse;
 import com.project.siternak.responses.PemilikResponse;
 import com.project.siternak.rest.RetrofitClient;
+import com.project.siternak.utils.DialogUtils;
 import com.project.siternak.utils.SharedPrefManager;
 
 import butterknife.BindView;
@@ -97,12 +98,18 @@ public class PemilikDetailActivity extends AppCompatActivity {
                         DataResponse resp = response.body();
 
                         if(response.isSuccessful()){
-                            Toast.makeText(PemilikDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(PemilikDetailActivity.this, PemilikActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
+                            if(resp.getStatus().equals("error")){
+//                                Toast.makeText(PemilikDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
+                                DialogUtils.swalFailed(PemilikDetailActivity.this, resp.getMessage());
+                            }
+                            else {
+                                Toast.makeText(PemilikDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(PemilikDetailActivity.this, PemilikActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
 
-                            PemilikDetailActivity.this.finish();
+                                PemilikDetailActivity.this.finish();
+                            }
                         }
                     }
 

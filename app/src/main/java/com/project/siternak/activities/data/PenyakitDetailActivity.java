@@ -16,6 +16,7 @@ import com.project.siternak.models.data.PenyakitModel;
 import com.project.siternak.responses.DataResponse;
 import com.project.siternak.responses.PenyakitResponse;
 import com.project.siternak.rest.RetrofitClient;
+import com.project.siternak.utils.DialogUtils;
 import com.project.siternak.utils.SharedPrefManager;
 
 import java.io.Serializable;
@@ -99,12 +100,18 @@ public class PenyakitDetailActivity extends AppCompatActivity {
                         DataResponse resp = response.body();
 
                         if(response.isSuccessful()){
-                            Toast.makeText(PenyakitDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(PenyakitDetailActivity.this, PenyakitActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
+                            if(resp.getStatus().equals("error")){
+//                                Toast.makeText(PenyakitDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
+                                DialogUtils.swalFailed(PenyakitDetailActivity.this, resp.getMessage());
+                            }
+                            else {
+                                Toast.makeText(PenyakitDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(PenyakitDetailActivity.this, PenyakitActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
 
-                            PenyakitDetailActivity.this.finish();
+                                PenyakitDetailActivity.this.finish();
+                            }
                         }
                     }
 

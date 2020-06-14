@@ -100,12 +100,18 @@ public class KematianDetailActivity extends AppCompatActivity {
                         DataResponse resp = response.body();
 
                         if(response.isSuccessful()){
-                            Toast.makeText(KematianDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(KematianDetailActivity.this, KematianActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
+                            if(resp.getStatus().equals("error")){
+//                                Toast.makeText(KematianDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
+                                DialogUtils.swalFailed(KematianDetailActivity.this, resp.getMessage());
+                            }
+                            else {
+                                Toast.makeText(KematianDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(KematianDetailActivity.this, KematianActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
 
-                            KematianDetailActivity.this.finish();
+                                KematianDetailActivity.this.finish();
+                            }
                         }
                     }
                     @Override

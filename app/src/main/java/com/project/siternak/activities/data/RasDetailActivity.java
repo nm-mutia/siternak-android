@@ -99,12 +99,18 @@ public class RasDetailActivity extends AppCompatActivity {
                         DataResponse resp = response.body();
 
                         if(response.isSuccessful()){
-                            Toast.makeText(RasDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(RasDetailActivity.this, RasActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
+                            if(resp.getStatus().equals("error")){
+//                                Toast.makeText(RasDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
+                                DialogUtils.swalFailed(RasDetailActivity.this, resp.getMessage());
+                            }
+                            else {
+                                Toast.makeText(RasDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(RasDetailActivity.this, RasActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
 
-                            RasDetailActivity.this.finish();
+                                RasDetailActivity.this.finish();
+                            }
                         }
                     }
 

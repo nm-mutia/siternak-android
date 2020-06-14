@@ -11,6 +11,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.project.siternak.R;
+import com.project.siternak.activities.peternak.PeternakDetailActivity;
 import com.project.siternak.models.data.PeternakanModel;
 import com.project.siternak.responses.DataResponse;
 import com.project.siternak.responses.PeternakanResponse;
@@ -99,12 +100,18 @@ public class PeternakanDetailActivity extends AppCompatActivity {
                         DataResponse resp = response.body();
 
                         if(response.isSuccessful()){
-                            Toast.makeText(PeternakanDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(PeternakanDetailActivity.this, PeternakanActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
+                            if(resp.getStatus().equals("error")){
+//                                Toast.makeText(PeternakanDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
+                                DialogUtils.swalFailed(PeternakanDetailActivity.this, resp.getMessage());
+                            }
+                            else {
+                                Toast.makeText(PeternakanDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(PeternakanDetailActivity.this, PeternakanActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
 
-                            PeternakanDetailActivity.this.finish();
+                                PeternakanDetailActivity.this.finish();
+                            }
                         }
                     }
 
