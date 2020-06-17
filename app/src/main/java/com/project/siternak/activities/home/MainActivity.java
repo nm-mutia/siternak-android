@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.project.siternak.R;
 import com.project.siternak.activities.auth.LoginActivity;
 import com.project.siternak.fragments.DashboardFragment;
@@ -23,6 +25,7 @@ import com.project.siternak.utils.SharedPrefManager;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
     Fragment selectedFragment;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         if (savedInstanceState == null) {
             displayFragment(new DashboardFragment());
         }
+
+        mAuth = FirebaseAuth.getInstance();
     }
 
 
@@ -56,6 +61,16 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
+
+        FirebaseAuth.AuthStateListener authStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = mAuth.getCurrentUser();
+                if (user == null) {
+                    SharedPrefManager.getInstance(MainActivity.this).logout();
+                }
+            }
+        };
 
         if(NetworkManager.isNetworkAvailable(MainActivity.this)){
             FirebaseHelper firebaseHelper = new FirebaseHelper(MainActivity.this);

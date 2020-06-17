@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.project.siternak.R;
 import com.project.siternak.activities.home.MainActivity;
 import com.project.siternak.utils.SharedPrefManager;
@@ -42,13 +41,13 @@ public class VerifyActivity extends AppCompatActivity {
 //        }
     }
 
-    @OnClick(R.id.b_logout)
-    public void logout(){
-        SharedPrefManager.getInstance(this).logout();
-        FirebaseAuth.getInstance().signOut();
-
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-    }
+//    @OnClick(R.id.b_logout)
+//    public void logout(){
+//        SharedPrefManager.getInstance(this).logout();
+//        FirebaseAuth.getInstance().signOut();
+//
+//        Intent intent = new Intent(this, LoginActivity.class);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        startActivity(intent);
+//    }
 }

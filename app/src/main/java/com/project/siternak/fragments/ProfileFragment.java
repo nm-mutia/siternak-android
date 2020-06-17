@@ -64,18 +64,19 @@ public class ProfileFragment extends Fragment {
     @OnClick(R.id.tv_logout)
     public void logout(){
         SharedPrefManager.getInstance(getActivity()).logout();
+//        String uid = SharedPrefManager.getInstance(getActivity()).getUid();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    Log.d(TAG, "User account deleted.");
+        if(user != null){
+            user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if(task.isSuccessful()){
+                        Log.d(TAG, "User account deleted.");
+                    }
                 }
-            }
-        });
-
-//        FirebaseAuth.getInstance().signOut();
+            });
+        }
 
         Intent intent = new Intent(getActivity(), LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

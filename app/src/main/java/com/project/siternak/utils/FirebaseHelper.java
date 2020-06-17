@@ -40,7 +40,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class FirebaseHelper {
-    private static final String TAG = "FrebaseHelperTAG";
+    private static final String TAG = "FirebaseHelperTAG";
 
     private Context mContext ;
     private String userToken;

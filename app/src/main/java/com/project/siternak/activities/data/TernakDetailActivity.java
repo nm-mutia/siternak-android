@@ -120,7 +120,8 @@ public class TernakDetailActivity extends AppCompatActivity {
 
                         if(response.isSuccessful()){
                             if(resp.getStatus().equals("error")){
-                                Toast.makeText(TernakDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
+//                                Toast.makeText(TernakDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();
+                                DialogUtils.swalFailed(TernakDetailActivity.this, resp.getMessage());
                             }
                             else{
                                 Toast.makeText(TernakDetailActivity.this, resp.getMessage(), Toast.LENGTH_LONG).show();

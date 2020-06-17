@@ -8,6 +8,7 @@ import com.project.siternak.models.auth.UserModel;
 public class SharedPrefManager {
     private static final String SHARED_PREF_NAME = "SiternakSharedPref";
     private static final String TAG_TOKEN = "token";
+    private static final String TAG_UID = "uid";
     private static final String IS_LOGGED_IN = "isLoggedIn";
 
 
@@ -38,6 +39,20 @@ public class SharedPrefManager {
     public String getAccessToken(){
         SharedPreferences sharedPreferences = mContext.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getString(TAG_TOKEN,null);
+    }
+
+    public void saveUid(String uid){
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putString(TAG_UID, uid);
+        editor.putBoolean(IS_LOGGED_IN, true);
+        editor.apply();
+    }
+
+    public String getUid(){
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(TAG_UID,null);
     }
 
     public void saveUser(UserModel user){

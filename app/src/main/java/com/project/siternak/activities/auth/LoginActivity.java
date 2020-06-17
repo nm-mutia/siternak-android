@@ -118,12 +118,6 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-//    public void moveToVerifyEmail() {
-//        Intent intent = new Intent(LoginActivity.this, VerifyActivity.class);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//        startActivity(intent);
-//    }
-
     private boolean validated(String email, String password) {
         boolean pass = true;
 
@@ -165,13 +159,6 @@ public class LoginActivity extends AppCompatActivity {
                         moveToDashboard();
                         Toast.makeText(LoginActivity.this, "Selamat datang, " + resp.getData().getName(), Toast.LENGTH_LONG).show();
                     }
-
-//                    if(resp.getData().getEmail_verified_at() == null){
-//                        moveToVerifyEmail();
-//                    }
-//                    else{
-//                        moveToDashboard();
-//                    }
                 }
                 else{
                     pDialog.dismiss();
@@ -260,5 +247,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
 }
 
