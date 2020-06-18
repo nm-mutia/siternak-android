@@ -1,12 +1,15 @@
 package com.project.siternak.activities.data;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.DatePicker;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -15,6 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.project.siternak.R;
 import com.project.siternak.activities.option.PenyakitOptionActivity;
 import com.project.siternak.activities.option.TernakRiwayatOptionActivity;
+import com.project.siternak.fragments.DatePickerFragment;
 import com.project.siternak.models.data.PenyakitModel;
 import com.project.siternak.models.data.RiwayatPenyakitModel;
 import com.project.siternak.models.data.TernakModel;
@@ -25,6 +29,7 @@ import com.project.siternak.utils.NetworkManager;
 import com.project.siternak.utils.SharedPrefManager;
 
 import java.io.Serializable;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,7 +39,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RiwayatPenyakitEditActivity extends AppCompatActivity {
+public class RiwayatPenyakitEditActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
     @BindView(R.id.til_riwayat_id)
     TextInputLayout tilRiwayatId;
     @BindView(R.id.tiet_riwayat_id)
@@ -234,5 +239,19 @@ public class RiwayatPenyakitEditActivity extends AppCompatActivity {
 
             RiwayatPenyakitEditActivity.this.finish();
         }
+    }
+
+    @OnClick(R.id.tiet_riwayat_tgl)
+    public void setDate(){
+        String[] getDate = riwayatData.getTglSakit().split("-");
+
+        DialogFragment datePicker = new DatePickerFragment(Integer.valueOf(getDate[0]), Integer.valueOf(getDate[1])-1, Integer.valueOf(getDate[2]));
+        datePicker.show(getSupportFragmentManager(), "date picker");
+    }
+
+    @Override
+    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+        String dateStr = i+"-"+(i1+1)+"-"+i2;
+        tietRiwayatTgl.setText(dateStr);
     }
 }
