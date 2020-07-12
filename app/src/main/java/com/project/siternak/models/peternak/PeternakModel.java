@@ -9,18 +9,24 @@ public class PeternakModel implements Serializable {
     @SerializedName("id")
     @Expose
     Integer id;
+    @SerializedName("name")
+    @Expose
+    String namaPeternak;
     @SerializedName("peternakan_id")
     @Expose
     Integer peternakanId;
-    @SerializedName("nama_peternak")
+    @SerializedName("register_from_admin")
     @Expose
-    String namaPeternak;
+    Boolean regAdmin;
     @SerializedName("username")
     @Expose
     String username;
-    @SerializedName("password")
+    @SerializedName("password_first")
     @Expose
     String password;
+    @SerializedName("email")
+    @Expose
+    String email;
     @SerializedName("created_at")
     @Expose
     String created_at;
@@ -28,8 +34,6 @@ public class PeternakModel implements Serializable {
     @Expose
     String updated_at;
 
-    // for add only
-    String email;
     public PeternakModel(Integer peternakanId, String namaPeternak, String username, String email) {
         this.peternakanId = peternakanId;
         this.namaPeternak = namaPeternak;
@@ -46,12 +50,14 @@ public class PeternakModel implements Serializable {
         this.namaPeternak = namaPeternak;
     }
 
-    public PeternakModel(Integer id, Integer peternakanId, String namaPeternak, String username, String password, String created_at, String updated_at) {
+    public PeternakModel(Integer id, String namaPeternak, Integer peternakanId, Boolean regAdmin, String username, String password, String email, String created_at, String updated_at) {
         this.id = id;
-        this.peternakanId = peternakanId;
         this.namaPeternak = namaPeternak;
+        this.peternakanId = peternakanId;
+        this.regAdmin = regAdmin;
         this.username = username;
         this.password = password;
+        this.email = email;
         this.created_at = created_at;
         this.updated_at = updated_at;
     }
@@ -118,5 +124,13 @@ public class PeternakModel implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Boolean getRegAdmin() {
+        return regAdmin;
+    }
+
+    public void setRegAdmin(Boolean regAdmin) {
+        this.regAdmin = regAdmin;
     }
 }

@@ -138,7 +138,9 @@ public class PeternakEditActivity extends AppCompatActivity {
                             Toast.makeText(PeternakEditActivity.this, resp.getErrors().toString(), Toast.LENGTH_LONG).show();
                         }
                         else {
-                            PeternakModel datas = new PeternakModel(id, peternakan, nama, resp.getPeternaks().getUsername(), resp.getPeternaks().getPassword(), resp.getPeternaks().getCreated_at(), resp.getPeternaks().getUpdated_at());
+                            PeternakModel datas = new PeternakModel(id, nama, peternakan, resp.getPeternaks().getRegAdmin(),
+                                    resp.getPeternaks().getUsername(), resp.getPeternaks().getPassword(), resp.getPeternaks().getEmail(),
+                                    resp.getPeternaks().getCreated_at(), resp.getPeternaks().getUpdated_at());
                             Toast.makeText(PeternakEditActivity.this, "Data berhasil diubah: id " + resp.getPeternaks().getId(), Toast.LENGTH_LONG).show();
 
                             Intent intent = new Intent(PeternakEditActivity.this, PeternakDetailActivity.class);

@@ -30,9 +30,11 @@ import retrofit2.Response;
 
 public class PeternakDetailActivity extends AppCompatActivity {
     @BindView(R.id.tv_id) TextView tvId;
-    @BindView(R.id.tv_peternakan_id) TextView tvIdPeternakan;
     @BindView(R.id.tv_nama_peternak) TextView tvNama;
+    @BindView(R.id.tv_peternakan_id) TextView tvIdPeternakan;
+    @BindView(R.id.tv_reg_admin) TextView tvRegAdm;
     @BindView(R.id.tv_username) TextView tvUsername;
+    @BindView(R.id.tv_email) TextView tvEmail;
     @BindView(R.id.tv_password) TextView tvPass;
     @BindView(R.id.tv_created_at) TextView tvCreatedAt;
     @BindView(R.id.tv_updated_at) TextView tvUpdatedAt;
@@ -135,9 +137,11 @@ public class PeternakDetailActivity extends AppCompatActivity {
 
     private void setDataPeternak() {
         tvId.setText(String.valueOf(peternak.getId()));
-        tvIdPeternakan.setText(String.valueOf(peternak.getPeternakanId()));
         tvNama.setText(peternak.getNamaPeternak());
+        tvIdPeternakan.setText(String.valueOf(peternak.getPeternakanId()));
+        tvRegAdm.setText(String.valueOf(peternak.getRegAdmin()));
         tvUsername.setText(peternak.getUsername());
+        tvEmail.setText(peternak.getEmail());
         tvPass.setText(peternak.getPassword());
         tvCreatedAt.setText(peternak.getCreated_at());
         tvUpdatedAt.setText(peternak.getUpdated_at());

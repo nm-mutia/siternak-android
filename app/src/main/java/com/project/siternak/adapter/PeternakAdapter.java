@@ -50,8 +50,8 @@ public class PeternakAdapter extends RecyclerView.Adapter<PeternakAdapter.Petern
         holder.tvId.setText(String.valueOf(data.getId()));
         holder.tvNama.setText(data.getNamaPeternak());
         holder.tvPeternakan.setText(String.valueOf(data.getPeternakanId()));
-        holder.tvUsername.setText(data.getUsername());
-        holder.tvPass.setText(data.getPassword());
+        holder.tvEmail.setText(data.getEmail());
+        holder.tvRegAdmin.setText(String.valueOf(data.getRegAdmin()));
         holder.llPeternak.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -112,8 +112,8 @@ public class PeternakAdapter extends RecyclerView.Adapter<PeternakAdapter.Petern
         @BindView(R.id.tv_id) TextView tvId;
         @BindView(R.id.tv_tgl) TextView tvNama;
         @BindView(R.id.tv_text1) TextView tvPeternakan;
-        @BindView(R.id.tv_text2) TextView tvUsername;
-        @BindView(R.id.tv_text3) TextView tvPass;
+        @BindView(R.id.tv_text2) TextView tvEmail;
+        @BindView(R.id.tv_text3) TextView tvRegAdmin;
         @BindView(R.id.ll_data) LinearLayout llPeternak;
 
         public PeternakHolder(@NonNull View itemView) {

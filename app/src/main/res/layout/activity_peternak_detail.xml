@@ -61,32 +61,6 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="ID\nPeternakan"
-                        android:layout_marginLeft="12dp"
-                        android:padding="4dp"
-                        android:fontFamily="@font/sourcesanspro_semibold"
-                        android:textColor="@color/black"
-                        android:textSize="18sp"/>
-                    <TextView
-                        android:id="@+id/tv_peternakan_id"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="id peternakan"
-                        android:layout_marginLeft="12dp"
-                        android:padding="4dp"
-                        android:singleLine="false"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/sourcesanspro_regular"
-                        android:textColor="@color/black"
-                        android:textSize="18sp"/>
-                </TableRow>
-
-                <TableRow
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="Nama\nPeternak"
                         android:layout_marginLeft="12dp"
                         android:padding="4dp"
@@ -113,6 +87,58 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="ID\nPeternakan"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"/>
+                    <TextView
+                        android:id="@+id/tv_peternakan_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="id peternakan"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Admin\nRegister"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"/>
+                    <TextView
+                        android:id="@+id/tv_reg_admin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="reg"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:text="Username"
                         android:layout_marginLeft="12dp"
                         android:padding="4dp"
@@ -124,6 +150,32 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="username"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:singleLine="false"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/sourcesanspro_regular"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"/>
+                </TableRow>
+
+                <TableRow
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Email"
+                        android:layout_marginLeft="12dp"
+                        android:padding="4dp"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"/>
+                    <TextView
+                        android:id="@+id/tv_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="email"
                         android:layout_marginLeft="12dp"
                         android:padding="4dp"
                         android:singleLine="false"

@@ -19,6 +19,9 @@ public class UserModel {
     @SerializedName("email")
     @Expose
     String email;
+    @SerializedName("register_from_admin")
+    @Expose
+    Boolean regAdmin;
     @SerializedName("email_verified_at")
     @Expose
     String email_verified_at;
@@ -40,12 +43,13 @@ public class UserModel {
         this.email = email;
     }
 
-    public UserModel(Integer id, String name, String username, String role, String email, String email_verified_at, String created_at, String updated_at) {
+    public UserModel(Integer id, String name, String username, String role, String email, Boolean regAdmin, String email_verified_at, String created_at, String updated_at) {
         this.id = id;
         this.name = name;
         this.username = username;
         this.role = role;
         this.email = email;
+        this.regAdmin = regAdmin;
         this.email_verified_at = email_verified_at;
         this.created_at = created_at;
         this.updated_at = updated_at;
@@ -113,5 +117,13 @@ public class UserModel {
 
     public void setUpdated_at(String updated_at) {
         this.updated_at = updated_at;
+    }
+
+    public Boolean getRegAdmin() {
+        return regAdmin;
+    }
+
+    public void setRegAdmin(Boolean regAdmin) {
+        this.regAdmin = regAdmin;
     }
 }

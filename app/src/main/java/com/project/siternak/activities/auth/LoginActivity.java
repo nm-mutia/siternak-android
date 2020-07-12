@@ -151,7 +151,17 @@ public class LoginActivity extends AppCompatActivity {
                     SharedPrefManager.getInstance(LoginActivity.this).saveUser(resp.getData());
 
                     if(resp.getData().getRole().equals("peternak")){
-                        checkPeternak(resp.getData(), pDialog, email, password);
+                        if(resp.getData().getRegAdmin()){
+                            pDialog.dismiss();
+                            addUserToFirebase(email, password);
+                            moveToDashboard();
+                            Toast.makeText(LoginActivity.this, "Selamat datang, " + resp.getData().getName(), Toast.LENGTH_LONG).show();
+                        }
+                        else{
+                            pDialog.dismiss();
+                            SharedPrefManager.getInstance(LoginActivity.this).logout();
+                            DialogUtils.swalFailed(LoginActivity.this, "Tidak terauthorisasi - Register dari Admin!");
+                        }
                     }
                     else{
                         pDialog.dismiss();
@@ -172,56 +182,6 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
-    }
-
-    // cek peternak apaka ada di tabel peternak
-    private void checkPeternak(UserModel user, SweetAlertDialog pDialog, String email, String password){
-        Call<PeternakGetResponse> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .getPeternak("Bearer " + SharedPrefManager.getInstance(this).getAccessToken());
-
-        call.enqueue(new Callback<PeternakGetResponse>() {
-            @Override
-            public void onResponse(Call<PeternakGetResponse> call, Response<PeternakGetResponse> response) {
-                PeternakGetResponse resp = response.body();
-                boolean exists = false;
-
-                if(response.isSuccessful()) {
-                    List<PeternakModel> peternaks = resp.getPeternaks();
-
-                    for(PeternakModel data : peternaks){
-                        if(data.getUsername().equals(user.getUsername())){
-                            exists = true;
-                            break;
-                        }
-                    }
-
-                    pDialog.dismiss();
-
-                    if(exists){
-                        addUserToFirebase(email, password);
-                        moveToDashboard();
-                        Toast.makeText(LoginActivity.this, "Selamat datang, " + user.getName(), Toast.LENGTH_LONG).show();
-                    }
-                    else{
-                        SharedPrefManager.getInstance(LoginActivity.this).logout();
-                        DialogUtils.swalFailed(LoginActivity.this, "Tidak terauthorisasi - Register dari Admin!");
-                    }
-                }
-                else{
-                    pDialog.dismiss();
-                    DialogUtils.swalFailed(LoginActivity.this, "Code: " + response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<PeternakGetResponse> call, Throwable t) {
-                pDialog.dismiss();
-                Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-
     }
 
     //create email and password to firebase

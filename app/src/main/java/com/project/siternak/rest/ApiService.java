@@ -116,7 +116,7 @@ public interface ApiService {
     @POST("peternak")
     Call<PeternakResponse> addPeternak(
             @Field("peternakan_id") Integer peternakanId,
-            @Field("nama_peternak") String namaPeternak,
+            @Field("name") String namaPeternak,
             @Field("username") String username,
             @Field("email") String email,
             @Header("Authorization") String authToken
@@ -127,7 +127,7 @@ public interface ApiService {
     Call<PeternakResponse> editPeternak(
             @Path("id") Integer id,
             @Field("peternakan_id") Integer peternakanId,
-            @Field("nama_peternak") String namaPeternak,
+            @Field("name") String namaPeternak,
             @Header("Authorization") String authToken
     );
 
