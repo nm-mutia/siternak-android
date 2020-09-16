@@ -145,7 +145,7 @@ public class TernakParentOptionActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                loadingDialog.cancel();
             }
         });
     }

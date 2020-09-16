@@ -117,7 +117,7 @@ public class PeternakanOptionActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                loadingDialog.cancel();
             }
         });
     }

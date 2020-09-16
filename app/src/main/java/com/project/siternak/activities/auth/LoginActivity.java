@@ -153,7 +153,7 @@ public class LoginActivity extends AppCompatActivity {
                     if(resp.getData().getRole().equals("peternak")){
                         if(resp.getData().getRegAdmin()){
                             pDialog.dismiss();
-                            addUserToFirebase(email, password);
+                            //addUserToFirebase(email, password);
                             moveToDashboard();
                             Toast.makeText(LoginActivity.this, "Selamat datang, " + resp.getData().getName(), Toast.LENGTH_LONG).show();
                         }
@@ -165,7 +165,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     else{
                         pDialog.dismiss();
-                        addUserToFirebase(email, password);
+                        //addUserToFirebase(email, password);
                         moveToDashboard();
                         Toast.makeText(LoginActivity.this, "Selamat datang, " + resp.getData().getName(), Toast.LENGTH_LONG).show();
                     }

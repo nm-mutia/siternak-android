@@ -115,7 +115,7 @@ public class PemilikOptionActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                loadingDialog.cancel();
             }
         });
     }
